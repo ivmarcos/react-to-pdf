@@ -10,7 +10,12 @@ const React = require('react');
 ```jsx
 const React = require('react');
 const ref = React.createRef();
-<ReactToPdf targetRef={ref} filename="div-blue.pdf">
-    {({toPdf}) => <div style={{width: 500, height: 500, background: 'blue'}} onClick={toPdf} ref={ref}/>}
-</ReactToPdf>
+<div>
+    <ReactToPdf targetRef={ref} filename="div-blue.pdf">
+        {({toPdf}) => (
+            <button onClick={toPdf}>Generate pdf</button>
+        )}
+    </ReactToPdf>
+    <div style={{width: 500, height: 500, background: 'blue'}} ref={ref}/>
+</div>
 ```
