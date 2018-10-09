@@ -1,0 +1,11 @@
+node_modules
+yarn.lock
+.travis.yml
+src
+test
+.eslintrc.json
+.babelrc
+.gitignore
+.codeclimate.yml
+*.log
+*.env

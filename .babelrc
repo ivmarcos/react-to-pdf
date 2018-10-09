@@ -1,0 +1,16 @@
+{
+    "presets": ["flow", "react", "es2015"],
+    "plugins": [
+      "transform-class-properties",
+      "transform-react-jsx",
+      "transform-object-rest-spread",
+      ["module-resolver", {
+        "root": ["./src"],
+        "alias": {
+          "sm-ui": "../sm-ui/src",
+          "~": "./src"
+        }
+      }]
+    ]
+  }
+  

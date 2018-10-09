@@ -1,0 +1,43 @@
+{
+    "extends": ["airbnb", "plugin:flowtype/recommended", "prettier"],
+    "plugins": ["flowtype", "prettier"],
+    "parser": "babel-eslint",
+    "rules": {
+      "prettier/prettier": ["error", { "singleQuote": true, "printWidth": 100 }],
+      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+      "react/jsx-one-expression-per-line": 0,
+      "react/prop-types": 2,    
+      "react/jsx-no-bind": [2, {}],
+      "jsx-a11y/label-has-for": 0,
+      "jsx-a11y/click-events-have-key-events": 0,
+      "jsx-a11y/no-static-element-interactions": 0,
+      "class-methods-use-this": 0,
+      "no-underscore-dangle": 0,
+      "no-restricted-globals": 0,
+      "no-restricted-syntax": 0,
+      "no-param-reassign": 0,
+      "no-case-declarations": 0,
+      "no-console": 0,
+      "no-prototype-builtins": 0,
+      "no-plusplus": 0,
+      "camelcase": 0,
+      "import/prefer-default-export": 0,
+      "prefer-promise-reject-errors": 0,
+      "linebreak-style": 0
+    },
+    "parserOptions": {
+      "sourceType": "module"
+    },
+    "env": {
+      "es6": true,
+      "browser": true,
+      "node": true,
+      "jest": true
+    },
+    "settings": {
+      "import/resolver": {
+        "babel-module": {}
+      }
+    }
+  }
+  
