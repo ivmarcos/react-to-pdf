@@ -7,6 +7,9 @@ Easily create pdf documents from react components.
 ```
 $ npm install react-to-pdf
 ```
+## Examples
+
+https://codesandbox.io/s/00z452xyrl
 
 ## Usage
 
