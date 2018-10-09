@@ -21,7 +21,7 @@
     "url": "git+https://github.com/ivmarcos/react-to-pdf.git"
   },
   "author": "Marcos Andrei Ivanechtchuk",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ivmarcos/react-to-pdf/issues"
   },
