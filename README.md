@@ -10,7 +10,7 @@ $ npm install react-to-pdf
 
 ## Usage
 
-Using inner target ref
+**Using inner target ref**
 
 ```jsx
 <ReactToPdf>
@@ -20,7 +20,7 @@ Using inner target ref
 </ReactToPdf>
 ```
 
-Using outer target ref
+**Using outer target ref**
 
 ```jsx
 const ref = React.createRef();
@@ -35,4 +35,9 @@ const ref = React.createRef();
 </div>
 ```
 
-Props
+## Props
+
+|Prop name        |Type               |Default            |Description
+|-----------------|-------------------|-------------------|--------------------------------
+|filename         | `string`          | `'download.pdf'`  | Name of the pdf file
+|targetRef        | `string`          |                   | Reference for the target component (use this or inner target reference)
