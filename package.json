@@ -1,6 +1,6 @@
 {
   "name": "react-to-pdf",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Create pdf documents from React Components",
   "main": "index.js",
   "keywords": [
