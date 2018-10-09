@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react';
+import {findDOMNode} from 'react-dom'
 import PropTypes from 'prop-types';
-import jsPdf from 'jspdf';
+import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 class ReactToPdf extends PureComponent {
@@ -8,11 +9,17 @@ class ReactToPdf extends PureComponent {
     constructor(props){
         super(props);
         this.toPdf = this.toPdf.bind(this);
+        this.targetRef = React.createRef();
     }
 
     toPdf(){
-        const {source, filename, options, onComplete} = this.props;
-        html2canvas(input)
+        const {targetRef, filename, options, onComplete} = this.props;
+        const source = targetRef || this.targetRef;
+        if (!source){
+            console.log('source is null')
+            return;
+        }
+        html2canvas(source.current)
         .then((canvas) => {
           const imgData = canvas.toDataURL('image/png');
           const pdf = new jsPDF(options);
@@ -26,7 +33,7 @@ class ReactToPdf extends PureComponent {
 
     render(){
         const {children} = this.props;
-        return children({toPdf: this.toPdf});
+        return children({toPdf: this.toPdf, targetRef: this.targetRef});
     }
 
 };
