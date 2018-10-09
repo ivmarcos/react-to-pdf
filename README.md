@@ -1,4 +1,4 @@
-# ReactToPdf
+# React to PDF
 
 Easily create pdf documents from react components.
 
