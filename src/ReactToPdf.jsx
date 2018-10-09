@@ -1,5 +1,4 @@
 import React, {PureComponent} from 'react';
-import {findDOMNode} from 'react-dom'
 import PropTypes from 'prop-types';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -24,7 +23,6 @@ class ReactToPdf extends PureComponent {
           const imgData = canvas.toDataURL('image/png');
           const pdf = new jsPDF(options);
           pdf.addImage(imgData, 'JPEG', 0, 0);
-          // pdf.output('dataurlnewwindow');
           pdf.save(filename);
           if (onComplete) onComplete();
         })
