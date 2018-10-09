@@ -12,7 +12,7 @@ class ReactToPdf extends PureComponent {
     }
 
     toPdf(){
-        const {targetRef, filename, options, onComplete} = this.props;
+        const {targetRef, filename, x, y, options, onComplete} = this.props;
         const source = targetRef || this.targetRef;
         if (!source){
             console.log('source is null')
@@ -22,7 +22,7 @@ class ReactToPdf extends PureComponent {
         .then((canvas) => {
           const imgData = canvas.toDataURL('image/png');
           const pdf = new jsPDF(options);
-          pdf.addImage(imgData, 'JPEG', 0, 0);
+          pdf.addImage(imgData, 'JPEG', x, y);
           pdf.save(filename);
           if (onComplete) onComplete();
         })
@@ -39,10 +39,15 @@ class ReactToPdf extends PureComponent {
 
 ReactToPdf.propTypes = {
     filename: PropTypes.string.isRequired,
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    options: PropTypes.object
 };
 
 ReactToPdf.defaultProps = {
-    filename: 'download.pdf'
+    filename: 'download.pdf',
+    x: 0,
+    y: 0
 }
 
 export default ReactToPdf;
