@@ -37,7 +37,7 @@ ReactToPdf.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   options: PropTypes.object,
-  children: PropTypes.number.isRequired
+  children: PropTypes.func.isRequired
 };
 
 ReactToPdf.defaultProps = {
