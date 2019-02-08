@@ -37,54 +37,65 @@ class ReactToPdf extends PureComponent {
   toMultiplePage() {
     const { x, y, filename, options, onComplete } = this.props;
     // const factor = 980;
-    const factor = 1000;
-    this.toCanvas().then(canvas => {
-      const destination = document.getElementById('destination');
-      const source = this.getSource();
-      console.log('source width', source.clientWidth);
-      console.log('source height', source.clientHeight);
-      const imgData = canvas.toDataURL('image/png');
-      const image = new Image();
-      image.src = imgData;
-      image.setAttribute('width', source.clientWidth);
-      image.setAttribute('height', source.clientHeight);
-      image.onload = () => {
-        console.log('image height', image.clientHeight);
-        const pdf = new JsPdf(options);
-        // const sX = 0;
-        // const sWidth = 778;
-        // const sHeight = 1120;
-        // const dX = 0;
-        // const dY = 0;
-        // const dWidth = 778;
-        // const dHeight = 1120;
-        const sX = 0;
-        const sWidth = source.clientWidth;
-        const sHeight = 100;
-        const dX = 0;
-        const dY = 0;
-        const dWidth = sWidth;
-        const dHeight = sHeight;
-        destination.innerHTML = '';
-        const pageSize = 100;
-        const sourceHeight = source.clientHeight;
-        const pages = sourceHeight / pageSize;
-        console.log('pages', pages);
-        for (let i = 0; i < pages; i++) {
-          const tmpCanvas = document.createElement('canvas');
-          tmpCanvas.setAttribute('width', sWidth);
-          tmpCanvas.setAttribute('height', sHeight);
-          const tmpCtx = tmpCanvas.getContext('2d');
-          const sY = 100 * i;
-          console.log('cut position', sY);
-          tmpCtx.drawImage(image, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
-          destination.appendChild(tmpCanvas);
-        }
-        //        destination.appendChild(image);
-      };
+    const WIDTH_HEIGHT_FACTOR = 1.414285714;
 
-      /*
-      console.log('clientHeight', source.clientHeight, source);
+    this.toCanvas().then(canvas => {
+      const pdf = new JsPdf(options);
+      const destination = document.getElementById('destination');
+      console.log('source width', canvas.width);
+      console.log('source height', canvas.height);
+      // const sX = 0;
+      // const sWidth = 778;
+      // const sHeight = 1120;
+      // const dX = 0;
+      // const dY = 0;
+      // const dWidth = 778;
+      // const dHeight = 1120;
+      const imageWidth = canvas.width;
+      const sX = 0;
+      const sWidth = imageWidth;
+      const sHeight = imageWidth * WIDTH_HEIGHT_FACTOR;
+      const dX = 0;
+      const dY = 0;
+      const dWidth = sWidth;
+      const dHeight = sHeight;
+      destination.innerHTML = '';
+      const pageSize = 100;
+      const pages = canvas.height / pageSize;
+      console.log('pages', pages);
+      for (let i = 0; i < pages; i++) {
+        const tmpCanvas = document.createElement('canvas');
+        tmpCanvas.setAttribute('width', sWidth);
+        tmpCanvas.setAttribute('height', sHeight);
+        const tmpCtx = tmpCanvas.getContext('2d');
+        const sY = sHeight * i;
+        console.log('cut position', sY);
+        tmpCtx.drawImage(canvas, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
+        // destination.appendChild(tmpCanvas);
+        const tmpDataUrl = tmpCanvas.toDataURL('image/png', 1.0);
+        const width = tmpCanvas.width;
+        const height = tmpCanvas.clientHeight;
+
+        //! If we're on anything other than the first page,
+        // add another page
+        if (i > 0) {
+          pdf.addPage();
+          // pdf.addPage(595, 842); // 8.5" x 11" in pts (in*72)
+        }
+        //! now we declare that we're working on that page
+        pdf.setPage(i + 1);
+        //! now we add content to that page!
+        // pdf.addImage(tmpDataUrl, 'PNG', 0, 0, width * 0.72, height * 0.71);
+        pdf.addImage(tmpDataUrl, 'PNG', 0, 0, 210, 210 * WIDTH_HEIGHT_FACTOR);
+        // destination.appendChild(tmpCanvas);
+
+        // pdf.addImage(tmpDataUrl, 'PNG', x, y);
+      }
+      pdf.save(filename);
+      if (onComplete) onComplete();
+    });
+
+    /* console.log('clientHeight', source.clientHeight, source);
       for (let i = 0; i <= source.clientHeight / factor; i++) {
         const tmpCanvas = document.createElement('canvas');
         tmpCanvas.setAttribute('width', sWidth);
@@ -111,11 +122,7 @@ class ReactToPdf extends PureComponent {
         destination.appendChild(tmpCanvas);
 
         // pdf.addImage(tmpDataUrl, 'PNG', x, y);
-      }
-
-      // pdf.save(filename);
-      if (onComplete) onComplete(); */
-    });
+      } */
   }
 
   toCanvas() {

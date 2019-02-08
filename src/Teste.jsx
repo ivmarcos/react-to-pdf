@@ -26,6 +26,7 @@ const style = {
 
 function test(ref) {
   const source = ref.current;
+  const WIDTH_HEIGHT_FACTOR = 1.414285714;
   html2canvas(source).then(canvas => {
     const destination = document.getElementById('destination');
     console.log('source width', canvas.width);
@@ -38,9 +39,10 @@ function test(ref) {
     // const dY = 0;
     // const dWidth = 778;
     // const dHeight = 1120;
+    const imageWidth = canvas.width;
     const sX = 0;
-    const sWidth = canvas.width;
-    const sHeight = 100;
+    const sWidth = imageWidth;
+    const sHeight = imageWidth * WIDTH_HEIGHT_FACTOR;
     const dX = 0;
     const dY = 0;
     const dWidth = sWidth;
@@ -54,7 +56,7 @@ function test(ref) {
       tmpCanvas.setAttribute('width', sWidth);
       tmpCanvas.setAttribute('height', sHeight);
       const tmpCtx = tmpCanvas.getContext('2d');
-      const sY = 100 * i;
+      const sY = sHeight * i;
       console.log('cut position', sY);
       tmpCtx.drawImage(canvas, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
       destination.appendChild(tmpCanvas);
