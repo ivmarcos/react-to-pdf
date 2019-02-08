@@ -9,29 +9,63 @@
 |options          | `number`          |         0         | options for the jsPdf document - [view more details](https://rawgit.com/MrRio/jsPDF/master/docs/)
 
 
-**Using inner target ref**
-
-```jsx
-const React = require('react');
-<ReactToPdf>
-    {({toPdf, targetRef}) => <div style={{width: 500, height: 500, background: 'red'}} onClick={toPdf} ref={targetRef}/>}
-</ReactToPdf>
-```
 
 **Using outer target ref**
 
 ```jsx
 const React = require('react');
 const ref = React.createRef();
+const style = {
+    container: {
+        background: 'yellow'
+    },
+    red: {
+        width: 500,
+        height: 1000,
+        background: 'red'
+    },
+    green: {
+        width: 500,
+        height: 1000,
+        background: 'green'
+    },
+    blue: {
+        width: 500,
+        height: 1000,
+        background: 'blue'
+    }
+};
 <div>
+    <div id="destinationass">
+    </div>
     <ReactToPdf targetRef={ref} filename="div-blue.pdf">
         {({toPdf}) => (
             <button onClick={toPdf}>Generate pdf</button>
         )}
     </ReactToPdf>
-    <div style={{width: 500, height: 500, background: 'blue'}} ref={ref}/>
+    <div ref={ref} style={style.container}>
+        <div style={style.blue}/>
+        <div style={style.green}/>
+        <div style={style.red}/>
+    </div>
+
 </div>
 ```
+
+**Using inner target ref**
+
+```jsx
+const React = require('react');
+const style = {
+    width: 500,
+    height: 3000,
+    background: 'red'
+};
+<ReactToPdf>
+    {({toPdf, targetRef}) => <div style={style} onClick={toPdf} ref={targetRef}/>}
+</ReactToPdf>
+```
+
 
 **Advanced options**
 ```jsx
@@ -41,12 +75,17 @@ const options = {
     unit: 'in',
     format: [4,2]
 };
+const style = {
+    width: 500,
+    height: 3000,
+    background: 'blue'
+};
 <div>
     <ReactToPdf targetRef={ref} filename="div-blue.pdf" options={options} x={.5} y={.5}>
         {({toPdf}) => (
             <button onClick={toPdf}>Generate pdf</button>
         )}
     </ReactToPdf>
-    <div style={{width: 500, height: 500, background: 'blue'}} ref={ref}/>
+    <div style={style} ref={ref}/>
 </div>
 ```
