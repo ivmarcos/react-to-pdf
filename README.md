@@ -2,6 +2,12 @@
 
 Easily create pdf documents from react components.
 
+## Roadmap
+
+- [ ] tests
+- [ ] multipage support
+- [ ] add props to allow easy customization like page orientation, resolution, margin, often used
+
 ## Install
 
 ```
