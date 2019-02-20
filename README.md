@@ -7,6 +7,7 @@ Easily create pdf documents from react components.
 - [ ] tests
 - [ ] multipage support
 - [ ] add props to allow easy customization like page orientation, resolution, margin, often used
+- [ ] hoc withPdf
 
 ## Install
 
