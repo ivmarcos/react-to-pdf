@@ -64,4 +64,4 @@ const options = {
 |targetRef        | `string`          |                   | Reference for the target component (use this or inner target reference)
 |x                | `number`          |         0         | X position in document
 |y                | `number`          |         0         | Y position in document
-|options          | `number`          |         0         | options for the jsPdf document - [view more details](https://rawgit.com/MrRio/jsPDF/master/docs/)[https://rawgit.com/MrRio/jsPDF/master/docs/]
+|options          | `object`          |        {}         | options for the jsPdf document - [view more details](https://rawgit.com/MrRio/jsPDF/master/docs/)[https://rawgit.com/MrRio/jsPDF/master/docs/]
