@@ -37,13 +37,20 @@ ReactToPdf.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   options: PropTypes.object,
-  children: PropTypes.func.isRequired
+  children: PropTypes.func.isRequired,
+  onComplete: PropTypes.func,
+  targetRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+  ])
 };
 
 ReactToPdf.defaultProps = {
   filename: 'download.pdf',
   x: 0,
-  y: 0
+  y: 0,
+  onComplete: undefined,
+  targetRef: undefined
 };
 
 export default ReactToPdf;

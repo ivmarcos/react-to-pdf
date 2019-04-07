@@ -12,7 +12,7 @@
     "start": "styleguidist server",
     "test": "echo \"Error: no test specified\" && exit 0",
     "build": "babel ./src/index.jsx --out-file ./lib/index.js",
-    "release": "yarn version --new-version patch",
+    "release": "yarn build && yarn version --new-version patch && npm publish",
     "preversion": "yarn test",
     "postversion": "git push"
   },
@@ -38,6 +38,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",

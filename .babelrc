@@ -4,6 +4,7 @@
       "transform-class-properties",
       "transform-react-jsx",
       "transform-object-rest-spread",
+      "transform-react-remove-prop-types",
       ["module-resolver", {
         "root": ["./src"],
         "alias": {

@@ -1,12 +1,25 @@
 # React to PDF
 
-Easily create pdf documents from react components.
+Easily create pdf documents from React components.
 
 ## Install
 
 ```
 $ npm install react-to-pdf
 ```
+
+## Important Notes
+
+- No SSR
+- Single page 
+- The pdf is created from a screenshot of the component and therefore is not vectorized. If you are looking for something more advanced for generating pdf using React components, please check out other popular alternatives packages listed below.
+
+## Alternatives and Similars Packages
+
+* [@react-pdf/renderer](https://www.npmjs.com/package/@react-pdf/renderer) - React renderer for creating PDF files on the browser and server
+* [react-pdf](https://www.npmjs.com/package/react-pdf) - Display PDFs in your React app as easily as if they were images.
+
+
 ## Examples
 
 https://codesandbox.io/s/00z452xyrl
