@@ -3,11 +3,11 @@
 |Prop name        |Type               |Default            |Description
 |-----------------|-------------------|-------------------|--------------------------------
 |filename         | `string`          | `'download.pdf'`  | Name of the pdf file
-|targetRef        | `string`          |                   | Reference for the target component (use this or inner target reference)
+|targetRef        | `RefObject`       |                   | [React ref](https://reactjs.org/docs/refs-and-the-dom.html) for the target component (use this or inner target reference)
 |x                | `number`          |         0         | X position in document
 |y                | `number`          |         0         | Y position in document
-|options          | `object`          |        {}         | options for the jsPdf document - [view more details](https://rawgit.com/MrRio/jsPDF/master/docs/)
-
+|options          | `object`          |    `undefined`    | options for the jsPdf document - [view more details](https://rawgit.com/MrRio/jsPDF/master/docs/)
+|onComplete       | `function`        |    `undefined`    | callback executed when process is finished
 
 **Using inner target ref**
 
