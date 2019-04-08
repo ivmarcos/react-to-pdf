@@ -11,7 +11,7 @@
   "scripts": {
     "start": "styleguidist server",
     "test": "echo \"Error: no test specified\" && exit 0",
-    "build": "babel ./src/index.jsx --out-file ./lib/index.js",
+    "build": "babel ./src/ReactToPdf.jsx --out-file ./lib/index.js",
     "release": "yarn build && yarn version --new-version patch && npm publish",
     "preversion": "yarn test",
     "postversion": "git push"
