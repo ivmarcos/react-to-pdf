@@ -50,3 +50,25 @@ const options = {
     <div style={{width: 500, height: 500, background: 'blue'}} ref={ref}/>
 </div>
 ```
+
+**Cors***
+```jsx
+const ref = React.createRef();
+<div>
+    <ReactToPdf targetRef={ref} filename="div-cors.pdf" >
+        {({toPdf}) => (
+            <button onClick={toPdf}>Generate pdf</button>
+        )}
+    </ReactToPdf>
+    <div ref={ref}>
+        <img
+            src="https://s.ftcdn.net/v2013/pics/all/curated/RKyaEDwp8J7JKeZWQPuOVWvkUjGQfpCx_cover_580.jpg?r=1a0fc22192d0c808b8bb2b9bcfbf4a45b1793687"
+            className={""}
+            alt=""
+            crossOrigin="anonymous"
+        />
+    </div>
+</div>
+```
+
+
