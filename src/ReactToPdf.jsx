@@ -19,7 +19,11 @@ class ReactToPdf extends PureComponent {
         'Target ref must be used or informed. See https://github.com/ivmarcos/react-to-pdf#usage.'
       );
     }
-    html2canvas(targetComponent, { logging: false, useCORS: true }).then(canvas => {
+    html2canvas(targetComponent, {
+      logging: false,
+      useCORS: true,
+      scale: this.props.scale
+    }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new JsPdf(options);
       pdf.addImage(imgData, 'JPEG', x, y);
@@ -39,6 +43,7 @@ ReactToPdf.propTypes = {
   x: PropTypes.number,
   y: PropTypes.number,
   options: PropTypes.object,
+  scale: PropTypes.number,
   children: PropTypes.func.isRequired,
   onComplete: PropTypes.func,
   targetRef: PropTypes.oneOfType([
@@ -51,6 +56,7 @@ ReactToPdf.defaultProps = {
   filename: 'download.pdf',
   x: 0,
   y: 0,
+  scale: 1,
   onComplete: undefined,
   targetRef: undefined
 };
