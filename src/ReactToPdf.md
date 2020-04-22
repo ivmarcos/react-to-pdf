@@ -9,7 +9,7 @@
 |options          | `object`          |    `undefined`    | options for the jsPdf document - [view more details](https://rawgit.com/MrRio/jsPDF/master/docs/)
 |onComplete       | `function`        |    `undefined`    | callback executed when process is finished
 
-**Using inner target ref**
+**Using inner target refsss**
 
 ```jsx
 const React = require('react');

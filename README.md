@@ -60,7 +60,7 @@ const options = {
     format: [4,2]
 };
 <div>
-    <ReactToPdf targetRef={ref} filename="div-blue.pdf" options={options} x={.5} y={.5}>
+    <ReactToPdf targetRef={ref} filename="div-blue.pdf" options={options} x={.5} y={.5} scale={0.8}>
         {({toPdf}) => (
             <button onClick={toPdf}>Generate pdf</button>
         )}
@@ -79,3 +79,4 @@ const options = {
 |y                | `number`          |         0         | Y position in document
 |options          | `object`          |    `undefined`    | options for the jsPdf document - [view more details](https://rawgit.com/MrRio/jsPDF/master/docs/)
 |onComplete       | `function`        |    `undefined`    | callback executed when process is finished
+|scale            | `number`          |    1              | Image scaling
