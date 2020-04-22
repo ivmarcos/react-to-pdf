@@ -12,7 +12,7 @@ $ npm install react-to-pdf
 
 - No SSR
 - Single page
-- The pdf is created from a screenshot of the component and therefore is not vectorized. If you are looking for something more advanced for generating pdf using React components, please check out other popular alternatives packages listed below.
+- Not vectorized - the pdf is created from a screenshot of the component and therefore is not vectorized. If you are looking for something more advanced for generating pdf using React components, please check out other popular alternatives packages listed below.
 
 ## Alternatives and Similars Packages
 
