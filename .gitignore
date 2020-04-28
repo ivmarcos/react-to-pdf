@@ -2,4 +2,6 @@ node_modules
 yarn.lock
 *.log
 *.env
+dist
+lib
 package-lock.json
