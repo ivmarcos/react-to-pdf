@@ -21,7 +21,7 @@
     "build": "babel ./src/ReactToPdf.jsx --out-file ./lib/index.js",
     "clean": "rimraf lib dist",
     "release": "yarn build && yarn version --new-version patch && npm publish",
-    "preparess": "npm run clean && npm test && npm run build",
+    "prepares": "npm run clean && npm test && npm run build",
     "lint": "eslint src",
     "lint-fix": "eslint --fix src --ext .js",
     "preversion": "yarn test",
