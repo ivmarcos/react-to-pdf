@@ -38,8 +38,8 @@ const ref = React.createRef();
 const ref = React.createRef();
 const options = {
     orientation: 'landscape',
-    unit: 'in',
-    format: [4,2]
+    unit: 'mm',
+    format: 'credit-card'
 };
 <div>
     <ReactToPdf targetRef={ref} filename="div-blue.pdf" options={options} x={.5} y={.5}>

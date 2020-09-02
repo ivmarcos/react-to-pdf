@@ -1,4 +1,3 @@
-// /const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const path = require('path');
 const fs = require('fs');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
@@ -40,18 +39,15 @@ function findComponentsWithMD(folder, map) {
 
 findComponentsWithMD(srcFolder);
 
-console.log('componentsWithAnnotation', componentsWithAnnotation);
-
 module.exports = {
   serverHost: 'localhost',
   serverPort: 6061,
   styleguideDir: 'public',
-  title: 'Planner SM-UI',
+  title: 'React-to-Pdf',
   styleguideComponents: {
     Wrapper: path.join(__dirname, 'src/Wrapper')
   },
   components: 'src/**/*.jsx',
-  //components: componentsWithAnnotation.length ? componentsWithAnnotation : componentsWithMD,
   webpackConfig: {
     devtool: 'sourcemap',
     module: {

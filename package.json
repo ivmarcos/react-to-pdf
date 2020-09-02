@@ -3,8 +3,8 @@
   "version": "0.0.11",
   "description": "Create pdf documents from React Components",
   "main": "lib/index.js",
-  "module": "dist/index.js",
-  "jsnext:main": "dist/index.js",
+  "module": "umd/index.js",
+  "jsnext:main": "umd/index.js",
   "files": [
     "dist",
     "lib",
@@ -29,8 +29,8 @@
     "build:watch": "echo 'build && watch the COMMONJS version of the package - for other version, run specific tasks' && npm run build:commonjs:watch",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel ./src/ReactToPdf.jsx --out-file ./lib/index.js",
     "build:commonjs:watch": "npm run build:commonjs -- --watch",
-    "build:umd": "cross-env BABEL_ENV=umd babel ./src/ReactToPdf.jsx --out-file ./dist/react-to-pdf.js",
-    "build:umd:min": "cross-env BABEL_ENV=umd babel --presets minify ./src/ReactToPdf.jsx --out-file ./dist/react-to-pdf.min.js",
+    "build:umd": "cross-env BABEL_ENV=umd babel ./src/ReactToPdf.jsx --out-file ./umd/react-to-pdf.js",
+    "build:umd:min": "cross-env BABEL_ENV=umd babel --presets minify ./src/ReactToPdf.jsx --out-file ./umd/react-to-pdf.min.js",
     "build:umd:watch": "npm run build:umd -- --watch"
   },
   "repository": {

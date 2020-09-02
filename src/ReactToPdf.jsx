@@ -24,7 +24,7 @@ class ReactToPdf extends PureComponent {
       useCORS: true,
       scale: this.props.scale
     }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = canvas.toDataURL('image/jpeg');
       const pdf = new JsPdf(options);
       pdf.addImage(imgData, 'JPEG', x, y);
       pdf.save(filename);
@@ -39,10 +39,10 @@ class ReactToPdf extends PureComponent {
 }
 
 ReactToPdf.propTypes = {
-  filename: PropTypes.string.isRequired,
+  filename: PropTypes.string,
   x: PropTypes.number,
   y: PropTypes.number,
-  options: PropTypes.object,
+  options: PropTypes.shape({}),
   scale: PropTypes.number,
   children: PropTypes.func.isRequired,
   onComplete: PropTypes.func,
@@ -54,6 +54,7 @@ ReactToPdf.propTypes = {
 
 ReactToPdf.defaultProps = {
   filename: 'download.pdf',
+  options: undefined,
   x: 0,
   y: 0,
   scale: 1,
