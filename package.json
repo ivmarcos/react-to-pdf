@@ -3,8 +3,8 @@
   "version": "0.0.13",
   "description": "Create pdf documents from React Components",
   "main": "lib/index.js",
-  "module": "umd/index.js",
-  "jsnext:main": "umd/index.js",
+  "module": "umd/react-to-pdf.js",
+  "jsnext:main": "umd/react-to-pdf.js",
   "files": [
     "umd",
     "lib"
