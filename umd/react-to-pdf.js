@@ -111,7 +111,7 @@
           useCORS: true,
           scale: this.props.scale
         }).then(function (canvas) {
-          var imgData = canvas.toDataURL('image/png');
+          var imgData = canvas.toDataURL('image/jpeg');
           var pdf = new _jspdf2.default(options);
           pdf.addImage(imgData, 'JPEG', x, y);
           pdf.save(filename);
@@ -132,6 +132,7 @@
 
   ReactToPdf.defaultProps = {
     filename: 'download.pdf',
+    options: undefined,
     x: 0,
     y: 0,
     scale: 1,

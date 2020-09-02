@@ -18,10 +18,10 @@
   "scripts": {
     "start": "styleguidist server",
     "test": "echo \"Error: no test specified\" && exit 0",
-    "build": "babel ./src/ReactToPdf.jsx --out-file ./lib/index.js",
+    "build": "npm run build:commonjs && npm run build:umd && npm run build:umd:min",
     "clean": "rimraf lib dist",
     "release": "yarn build && yarn version --new-version patch && npm publish",
-    "prepares": "npm run clean && npm test && npm run build",
+    "prepare": "npm run clean && npm test && npm run build",
     "lint": "eslint src",
     "lint-fix": "eslint --fix src --ext .js",
     "preversion": "yarn test",
@@ -48,6 +48,7 @@
     "jspdf": "^1.4.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.2",
     "babel-loader": "7",
