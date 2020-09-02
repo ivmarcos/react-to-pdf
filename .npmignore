@@ -9,3 +9,5 @@ test
 .codeclimate.yml
 *.log
 *.env
+package-lock.json
+yarn-error.log
