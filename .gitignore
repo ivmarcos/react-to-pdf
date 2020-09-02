@@ -6,3 +6,4 @@ dist
 lib
 package-lock.json
 yarn-error.log
+umd

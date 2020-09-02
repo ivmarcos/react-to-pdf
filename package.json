@@ -6,9 +6,8 @@
   "module": "umd/index.js",
   "jsnext:main": "umd/index.js",
   "files": [
-    "dist",
-    "lib",
-    "src"
+    "umd",
+    "lib"
   ],
   "keywords": [
     "pdf",
