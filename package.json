@@ -44,7 +44,7 @@
   "homepage": "https://github.com/ivmarcos/react-to-pdf#readme",
   "dependencies": {
     "html2canvas": "^1.0.0-alpha.12",
-    "jspdf": "^1.4.1"
+    "jspdf": "^2.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
