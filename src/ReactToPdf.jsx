@@ -11,7 +11,7 @@ class ReactToPdf extends PureComponent {
   }
 
   toPdf() {
-    const { targetRef, filename, x, y, options, onComplete, imageFormat = 'png' } = this.props;
+    const { targetRef, filename, x, y, options, onComplete, imageFormat } = this.props;
     const source = targetRef || this.targetRef;
     const targetComponent = source.current || source;
     if (!targetComponent) {
@@ -60,7 +60,7 @@ ReactToPdf.defaultProps = {
   y: 0,
   scale: 1,
   onComplete: undefined,
-  imageFormat: 'png',
+  imageFormat: 'jpeg',
   targetRef: undefined
 };
 
