@@ -11,7 +11,7 @@ class ReactToPdf extends PureComponent {
   }
 
   toPdf() {
-    const { targetRef, filename, x, y, options, onComplete } = this.props;
+    const { targetRef, filename, x, y, options, onComplete, imageFormat = 'png' } = this.props;
     const source = targetRef || this.targetRef;
     const targetComponent = source.current || source;
     if (!targetComponent) {
@@ -24,9 +24,9 @@ class ReactToPdf extends PureComponent {
       useCORS: true,
       scale: this.props.scale
     }).then(canvas => {
-      const imgData = canvas.toDataURL('image/jpeg');
+      const imgData = canvas.toDataURL(`image/${imageFormat}`);
       const pdf = new JsPdf(options);
-      pdf.addImage(imgData, 'JPEG', x, y);
+      pdf.addImage(imgData, imageFormat.toUpperCase(), x, y);
       pdf.save(filename);
       if (onComplete) onComplete();
     });
@@ -46,6 +46,7 @@ ReactToPdf.propTypes = {
   scale: PropTypes.number,
   children: PropTypes.func.isRequired,
   onComplete: PropTypes.func,
+  imageFormat: PropTypes.string,
   targetRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) })
@@ -59,6 +60,7 @@ ReactToPdf.defaultProps = {
   y: 0,
   scale: 1,
   onComplete: undefined,
+  imageFormat: 'png',
   targetRef: undefined
 };
 
