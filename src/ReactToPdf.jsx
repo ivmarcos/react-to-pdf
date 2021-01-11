@@ -3,9 +3,14 @@ import PropTypes from 'prop-types';
 import JsPdf from 'jspdf';
 import html2canvas from 'html2canvas';
 
+const IMAGE_FORMATS = ['pdf', 'jpeg'];
+
 class ReactToPdf extends PureComponent {
   constructor(props) {
     super(props);
+    if (!IMAGE_FORMATS.contains(props.imageFormat)) {
+      throw new Error('Invalid image format. Use "pdf" or "jpeg"');
+    }
     this.toPdf = this.toPdf.bind(this);
     this.targetRef = React.createRef();
   }
