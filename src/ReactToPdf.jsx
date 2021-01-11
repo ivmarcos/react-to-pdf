@@ -8,7 +8,7 @@ const IMAGE_FORMATS = ['pdf', 'jpeg'];
 class ReactToPdf extends PureComponent {
   constructor(props) {
     super(props);
-    if (!IMAGE_FORMATS.contains(props.imageFormat)) {
+    if (!IMAGE_FORMATS.includes(props.imageFormat)) {
       throw new Error('Invalid image format. Use "pdf" or "jpeg"');
     }
     this.toPdf = this.toPdf.bind(this);
