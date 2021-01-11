@@ -8,9 +8,6 @@ const IMAGE_FORMATS = ['pdf', 'jpeg'];
 class ReactToPdf extends PureComponent {
   constructor(props) {
     super(props);
-    if (!IMAGE_FORMATS.includes(props.imageFormat)) {
-      throw new Error('Invalid image format. Use "pdf" or "jpeg"');
-    }
     this.toPdf = this.toPdf.bind(this);
     this.targetRef = React.createRef();
   }
@@ -23,6 +20,9 @@ class ReactToPdf extends PureComponent {
       throw new Error(
         'Target ref must be used or informed. See https://github.com/ivmarcos/react-to-pdf#usage.'
       );
+    }
+    if (!IMAGE_FORMATS.includes(imageFormat)) {
+      throw new Error('Invalid image format. Use "pdf" or "jpeg"');
     }
     html2canvas(targetComponent, {
       logging: false,
