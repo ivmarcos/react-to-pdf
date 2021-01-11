@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import JsPdf from 'jspdf';
 import html2canvas from 'html2canvas';
 
-const IMAGE_FORMATS = ['pdf', 'jpeg'];
+const IMAGE_FORMATS = ['png', 'jpeg'];
 
 class ReactToPdf extends PureComponent {
   constructor(props) {
@@ -22,7 +22,7 @@ class ReactToPdf extends PureComponent {
       );
     }
     if (!IMAGE_FORMATS.includes(imageFormat)) {
-      throw new Error('Invalid image format. Use "pdf" or "jpeg"');
+      throw new Error(`Invalid image format. Use ${IMAGE_FORMATS.join(', ')}`);
     }
     html2canvas(targetComponent, {
       logging: false,
