@@ -80,3 +80,4 @@ const options = {
 |options          | `object`          |    `undefined`    | options for the jsPdf document - [view more details](https://rawgit.com/MrRio/jsPDF/master/docs/)
 |onComplete       | `function`        |    `undefined`    | callback executed when process is finished
 |scale            | `number`          |    1              | Image scaling
+|imageFormat      | `string`          | `'jpeg'`          | Image format (`'jpeg'` or `'png'`)
