@@ -11,7 +11,7 @@ class ReactToPdf extends PureComponent {
   }
 
   toPdf() {
-    const { targetRef, filename, x, y, options, onComplete } = this.props;
+    const { targetRef, filename, x, y, options, onComplete, imgWidth, pageHeight } = this.props;
     const source = targetRef || this.targetRef;
     const targetComponent = source.current || source;
     if (!targetComponent) {
@@ -22,12 +22,30 @@ class ReactToPdf extends PureComponent {
     html2canvas(targetComponent, {
       logging: false,
       useCORS: true,
-      scale: this.props.scale
-    }).then(canvas => {
-      const imgData = canvas.toDataURL('image/jpeg');
-      const pdf = new JsPdf(options);
-      pdf.addImage(imgData, 'JPEG', x, y);
-      pdf.save(filename);
+      scale: this.props.scale,
+    }).then((canvas) => {
+      // const imgData = canvas.toDataURL('image/jpeg');
+      // const pdf = new JsPdf(options);
+      // pdf.addImage(imgData, 'JPEG', x, y);
+      // pdf.save(filename);
+      // if (onComplete) onComplete();
+
+      let imgData = canvas.toDataURL('image/png');
+      let imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let doc = new JsPdf(options);
+      let position = 0;
+
+      doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      doc.save(filename);
       if (onComplete) onComplete();
     });
   }
@@ -42,14 +60,16 @@ ReactToPdf.propTypes = {
   filename: PropTypes.string,
   x: PropTypes.number,
   y: PropTypes.number,
+  imgWidth: PropTypes.number,
+  pageHeight: PropTypes.number,
   options: PropTypes.shape({}),
   scale: PropTypes.number,
   children: PropTypes.func.isRequired,
   onComplete: PropTypes.func,
   targetRef: PropTypes.oneOfType([
     PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(Element) })
-  ])
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  ]),
 };
 
 ReactToPdf.defaultProps = {
@@ -57,9 +77,11 @@ ReactToPdf.defaultProps = {
   options: undefined,
   x: 0,
   y: 0,
+  imgWidth: 210,
+  pageHeight: 295,
   scale: 1,
   onComplete: undefined,
-  targetRef: undefined
+  targetRef: undefined,
 };
 
 export default ReactToPdf;
