@@ -1,3 +1,7 @@
+# 0.0.14 (May 18, 2021)
+
+- Upgraded JsPdf
+
 # 0.0.13 (September 2, 2020)
 
 - Fixed UMD configuration
