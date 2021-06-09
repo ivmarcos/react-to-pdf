@@ -1,31 +1,47 @@
 {
-    "env": {
-      "commonjs": {
-        "presets": ["flow", "react", "es2015"],
-        "plugins": [
-          "transform-class-properties",
-          "transform-react-jsx",
-          "transform-object-rest-spread",
-          ["transform-react-remove-prop-types", {
-              "removeImport": true,
-          }],
+  "env": {
+    "commonjs": {
+      "presets": [
+        "@babel/preset-flow",
+        "@babel/preset-react",
+        "@babel/preset-env"
+      ],
+      "plugins": [
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-transform-react-jsx",
+        "@babel/plugin-proposal-object-rest-spread",
+        [
+          "transform-react-remove-prop-types",
+          {
+            "removeImport": true
+          }
         ]
-      },
-      "umd": {
-        "presets": ["flow", "react", "es2015", ["env", {
-          "useBuiltIns": false,
-          "modules": false
-        }]],
-        "plugins": [
-          "transform-class-properties",
-          "transform-react-jsx",
-          "transform-object-rest-spread",
-          "transform-es2015-modules-umd",
-          ["transform-react-remove-prop-types", {
-              "removeImport": true,
-          }],
+      ]
+    },
+    "umd": {
+      "presets": [
+        "@babel/preset-flow",
+        "@babel/preset-react",
+        [
+          "@babel/preset-env",
+          {
+            "useBuiltIns": false,
+            "modules": false
+          }
         ]
-      }
+      ],
+      "plugins": [
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-transform-react-jsx",
+        "@babel/plugin-proposal-object-rest-spread",
+        "@babel/plugin-transform-modules-umd",
+        [
+          "transform-react-remove-prop-types",
+          {
+            "removeImport": true
+          }
+        ]
+      ]
     }
   }
-  
+}
