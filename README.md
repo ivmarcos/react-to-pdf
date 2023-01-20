@@ -1,11 +1,11 @@
 # React to PDF
 
-Easily create pdf documents from React components.
+Easily create single page pdf documents from React components.
 
 ## Install
 
 ```
-$ npm install react-to-pdf
+$ npm install react-render-pdf
 ```
 
 ## Important Notes
