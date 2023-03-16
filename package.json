@@ -1,6 +1,6 @@
 {
   "name": "react-to-pdf",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Create pdf documents from React Components",
   "main": "lib/index.js",
   "module": "umd/react-to-pdf.js",
