@@ -4,7 +4,9 @@ import html2canvas from "html2canvas";
 import Converter from "./converter";
 import { ReactToPDFOptions, TargetElementFinder, UsePDFResult } from "./types";
 import { buildConvertOptions } from "./utils";
+import jsPDF from "jspdf";
 export { Resolution, Margin } from "./constants";
+export type { ReactToPDFOptions };
 
 const getTargetElement = (
   targetRefOrFunction: TargetElementFinder
@@ -18,7 +20,7 @@ const getTargetElement = (
 export const usePDF = (usePDFoptions?: ReactToPDFOptions): UsePDFResult => {
   const targetRef = React.createRef<HTMLElement>();
   const toPDF = React.useCallback(
-    (toPDFoptions?: ReactToPDFOptions) => {
+    (toPDFoptions?: ReactToPDFOptions): Promise<InstanceType<typeof jsPDF>> => {
       return generatePDF(targetRef, usePDFoptions ?? toPDFoptions);
     },
     [targetRef, usePDFoptions]
@@ -29,7 +31,7 @@ export const usePDF = (usePDFoptions?: ReactToPDFOptions): UsePDFResult => {
 const generatePDF = async (
   targetRefOrFunction: TargetElementFinder,
   customOptions?: ReactToPDFOptions
-) => {
+): Promise<InstanceType<typeof jsPDF>> => {
   const options = buildConvertOptions(customOptions);
   const targetElement = getTargetElement(targetRefOrFunction);
   if (!targetElement) {

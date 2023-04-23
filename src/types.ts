@@ -55,7 +55,6 @@ export type ConversionOptions = {
    * or crash, due to the size of the image generated for the PDF.
    */
   resolution: Resolution | number;
-  onCanvas?: (canvas: HTMLCanvasElement, pageNumber: number) => void;
   /** Page options */
   page: PageConversionOptions;
   /** Canvas options */

@@ -39,37 +39,7 @@ const selects = [
 
 export function App() {
   const { targetRef, toPDF } = usePDF();
-  const testRef = React.createRef();
-  const cloneRef = React.useRef();
   const [options, setOptions] = React.useState(buildConvertOptions());
-
-  const handleCanvas = (canvasEl, pageNumber) => {
-    const cloneEl = cloneRef.current as HTMLElement;
-    if (cloneEl.childNodes.length && cloneEl.childNodes[pageNumber - 1]) {
-      cloneEl.replaceChild(canvasEl, cloneEl.childNodes[pageNumber - 1]);
-      return;
-    }
-    cloneEl.appendChild(canvasEl);
-  };
-
-  const handleSquareCanvas = (canvasEl, pageNumber) => {
-    const cloneEl = document.getElementById("clone-square");
-    if (cloneEl.childNodes.length && cloneEl.childNodes[pageNumber - 1]) {
-      cloneEl.replaceChild(canvasEl, cloneEl.childNodes[pageNumber - 1]);
-      return;
-    }
-    cloneEl.appendChild(canvasEl);
-  };
-
-  React.useEffect(() => {
-    toPDF({
-      method: "build",
-      onCanvas: handleCanvas,
-      page: { margin: 20 },
-      resolution: 1,
-    });
-  }, []);
-
   const handleChange = (onChange) => (event) => {
     const nextOptions = buildConvertOptions({
       page: { margin: 10 },
@@ -101,21 +71,16 @@ export function App() {
         <label>Options: </label>
         <pre>{JSON.stringify(options, null, 2)}</pre>
       </div>
-      <div id="teste" style={{ width: 100, height: 100, background: "red" }}>
+      <div id="test" style={{ width: 100, height: 100, background: "red" }}>
         <button
           onClick={() =>
-            generatePDF(() => document.getElementById("teste"), {
+            generatePDF(() => document.getElementById("test"), {
               ...options,
-              onCanvas: handleSquareCanvas,
             })
           }
         >
           Generate PDF
         </button>
-      </div>
-      <div>
-        Clone
-        <div id="clone-square"></div>
       </div>
       <div
         ref={targetRef}
@@ -665,7 +630,6 @@ export function App() {
         <img src="https://picsum.photos/700/800" />
       </div>
 
-      <div ref={cloneRef} />
     </React.Fragment>
   );
 }

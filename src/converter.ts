@@ -143,9 +143,6 @@ export default class Converter {
       this.canvas.width,
       canvasPageHeight
     );
-    if (this.options.onCanvas) {
-      this.options.onCanvas(canvasPage, pageNumber);
-    }
     return canvasPage;
   }
   convert(): InstanceType<typeof jsPDF> {
