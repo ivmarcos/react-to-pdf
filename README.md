@@ -10,9 +10,8 @@ $ npm install react-to-pdf
 
 ## Important Notes
 
-- No SSR
-- Single page
 - Not vectorized - the pdf is created from a screenshot of the component and therefore is not vectorized. If you are looking for something more advanced for generating pdf using React components, please check out other popular alternatives packages listed below.
+- No SSR
 
 ## Alternatives and Similars Packages
 
@@ -22,61 +21,59 @@ $ npm install react-to-pdf
 
 ## Examples
 
-https://codesandbox.io/s/l2l4pz0jyl
 
 ## Usage
 
-**Using inner target ref**
+**Default method**
 
 ```jsx
-<ReactToPdf>
-    {({toPdf, targetRef}) =>  (
-        <div style={{width: 500, height: 500, background: 'red'}} onClick={toPdf} ref={targetRef}/>
-    )}
-</ReactToPdf>
+   import generatePDF from 'react-to-pdf'
+
+const Component = () => {
+    const targetRef = React.createRef();
+return (
+   <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
+   <div ref={targetRef}>
+     Content to be included in the PDF
+   </div>
+)
+
+}
 ```
 
-**Using outer target ref**
+**Using hook**
 
 ```jsx
-const ref = React.createRef();
+   import { usePDF } from 'react-to-pdf'
 
-<div>
-    <ReactToPdf targetRef={ref} filename="div-blue.pdf">
-        {({toPdf}) => (
-            <button onClick={toPdf}>Generate pdf</button>
-        )}
-    </ReactToPdf>
-    <div style={{width: 500, height: 500, background: 'blue'}} ref={ref}/>
-</div>
+const Component = () => {
+   const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
+
+return (
+   <button onClick={toPDF}>Download PDF</button>
+   <div ref={targetRef}>
+     Content to be included in the PDF
+   </div>
+)
+
+}
+
 ```
+
 
 **Advanced options**
 ```jsx
-const ref = React.createRef();
-const options = {
-    orientation: 'landscape',
-    unit: 'in',
-    format: [4,2]
-};
-<div>
-    <ReactToPdf targetRef={ref} filename="div-blue.pdf" options={options} x={.5} y={.5} scale={0.8}>
-        {({toPdf}) => (
-            <button onClick={toPdf}>Generate pdf</button>
-        )}
-    </ReactToPdf>
-    <div style={{width: 500, height: 500, background: 'blue'}} ref={ref}/>
-</div>
+   import { usePDF } from 'react-to-pdf'
+
+const Component = () => {
+    const targetRef = React.createRef();
+return (
+   <button onClick={() => generatePDF(targetRef)}>Generate PDF</button>
+   <div ref={targetRef}>
+     Content to be included in the PDF
+   </div>
+)
+
+}
 ```
 
-## Props
-
-|Prop name        |Type               |Default            |Description
-|-----------------|-------------------|-------------------|--------------------------------
-|filename         | `string`          | `'download.pdf'`  | Name of the pdf file
-|targetRef        | `RefObject`       |                   | [React ref](https://reactjs.org/docs/refs-and-the-dom.html) for the target component (use this or inner target reference)
-|x                | `number`          |         0         | X position in document
-|y                | `number`          |         0         | Y position in document
-|options          | `object`          |    `undefined`    | options for the jsPdf document - [view more details](https://rawgit.com/MrRio/jsPDF/master/docs/)
-|onComplete       | `function`        |    `undefined`    | callback executed when process is finished
-|scale            | `number`          |    1              | Image scaling
