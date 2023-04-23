@@ -629,7 +629,6 @@ export function App() {
         </p>
         <img src="https://picsum.photos/700/800" />
       </div>
-
     </React.Fragment>
   );
 }

@@ -28,7 +28,7 @@
     "pre:build": "npm run test && npm run clean",
     "docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts src/types.ts src/constants.ts",
     "test": "jest",
-    "format": "prettier --write src example"
+    "format": "prettier --write src example README.md CHANGELOG.md"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",

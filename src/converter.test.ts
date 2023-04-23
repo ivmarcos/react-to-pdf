@@ -67,6 +67,7 @@ const resolutionsTestSet: number[] = Object.keys(Resolution)
 const marginsTestTest: number[] = Object.keys(Margin)
   .filter((key) => isNaN(Number(key)))
   .map((key) => Resolution[key]);
+  
 const canvasDimensionsTestSet: CanvasDimensions[] = [
   {
     width: 2000,

@@ -61,14 +61,14 @@ export type ConversionOptions = {
   canvas: CanvasConversionOptions;
   /** Override values passed for the jsPDF document and html2canvas */
   overrides: {
-    /** 
+    /**
      * Override the values passed for the jsPDF instance. See its docs for more details
-     * in https://artskydj.github.io/jsPDF/docs/jsPDF.html. 
+     * in https://artskydj.github.io/jsPDF/docs/jsPDF.html.
      * */
     pdf?: Partial<jsPDFOptions>;
-    /** 
+    /**
      * Override the values passed for the html2canvas function. See its docs
-     * for more details in https://html2canvas.hertzen.com/documentation 
+     * for more details in https://html2canvas.hertzen.com/documentation
      * */
     canvas?: Partial<Html2CanvasOptions>;
   };

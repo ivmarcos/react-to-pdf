@@ -23,85 +23,83 @@ $ npm install react-to-pdf
 **Basic**
 
 ```jsx
-   import generatePDF from 'react-to-pdf'
+import generatePDF from 'react-to-pdf';
 
 const Component = () => {
-    const targetRef = React.createRef();
-return (
-   <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
-   <div ref={targetRef}>
-     Content to be included in the PDF
-   </div>
-)
-
+   const targetRef = React.createRef();
+   return (
+      <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
+      <div ref={targetRef}>
+         Content to be included in the PDF
+      </div>
+   )
 }
 ```
 
 **Using hook**
 
 ```jsx
-   import { usePDF } from 'react-to-pdf'
+import { usePDF } from 'react-to-pdf';
 
 const Component = () => {
    const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
-
-return (
-   <button onClick={toPDF}>Download PDF</button>
-   <div ref={targetRef}>
-     Content to be included in the PDF
-   </div>
-)
-
+   return (
+      <button onClick={toPDF}>Download PDF</button>
+      <div ref={targetRef}>
+         Content to be included in the PDF
+      </div>
+   )
 }
-
 ```
 
 **Advanced options**
 
 ```jsx
-   import createPDF, {Resolution, Margin} from 'react-to-pdf'
+import createPDF, { Resolution, Margin } from 'react-to-pdf';
 
-   const options = {
-      // default is `save`
-      method: 'open',
-      // default is Resolution.MEDIUM = 3, which should be enough, higher values increases the image quality but also the size of the PDF, so be careful using values higher than 10 when having multiple pages generated, it might cause the browser to crash or hang
-      resolution: Resolution.HIGH,
-      page: {
-         // margin is in MM, default is Margin.NONE = 0
-         margin: Margin.SMALL,
-         // default is 'A4'
-         format: 'letter',
-         // default is 'portrait'
-         orientation: 'landscape',
+const options = {
+   // default is `save`
+   method: 'open',
+   // default is Resolution.MEDIUM = 3, which should be enough, higher values 
+   // increases the image quality but also the size of the PDF, so be careful 
+   // using values higher than 10 when having multiple pages generated, it 
+   // might cause the browser to crash or hang.
+   resolution: Resolution.HIGH,
+   page: {
+      // margin is in MM, default is Margin.NONE = 0
+      margin: Margin.SMALL,
+      // default is 'A4'
+      format: 'letter',
+      // default is 'portrait'
+      orientation: 'landscape',
+   },
+   canvas: {
+      // default is 'image/jpeg' for better size performance
+      mimeType: 'image/png'
+      qualityRatio: 1
+   },
+   // customize any value passed for the jsPDF instance and html2canvas 
+   // function - you should not need this, use with caution.
+   overrides: {
+      // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
+      pdf: {
+         compress: true
       },
+      // see https://html2canvas.hertzen.com/configuration for more options
       canvas: {
-         // default is 'image/jpeg' for better size performance
-         mimeType: 'image/png'
-         qualityRatio: 1
-      },
-      // override or add any value passed for the jsPDF instance and html2canvas function - you should not need this, use with caution.
-      overrides: {
-         // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
-         pdf: {
-            compress: true
-         },
-         // see https://html2canvas.hertzen.com/configuration for more options
-         canvas: {
-            logging: true
-         }
-
-      },
-   }
+         useCORS: false
+      }
+   },
+};
 
 const Component = () => {
-   // you can also use a function to return the target element besides using React refs 
-   const getTargetElement = () => document.getElementById('content-id')
-return (
-   <button onClick={() => createPDF(getTargetElement, options)}>Generate PDF</button>
-   <div id="content-id">
-     Content to be included in the PDF
-   </div>
-)
-
+   // you can use a function to return the target element besides using React refs
+   const getTargetElement = () => document.getElementById('content-id');
+   return (
+      <button onClick={() => createPDF(getTargetElement, options)}>Generate PDF</button>
+      <div id="content-id">
+         Content to be included in the PDF
+      </div>
+   );
 }
 ```
