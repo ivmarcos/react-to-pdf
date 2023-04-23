@@ -67,7 +67,7 @@ const resolutionsTestSet: number[] = Object.keys(Resolution)
 const marginsTestTest: number[] = Object.keys(Margin)
   .filter((key) => isNaN(Number(key)))
   .map((key) => Resolution[key]);
-  
+
 const canvasDimensionsTestSet: CanvasDimensions[] = [
   {
     width: 2000,
@@ -81,9 +81,9 @@ const canvasDimensionsTestSet: CanvasDimensions[] = [
 
 const buildTestSet = () => {
   const testSet: [string, ReactToPDFOptions, CanvasDimensions][] = [];
-  for (let resolution of resolutionsTestSet) {
-    for (let margin of marginsTestTest) {
-      for (let canvasDimensions of canvasDimensionsTestSet) {
+  for (const resolution of resolutionsTestSet) {
+    for (const margin of marginsTestTest) {
+      for (const canvasDimensions of canvasDimensionsTestSet) {
         testSet.push([
           `Resolution: ${resolution}, Margin: ${margin}, Dimensions: ${canvasDimensions.height}x${canvasDimensions.width}`,
           {

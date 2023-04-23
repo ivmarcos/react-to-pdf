@@ -60,9 +60,9 @@ import createPDF, { Resolution, Margin } from 'react-to-pdf';
 const options = {
    // default is `save`
    method: 'open',
-   // default is Resolution.MEDIUM = 3, which should be enough, higher values 
-   // increases the image quality but also the size of the PDF, so be careful 
-   // using values higher than 10 when having multiple pages generated, it 
+   // default is Resolution.MEDIUM = 3, which should be enough, higher values
+   // increases the image quality but also the size of the PDF, so be careful
+   // using values higher than 10 when having multiple pages generated, it
    // might cause the browser to crash or hang.
    resolution: Resolution.HIGH,
    page: {
@@ -78,7 +78,7 @@ const options = {
       mimeType: 'image/png'
       qualityRatio: 1
    },
-   // customize any value passed for the jsPDF instance and html2canvas 
+   // customize any value passed for the jsPDF instance and html2canvas
    // function - you should not need this, use with caution.
    overrides: {
       // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options

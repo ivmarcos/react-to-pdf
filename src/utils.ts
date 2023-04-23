@@ -1,5 +1,4 @@
 import { DEFAULT_OPTIONS } from "./constants";
-import Converter from "./converter";
 import { ConversionOptions, ReactToPDFOptions } from "./types";
 
 export const buildConvertOptions = (

@@ -1,0 +1,5 @@
+dist
+.parcel-cache/
+jest.config.js
+.eslintrc.js
+babel.config.js

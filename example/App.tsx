@@ -52,10 +52,9 @@ export function App() {
   return (
     <React.Fragment>
       {selects.map((s) => (
-        <div>
+        <div key={s.label}>
           <label>{s.label}: </label>
           <select
-            key={s.label}
             onChange={handleChange(s.onChange)}
             value={s.getValue(options)}
           >

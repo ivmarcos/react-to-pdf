@@ -27,7 +27,8 @@
     "clean": "rimraf dist",
     "pre:build": "npm run test && npm run clean",
     "docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts src/types.ts src/constants.ts",
-    "test": "jest",
+    "test": "npm run lint && jest",
+    "lint": "eslint .",
     "format": "prettier --write src example README.md CHANGELOG.md"
   },
   "devDependencies": {
@@ -39,7 +40,11 @@
     "@types/jsdom": "^21.1.1",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
     "canvas": "^2.11.0",
+    "eslint": "^8.39.0",
+    "eslint-plugin-react": "^7.32.2",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
     "parcel": "latest",
