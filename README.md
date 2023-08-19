@@ -1,6 +1,6 @@
 # React to PDF
 
-Easily create pdf documents from React components.
+Easily create PDF documents from React components.
 
 ## Install
 
@@ -20,22 +20,6 @@ $ npm install react-to-pdf
 
 ## Usage
 
-**Basic**
-
-```jsx
-import generatePDF from 'react-to-pdf';
-
-const Component = () => {
-   const targetRef = React.createRef();
-   return (
-      <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
-      <div ref={targetRef}>
-         Content to be included in the PDF
-      </div>
-   )
-}
-```
-
 **Using hook**
 
 ```jsx
@@ -46,6 +30,23 @@ const Component = () => {
    return (
       <button onClick={toPDF}>Download PDF</button>
       <div ref={targetRef}>
+         Content to be generated to PDF
+      </div>
+   )
+}
+```
+
+**Using default function**
+
+```jsx
+import { useRef } from 'react';
+import generatePDF from 'react-to-pdf';
+
+const Component = () => {
+   const targetRef = useRef();
+   return (
+      <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
+      <div ref={targetRef}>
          Content to be included in the PDF
       </div>
    )
@@ -55,7 +56,7 @@ const Component = () => {
 **Advanced options**
 
 ```jsx
-import createPDF, { Resolution, Margin } from 'react-to-pdf';
+import generatePDF, { Resolution, Margin } from 'react-to-pdf';
 
 const options = {
    // default is `save`
@@ -63,7 +64,7 @@ const options = {
    // default is Resolution.MEDIUM = 3, which should be enough, higher values
    // increases the image quality but also the size of the PDF, so be careful
    // using values higher than 10 when having multiple pages generated, it
-   // might cause the browser to crash or hang.
+   // might cause the page to crash or hang.
    resolution: Resolution.HIGH,
    page: {
       // margin is in MM, default is Margin.NONE = 0
@@ -78,8 +79,8 @@ const options = {
       mimeType: 'image/png'
       qualityRatio: 1
    },
-   // customize any value passed for the jsPDF instance and html2canvas
-   // function - you should not need this, use with caution.
+   // customize any value passed to the jsPDF instance and html2canvas
+   // function
    overrides: {
       // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
       pdf: {
@@ -96,9 +97,9 @@ const Component = () => {
    // you can use a function to return the target element besides using React refs
    const getTargetElement = () => document.getElementById('content-id');
    return (
-      <button onClick={() => createPDF(getTargetElement, options)}>Generate PDF</button>
+      <button onClick={() => generatePDF(getTargetElement, options)}>Generate PDF</button>
       <div id="content-id">
-         Content to be included in the PDF
+         Content to be generated to PDF
       </div>
    );
 }
