@@ -1,11 +1,11 @@
 import jsPDF from "jspdf";
 import { MM_TO_PX } from "./constants";
-import { ConversionOptions, ReactToPDFOptions } from "./types";
+import { ConversionOptions, Options } from "./types";
 
 export default class Converter {
   pdf: InstanceType<typeof jsPDF>;
   canvas: HTMLCanvasElement;
-  options: ReactToPDFOptions;
+  options: Options;
   constructor(canvas: HTMLCanvasElement, options: ConversionOptions) {
     this.canvas = canvas;
     this.options = options;

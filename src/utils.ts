@@ -1,9 +1,7 @@
 import { DEFAULT_OPTIONS } from "./constants";
-import { ConversionOptions, ReactToPDFOptions } from "./types";
+import { ConversionOptions, Options } from "./types";
 
-export const buildConvertOptions = (
-  options?: ReactToPDFOptions
-): ConversionOptions => {
+export const buildConvertOptions = (options?: Options): ConversionOptions => {
   if (!options) {
     return DEFAULT_OPTIONS;
   }

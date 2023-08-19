@@ -4,7 +4,7 @@
 
 import { Margin, Resolution } from "./constants";
 import Converter from "./converter";
-import { ReactToPDFOptions } from "./types";
+import { Options } from "./types";
 import { buildConvertOptions } from "./utils";
 
 export const createPageSnapshotObject = (
@@ -46,7 +46,7 @@ const defaultCanvasDimensions = {
 };
 
 const setupConverter = (
-  options?: ReactToPDFOptions,
+  options?: Options,
   canvasDimensions = defaultCanvasDimensions
 ): InstanceType<typeof Converter> => {
   const canvas = document.createElement("canvas");
@@ -80,7 +80,7 @@ const canvasDimensionsTestSet: CanvasDimensions[] = [
 ];
 
 const buildTestSet = () => {
-  const testSet: [string, ReactToPDFOptions, CanvasDimensions][] = [];
+  const testSet: [string, Options, CanvasDimensions][] = [];
   for (const resolution of resolutionsTestSet) {
     for (const margin of marginsTestTest) {
       for (const canvasDimensions of canvasDimensionsTestSet) {

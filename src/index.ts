@@ -1,12 +1,12 @@
-import * as React from "react";
+import { useRef, useCallback } from "react";
 import html2canvas from "html2canvas";
 
 import Converter from "./converter";
-import { ReactToPDFOptions, TargetElementFinder, UsePDFResult } from "./types";
+import { Options, TargetElementFinder, UsePDFResult } from "./types";
 import { buildConvertOptions } from "./utils";
 import jsPDF from "jspdf";
 export { Resolution, Margin } from "./constants";
-export type { ReactToPDFOptions };
+export type { Options };
 
 const getTargetElement = (
   targetRefOrFunction: TargetElementFinder
@@ -17,10 +17,10 @@ const getTargetElement = (
   return targetRefOrFunction?.current;
 };
 
-export const usePDF = (usePDFoptions?: ReactToPDFOptions): UsePDFResult => {
-  const targetRef = React.createRef<HTMLElement>();
-  const toPDF = React.useCallback(
-    (toPDFoptions?: ReactToPDFOptions): Promise<InstanceType<typeof jsPDF>> => {
+export const usePDF = (usePDFoptions?: Options): UsePDFResult => {
+  const targetRef = useRef();
+  const toPDF = useCallback(
+    (toPDFoptions?: Options): Promise<InstanceType<typeof jsPDF>> => {
       return generatePDF(targetRef, usePDFoptions ?? toPDFoptions);
     },
     [targetRef, usePDFoptions]
@@ -30,7 +30,7 @@ export const usePDF = (usePDFoptions?: ReactToPDFOptions): UsePDFResult => {
 
 const generatePDF = async (
   targetRefOrFunction: TargetElementFinder,
-  customOptions?: ReactToPDFOptions
+  customOptions?: Options
 ): Promise<InstanceType<typeof jsPDF>> => {
   const options = buildConvertOptions(customOptions);
   const targetElement = getTargetElement(targetRefOrFunction);

@@ -1,4 +1,4 @@
-import { RefObject } from "react";
+import React, { MutableRefObject } from "react";
 import { jsPDFOptions } from "jspdf";
 import { Options as Html2CanvasOptions } from "html2canvas";
 import { Margin, Resolution } from "./constants";
@@ -11,11 +11,11 @@ export type DetailedMargin = {
 };
 
 type PageConversionOptions = {
-  /** Margin of the page in MM, defaults to 0 */
+  /** Margin of the page in MM, defaults to 0. */
   margin: DetailedMargin | Margin | number;
-  /** Format of the page (A4, letter), defaults to A4 */
+  /** Format of the page (A4, letter), defaults to A4. */
   format: jsPDFOptions["format"];
-  /** Orientation of the page (portrait or landscape), defaults to portrait */
+  /** Orientation of the page (portrait or landscape), defaults to `portrait`. */
   orientation: jsPDFOptions["orientation"];
 };
 
@@ -45,6 +45,7 @@ export type ConversionOptions = {
   /**
    * Method that will follow to do with the PDF file. The `build` method just
    * returns the PDF instance in the invoked function 'generatePDF' or 'toPDF'.
+   * By default is `open`.
    */
   method: "save" | "open" | "build";
   /**
@@ -74,7 +75,7 @@ export type ConversionOptions = {
   };
 };
 
-export type ReactToPDFOptions = Omit<
+export type Options = Omit<
   Partial<ConversionOptions>,
   "page" | "canvas" | "overrides"
 > & {
@@ -85,15 +86,15 @@ export type ReactToPDFOptions = Omit<
 
 export type UsePDFResult = {
   /**
-   * React ref of the target component
+   * React ref of the target element
    */
-  targetRef: RefObject<any>;
+  targetRef: MutableRefObject<any>;
   /**
    * Generates the pdf
    */
-  toPDF: (options?: ReactToPDFOptions) => void;
+  toPDF: (options?: Options) => void;
 };
 
 export type TargetElementFinder =
-  | RefObject<HTMLElement>
+  | MutableRefObject<any>
   | (() => HTMLElement | null);
