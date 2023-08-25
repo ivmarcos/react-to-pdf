@@ -12,3 +12,4 @@ package-lock.json
 yarn-error.log
 .parcel-cache/
 dist/
+example/
