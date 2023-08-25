@@ -1,4 +1,4 @@
-import React, { MutableRefObject } from "react";
+import { MutableRefObject } from "react";
 import { jsPDFOptions } from "jspdf";
 import { Options as Html2CanvasOptions } from "html2canvas";
 import { Margin, Resolution } from "./constants";

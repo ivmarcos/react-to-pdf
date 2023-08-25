@@ -25,10 +25,9 @@
     "start": "parcel example/index.html",
     "build": "parcel build src/index.ts",
     "clean": "rimraf dist",
-    "pre:build": "npm run test && npm run clean",
     "docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts src/types.ts src/constants.ts",
     "test": "npm run lint && jest",
-    "lint": "eslint .",
+    "lint": "eslint . && prettier -c .",
     "format": "prettier --write src example README.md CHANGELOG.md"
   },
   "devDependencies": {

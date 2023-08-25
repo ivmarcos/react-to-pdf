@@ -1,8 +1,8 @@
 {
-    "compilerOptions": {
-      "experimentalDecorators": true,
-      "lib": [ "es2015", "DOM" ],
-      "jsx": "react",
-      "esModuleInterop": true,
-    }
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "lib": ["es2015", "DOM"],
+    "jsx": "react",
+    "esModuleInterop": true
+  }
 }
