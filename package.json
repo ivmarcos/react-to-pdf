@@ -55,7 +55,7 @@
     "react": "^16.8",
     "react-dom": "^16.8",
     "react-test-renderer": "^16.14.0",
-    "release-it": "^15.10.1",
+    "release-it": "^16.1.5",
     "rimraf": "^5.0.0",
     "ts-jest": "^29.1.1",
     "typedoc": "^0.24.4",

@@ -1,4 +1,4 @@
-# 1.0.0-alpha.0 (Aug 26, 2023)
+# 1.0.0-alpha.0 (August 26, 2023)
 
 ## New Features
 
