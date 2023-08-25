@@ -58,6 +58,7 @@
     "react-test-renderer": "^16.14.0",
     "release-it": "^15.10.1",
     "rimraf": "^5.0.0",
+    "ts-jest": "^29.1.1",
     "typedoc": "^0.24.4",
     "typedoc-plugin-markdown": "^3.15.2",
     "typescript": ">=3.0.0"
