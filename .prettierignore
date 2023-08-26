@@ -3,7 +3,6 @@ package-lock.json
 yarn.lock
 .babelrc
 node_modules/
-public/
 dist/
-layout
 .vscode
+*.md

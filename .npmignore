@@ -2,7 +2,6 @@ node_modules
 yarn.lock
 .travis.yml
 src
-test
 .eslintrc.json
 .babelrc
 .gitignore
@@ -11,3 +10,5 @@ test
 *.env
 package-lock.json
 yarn-error.log
+.parcel-cache/
+dist/

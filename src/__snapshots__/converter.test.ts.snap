@@ -1,0 +1,561 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Converter Resolution: 1, Margin: 3, Dimensions: 100x20000 1`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 1099.8428346470896,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 771.0295013133317,
+  "canvas": {
+    "height": 100,
+    "originalHeight": 100,
+    "originalWidth": 20000,
+    "width": 20000,
+  },
+  "heightLeft": 100,
+  "horizontalFitFactor": 25.939344689059286,
+  "margin": 3,
+  "numberPages": 1,
+  "offsetY": 0,
+  "pageCanvasHeight": 100,
+  "pageCanvasWidth": 20000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 1,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 1,
+}
+`;
+
+exports[`Converter Resolution: 1, Margin: 3, Dimensions: 10000x2000 1`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 1099.8428346470896,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 771.0295013133317,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 10000,
+    "originalWidth": 2000,
+    "width": 2000,
+  },
+  "heightLeft": 10000,
+  "horizontalFitFactor": 2.5939344689059287,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 0,
+  "pageCanvasHeight": 2852.9202391702897,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 1,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 1,
+}
+`;
+
+exports[`Converter Resolution: 1, Margin: 3, Dimensions: 10000x2000 2`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 1099.8428346470896,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 771.0295013133317,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 10000,
+    "originalWidth": 2000,
+    "width": 2000,
+  },
+  "heightLeft": 7147.079760829711,
+  "horizontalFitFactor": 2.5939344689059287,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 2852.9202391702897,
+  "pageCanvasHeight": 2852.9202391702897,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 2,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 1,
+}
+`;
+
+exports[`Converter Resolution: 1, Margin: 3, Dimensions: 10000x2000 3`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 1099.8428346470896,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 771.0295013133317,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 10000,
+    "originalWidth": 2000,
+    "width": 2000,
+  },
+  "heightLeft": 4294.1595216594205,
+  "horizontalFitFactor": 2.5939344689059287,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 5705.8404783405795,
+  "pageCanvasHeight": 2852.9202391702897,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 3,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 1,
+}
+`;
+
+exports[`Converter Resolution: 1, Margin: 3, Dimensions: 10000x2000 4`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 1099.8428346470896,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 771.0295013133317,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 10000,
+    "originalWidth": 2000,
+    "width": 2000,
+  },
+  "heightLeft": 1441.2392824891303,
+  "horizontalFitFactor": 2.5939344689059287,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 8558.76071751087,
+  "pageCanvasHeight": 1441.2392824891303,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 4,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 1,
+}
+`;
+
+exports[`Converter Resolution: 2, Margin: 3, Dimensions: 100x20000 1`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 2199.685669294179,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 1542.0590026266634,
+  "canvas": {
+    "height": 100,
+    "originalHeight": 50,
+    "originalWidth": 10000,
+    "width": 20000,
+  },
+  "heightLeft": 100,
+  "horizontalFitFactor": 12.969672344529643,
+  "margin": 3,
+  "numberPages": 1,
+  "offsetY": 0,
+  "pageCanvasHeight": 100,
+  "pageCanvasWidth": 20000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 1,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 2,
+}
+`;
+
+exports[`Converter Resolution: 2, Margin: 3, Dimensions: 10000x2000 1`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 2199.685669294179,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 1542.0590026266634,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 5000,
+    "originalWidth": 1000,
+    "width": 2000,
+  },
+  "heightLeft": 10000,
+  "horizontalFitFactor": 1.2969672344529644,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 0,
+  "pageCanvasHeight": 2852.9202391702897,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 1,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 2,
+}
+`;
+
+exports[`Converter Resolution: 2, Margin: 3, Dimensions: 10000x2000 2`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 2199.685669294179,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 1542.0590026266634,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 5000,
+    "originalWidth": 1000,
+    "width": 2000,
+  },
+  "heightLeft": 7147.079760829711,
+  "horizontalFitFactor": 1.2969672344529644,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 2852.9202391702897,
+  "pageCanvasHeight": 2852.9202391702897,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 2,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 2,
+}
+`;
+
+exports[`Converter Resolution: 2, Margin: 3, Dimensions: 10000x2000 3`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 2199.685669294179,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 1542.0590026266634,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 5000,
+    "originalWidth": 1000,
+    "width": 2000,
+  },
+  "heightLeft": 4294.1595216594205,
+  "horizontalFitFactor": 1.2969672344529644,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 5705.8404783405795,
+  "pageCanvasHeight": 2852.9202391702897,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 3,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 2,
+}
+`;
+
+exports[`Converter Resolution: 2, Margin: 3, Dimensions: 10000x2000 4`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 2199.685669294179,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 1542.0590026266634,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 5000,
+    "originalWidth": 1000,
+    "width": 2000,
+  },
+  "heightLeft": 1441.2392824891303,
+  "horizontalFitFactor": 1.2969672344529644,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 8558.76071751087,
+  "pageCanvasHeight": 1441.2392824891303,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 4,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 2,
+}
+`;
+
+exports[`Converter Resolution: 3, Margin: 3, Dimensions: 100x20000 1`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 3299.528503941269,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 2313.088503939995,
+  "canvas": {
+    "height": 100,
+    "originalHeight": 33.333333333333336,
+    "originalWidth": 6666.666666666667,
+    "width": 20000,
+  },
+  "heightLeft": 100,
+  "horizontalFitFactor": 8.64644822968643,
+  "margin": 3,
+  "numberPages": 1,
+  "offsetY": 0,
+  "pageCanvasHeight": 100,
+  "pageCanvasWidth": 20000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 1,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 3,
+}
+`;
+
+exports[`Converter Resolution: 3, Margin: 3, Dimensions: 10000x2000 1`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 3299.528503941269,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 2313.088503939995,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 3333.3333333333335,
+    "originalWidth": 666.6666666666666,
+    "width": 2000,
+  },
+  "heightLeft": 10000,
+  "horizontalFitFactor": 1,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 0,
+  "pageCanvasHeight": 3299.528503941269,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 1,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 3,
+}
+`;
+
+exports[`Converter Resolution: 3, Margin: 3, Dimensions: 10000x2000 2`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 3299.528503941269,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 2313.088503939995,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 3333.3333333333335,
+    "originalWidth": 666.6666666666666,
+    "width": 2000,
+  },
+  "heightLeft": 6700.471496058732,
+  "horizontalFitFactor": 1,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 3299.528503941269,
+  "pageCanvasHeight": 3299.528503941269,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 2,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 3,
+}
+`;
+
+exports[`Converter Resolution: 3, Margin: 3, Dimensions: 10000x2000 3`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 3299.528503941269,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 2313.088503939995,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 3333.3333333333335,
+    "originalWidth": 666.6666666666666,
+    "width": 2000,
+  },
+  "heightLeft": 3400.9429921174624,
+  "horizontalFitFactor": 1,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 6599.057007882538,
+  "pageCanvasHeight": 3299.528503941269,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 3,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 3,
+}
+`;
+
+exports[`Converter Resolution: 3, Margin: 3, Dimensions: 10000x2000 4`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 3299.528503941269,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 2313.088503939995,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 3333.3333333333335,
+    "originalWidth": 666.6666666666666,
+    "width": 2000,
+  },
+  "heightLeft": 101.41448817619312,
+  "horizontalFitFactor": 1,
+  "margin": 3,
+  "numberPages": 4,
+  "offsetY": 9898.585511823807,
+  "pageCanvasHeight": 101.41448817619312,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 4,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 3,
+}
+`;
+
+exports[`Converter Resolution: 7, Margin: 3, Dimensions: 100x20000 1`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 7698.899842529627,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 5397.206509193322,
+  "canvas": {
+    "height": 100,
+    "originalHeight": 14.285714285714286,
+    "originalWidth": 2857.1428571428573,
+    "width": 20000,
+  },
+  "heightLeft": 100,
+  "horizontalFitFactor": 3.7056206698656124,
+  "margin": 3,
+  "numberPages": 1,
+  "offsetY": 0,
+  "pageCanvasHeight": 100,
+  "pageCanvasWidth": 20000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 1,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 7,
+}
+`;
+
+exports[`Converter Resolution: 7, Margin: 3, Dimensions: 10000x2000 1`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 7698.899842529627,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 5397.206509193322,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 1428.5714285714287,
+    "originalWidth": 285.7142857142857,
+    "width": 2000,
+  },
+  "heightLeft": 10000,
+  "horizontalFitFactor": 1,
+  "margin": 3,
+  "numberPages": 2,
+  "offsetY": 0,
+  "pageCanvasHeight": 7698.899842529627,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 1,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 7,
+}
+`;
+
+exports[`Converter Resolution: 7, Margin: 3, Dimensions: 10000x2000 2`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 7698.899842529627,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 5397.206509193322,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 1428.5714285714287,
+    "originalWidth": 285.7142857142857,
+    "width": 2000,
+  },
+  "heightLeft": 2301.1001574703732,
+  "horizontalFitFactor": 1,
+  "margin": 3,
+  "numberPages": 2,
+  "offsetY": 7698.899842529627,
+  "pageCanvasHeight": 2301.1001574703732,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 2,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 7,
+}
+`;
+
+exports[`Converter Resolution: 12, Margin: 3, Dimensions: 100x20000 1`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 13198.114015765075,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 9252.35401575998,
+  "canvas": {
+    "height": 100,
+    "originalHeight": 8.333333333333334,
+    "originalWidth": 1666.6666666666667,
+    "width": 20000,
+  },
+  "heightLeft": 100,
+  "horizontalFitFactor": 2.1616120574216073,
+  "margin": 3,
+  "numberPages": 1,
+  "offsetY": 0,
+  "pageCanvasHeight": 100,
+  "pageCanvasWidth": 20000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 1,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 12,
+}
+`;
+
+exports[`Converter Resolution: 12, Margin: 3, Dimensions: 10000x2000 1`] = `
+{
+  "availableHeight": 1099.8428346470896,
+  "availableHeightScaled": 13198.114015765075,
+  "availableWidth": 771.0295013133317,
+  "availableWidthScaled": 9252.35401575998,
+  "canvas": {
+    "height": 10000,
+    "originalHeight": 833.3333333333334,
+    "originalWidth": 166.66666666666666,
+    "width": 2000,
+  },
+  "heightLeft": 10000,
+  "horizontalFitFactor": 1,
+  "margin": 3,
+  "numberPages": 1,
+  "offsetY": 0,
+  "pageCanvasHeight": 10000,
+  "pageCanvasWidth": 2000,
+  "pageHeight": 1122.5200000014497,
+  "pageHeightMM": 297.0000833333333,
+  "pageNumber": 1,
+  "pageWidth": 793.7066666676917,
+  "pageWidthMM": 210.0015555555555,
+  "scale": 12,
+}
+`;

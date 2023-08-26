@@ -1,9 +1,5 @@
-# /node_modules/* and /bower_components/* ignored by default
-
-dist/*
-setupTest.js
-src/registerServiceWorker.js
-layout
-.vscode
-.cache/*
-dev/*
+dist
+.parcel-cache/
+jest.config.js
+.eslintrc.js
+babel.config.js
