@@ -1,8 +1,0 @@
-package.json
-package-lock.json
-yarn.lock
-.babelrc
-node_modules/
-dist/
-.vscode
-*.md

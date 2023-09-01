@@ -1,9 +1,0 @@
-node_modules
-*.log
-*.env
-dist
-lib
-package-lock.json
-yarn-error.log
-umd
-.parcel-cache/
