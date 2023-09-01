@@ -6,7 +6,7 @@ import { Container } from './Container';
 export const ExampleFunction = () => {
     const downloadPDF = () => {
         // you can also pass React refs, e.g. `generatePDF(ref, options)`
-        generatePDF(() => document.getElementById('container'), {method: 'save', filename: 'card.pdf', page: {margin: Margin.MEDIUM}})
+        generatePDF(() => document.getElementById('container'), {method: 'save', filename: 'function-example.pdf', page: {margin: Margin.MEDIUM}})
     }
     return (
         <Container>

@@ -35,7 +35,7 @@ import { Button } from './Button';
 import { Container } from './Container';
 
 export const ExampleUsePDF = () => {
-    const {toPDF, targetRef} = usePDF({method: 'save', filename: 'card.pdf', page: {margin: Margin.MEDIUM}});
+    const {toPDF, targetRef} = usePDF({method: 'save', filename: 'usepdf-example.pdf', page: {margin: Margin.MEDIUM}});
     return (
         <Container>
             <Button onClick={toPDF}>Download PDF</Button>
@@ -60,7 +60,7 @@ import { Container } from './Container';
 export const ExampleFunction = () => {
     const downloadPDF = () => {
         // you can also pass React refs, e.g. `generatePDF(ref, options)`
-        generatePDF(() => document.getElementById('container'), {method: 'save', filename: 'card.pdf', page: {margin: Margin.MEDIUM}})
+        generatePDF(() => document.getElementById('container'), {method: 'save', filename: 'function-example.pdf', page: {margin: Margin.MEDIUM}})
     }
     return (
         <Container>
@@ -84,12 +84,12 @@ import { Button } from './Button';
 import { Container } from './Container';
 
 export const ExampleMultipage = () => {
-    const {toPDF, targetRef} = usePDF({method: 'save', filename: 'card.pdf', page: {margin: Margin.MEDIUM}});
+    const {toPDF, targetRef} = usePDF({method: 'save', filename: 'multipage-example.pdf', page: {margin: Margin.MEDIUM}});
     return (
         <Container>
             <Button onClick={toPDF}>Download PDF</Button>
             <div ref={targetRef} >
-                {Array(10).fill(0).map((_, index) => <Card imageId={19} key={index} title={`Multipage support, card #${index+1}`}/>)}
+                {Array(10).fill(0).map((_, index) => <Card imageId={30+index} key={index} title={`Multipage support, card #${index+1}`}/>)}
             </div>
         </Container>
      )

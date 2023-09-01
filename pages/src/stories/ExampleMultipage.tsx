@@ -4,7 +4,7 @@ import { Button } from './Button';
 import { Container } from './Container';
 
 export const ExampleMultipage = () => {
-    const {toPDF, targetRef} = usePDF({method: 'save', filename: 'card.pdf', page: {margin: Margin.MEDIUM}});
+    const {toPDF, targetRef} = usePDF({method: 'save', filename: 'multipage-example.pdf', page: {margin: Margin.MEDIUM}});
     return (
         <Container>
             <Button onClick={toPDF}>Download PDF</Button>
