@@ -1,3 +1,8 @@
+import { ExampleAdvanced } from './ExampleAdvanced';
+import { ExampleMultipage } from './ExampleMultipage';
+import { ExampleFunction } from './ExampleFunction';
+import { ExampleUsePDF } from './ExampleUsePDF';
+
 # React to PDF
 
 Easily create PDF documents from React components.
@@ -18,47 +23,91 @@ $ npm install react-to-pdf
 - [@react-pdf/renderer](https://www.npmjs.com/package/@react-pdf/renderer) - React renderer to create PDF files on the browser and server
 - [react-pdf](https://www.npmjs.com/package/react-pdf) - Display PDFs in your React app as easily as if they were images.
 
-## Usage
+## Examples
 
-**Using hook**
 
-```jsx
-import { usePDF } from 'react-to-pdf';
+### Using `usePDF` hook
 
-const Component = () => {
-   const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
-   return (
-      <button onClick={toPDF}>Download PDF</button>
-      <div ref={targetRef}>
-         Content to be generated to PDF
-      </div>
-   )
-}
-```
+```tsx
+import { Margin, usePDF } from 'react-to-pdf';
+import './usePDF.css'
+import { Card } from './Card';
+import Button from './Button';
+import { Container } from './Container';
 
-**Using default function**
+export const ExampleUsePDF = () => {
+    const {toPDF, targetRef} = usePDF({method: 'save', filename: 'card.pdf', page: {margin: Margin.MEDIUM}});
+    return (
+        <Container>
+            <Button onClick={toPDF}>Download PDF</Button>
+            <div ref={targetRef} >
+                <Card imageId={22} title="usePDF hook example"/>
+            </div>
+        </Container>
+     )
+}```
 
-```jsx
-import { useRef } from 'react';
-import generatePDF from 'react-to-pdf';
+<ExampleUsePDF/>
 
-const Component = () => {
-   const targetRef = useRef();
-   return (
-      <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
-      <div ref={targetRef}>
-         Content to be included in the PDF
-      </div>
-   )
-}
-```
+### Using default function
 
-**Advanced options**
+```tsx
+import generatePDF, { Margin } from 'react-to-pdf';
+import './usePDF.css'
+import { Card } from './Card';
+import Button from './Button';
+import { Container } from './Container';
 
-```jsx
-import generatePDF, { Resolution, Margin } from 'react-to-pdf';
+export const ExampleFunction = () => {
+    const downloadPDF = () => {
+        // you can also pass React refs, e.g. `generatePDF(ref, options)`
+        generatePDF(() => document.getElementById('container'), {method: 'save', filename: 'card.pdf', page: {margin: Margin.MEDIUM}})
+    }
+    return (
+        <Container>
+            <Button onClick={downloadPDF}>Download PDF</Button>
+            <div id="container" >
+                <Card imageId={18} title="Using default function"/>
+            </div>
+        </Container>
+     )
+}```
 
-const options = {
+<ExampleFunction/>
+
+### Multipage support
+
+```tsx
+import { Margin, usePDF } from 'react-to-pdf';
+import './usePDF.css'
+import { Card } from './Card';
+import Button from './Button';
+import { Container } from './Container';
+
+export const ExampleMultipage = () => {
+    const {toPDF, targetRef} = usePDF({method: 'save', filename: 'card.pdf', page: {margin: Margin.MEDIUM}});
+    return (
+        <Container>
+            <Button onClick={toPDF}>Download PDF</Button>
+            <div ref={targetRef} >
+                {Array(10).fill(0).map((_, index) => <Card imageId={19} key={index} title={`Multipage support, card #${index+1}`}/>)}
+            </div>
+        </Container>
+     )
+}```
+
+<ExampleMultipage/>
+
+### Advanced Options
+
+```tsx
+import './usePDF.css'
+import { Card } from './Card';
+import Button from './Button';
+import { Container } from './Container';
+import generatePDF, { Resolution, Margin, Options } from 'react-to-pdf';
+
+const options: Options = {
    // default is `save`
    method: 'open',
    // default is Resolution.MEDIUM = 3, which should be enough, higher values
@@ -76,7 +125,7 @@ const options = {
    },
    canvas: {
       // default is 'image/jpeg' for better size performance
-      mimeType: 'image/png'
+      mimeType: 'image/png',
       qualityRatio: 1
    },
    // customize any value passed to the jsPDF instance and html2canvas
@@ -88,19 +137,22 @@ const options = {
       },
       // see https://html2canvas.hertzen.com/configuration for more options
       canvas: {
-         useCORS: false
+         useCORS: true
       }
    },
 };
+export const ExampleAdvanced = () => {
+    const openPDF = () => {
+        generatePDF(() => document.getElementById('wrapper'), options)
+    }
+    return (
+        <Container> 
+            <Button onClick={openPDF}>Open PDF</Button>
+            <div id="wrapper">
+                <Card imageId={17} title="Using advanced options"/>
+            </div>
+        </Container>
+     )
+}```
 
-const Component = () => {
-   // you can use a function to return the target element besides using React refs
-   const getTargetElement = () => document.getElementById('content-id');
-   return (
-      <button onClick={() => generatePDF(getTargetElement, options)}>Generate PDF</button>
-      <div id="content-id">
-         Content to be generated to PDF
-      </div>
-   );
-}
-```
+<ExampleAdvanced/>

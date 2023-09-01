@@ -18,7 +18,7 @@ $ npm install react-to-pdf
 - [@react-pdf/renderer](https://www.npmjs.com/package/@react-pdf/renderer) - React renderer to create PDF files on the browser and server
 - [react-pdf](https://www.npmjs.com/package/react-pdf) - Display PDFs in your React app as easily as if they were images.
 
-## Usage
+## Examples
 
 **Using hook**
 
