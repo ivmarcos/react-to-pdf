@@ -6,10 +6,8 @@ type ButtonProps = {
     children: React.ReactNode
 }
 
-const Button = (props: ButtonProps) => {
+export const Button = (props: ButtonProps) => {
   return (
     <button className="button" {...props}/>
   )
 }
-
-export default Button

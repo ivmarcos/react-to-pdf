@@ -1,8 +1,7 @@
-import './usePDF.css'
-import { Card } from './Card';
-import Button from './Button';
-import { Container } from './Container';
 import generatePDF, { Resolution, Margin, Options } from 'react-to-pdf';
+import { Card } from './Card';
+import { Button } from './Button';
+import { Container } from './Container';
 
 const options: Options = {
    // default is `save`

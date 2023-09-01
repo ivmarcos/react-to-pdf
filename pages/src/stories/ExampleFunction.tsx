@@ -1,7 +1,6 @@
 import generatePDF, { Margin } from 'react-to-pdf';
-import './usePDF.css'
 import { Card } from './Card';
-import Button from './Button';
+import { Button } from './Button';
 import { Container } from './Container';
 
 export const ExampleFunction = () => {

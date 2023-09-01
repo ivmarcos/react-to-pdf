@@ -43,7 +43,7 @@ function run() {
         appendContent('\n')
         appendContent(`### ${docSequence.section}\n`);
         appendContent('\n')
-        appendContent(`\`\`\`tsx\n${exampleContent}\`\`\`\n`)
+        appendContent(`\`\`\`tsx\n${exampleContent}\n\`\`\`\n`)
         appendContent('\n')
         appendContent(`<${docSequence.component}/>\n`)
         prepend(getDocPath(), `import { ${docSequence.component} } from './${docSequence.component}';\n`)

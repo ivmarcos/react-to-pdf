@@ -30,9 +30,8 @@ $ npm install react-to-pdf
 
 ```tsx
 import { Margin, usePDF } from 'react-to-pdf';
-import './usePDF.css'
 import { Card } from './Card';
-import Button from './Button';
+import { Button } from './Button';
 import { Container } from './Container';
 
 export const ExampleUsePDF = () => {
@@ -45,7 +44,8 @@ export const ExampleUsePDF = () => {
             </div>
         </Container>
      )
-}```
+}
+```
 
 <ExampleUsePDF/>
 
@@ -53,9 +53,8 @@ export const ExampleUsePDF = () => {
 
 ```tsx
 import generatePDF, { Margin } from 'react-to-pdf';
-import './usePDF.css'
 import { Card } from './Card';
-import Button from './Button';
+import { Button } from './Button';
 import { Container } from './Container';
 
 export const ExampleFunction = () => {
@@ -71,7 +70,8 @@ export const ExampleFunction = () => {
             </div>
         </Container>
      )
-}```
+}
+```
 
 <ExampleFunction/>
 
@@ -79,9 +79,8 @@ export const ExampleFunction = () => {
 
 ```tsx
 import { Margin, usePDF } from 'react-to-pdf';
-import './usePDF.css'
 import { Card } from './Card';
-import Button from './Button';
+import { Button } from './Button';
 import { Container } from './Container';
 
 export const ExampleMultipage = () => {
@@ -94,18 +93,18 @@ export const ExampleMultipage = () => {
             </div>
         </Container>
      )
-}```
+}
+```
 
 <ExampleMultipage/>
 
 ### Advanced Options
 
 ```tsx
-import './usePDF.css'
-import { Card } from './Card';
-import Button from './Button';
-import { Container } from './Container';
 import generatePDF, { Resolution, Margin, Options } from 'react-to-pdf';
+import { Card } from './Card';
+import { Button } from './Button';
+import { Container } from './Container';
 
 const options: Options = {
    // default is `save`
@@ -153,6 +152,7 @@ export const ExampleAdvanced = () => {
             </div>
         </Container>
      )
-}```
+}
+```
 
 <ExampleAdvanced/>
