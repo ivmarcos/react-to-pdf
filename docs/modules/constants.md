@@ -22,7 +22,7 @@
 
 #### Defined in
 
-constants.ts:20
+[constants.ts:20](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/constants.ts#L20)
 
 ___
 
@@ -32,4 +32,4 @@ ___
 
 #### Defined in
 
-constants.ts:3
+[constants.ts:3](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/constants.ts#L3)

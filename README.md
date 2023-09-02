@@ -18,9 +18,18 @@ $ npm install react-to-pdf
 - [@react-pdf/renderer](https://www.npmjs.com/package/@react-pdf/renderer) - React renderer to create PDF files on the browser and server
 - [react-pdf](https://www.npmjs.com/package/react-pdf) - Display PDFs in your React app as easily as if they were images.
 
+
+## Examples
+
+- [Code Sandbox demo](https://codesandbox.io/s/ancient-violet-sznj9q?file=/src/App.tsx)
+- [Using `usePDF` hook](blob/main/examples/ExampleUsePDF.tsx) 
+- [Using default function](blob/main/examples/ExampleFunction.tsx) 
+- [Multipage support](blob/main/examples/ExampleMultipage.tsx) 
+- [Advanced options](blob/main/examples/ExampleAdvanced.tsx) 
+
 ## Usage
 
-**Using hook**
+**Using `usePDF` hook**
 
 ```jsx
 import { usePDF } from 'react-to-pdf';
@@ -28,13 +37,16 @@ import { usePDF } from 'react-to-pdf';
 const Component = () => {
    const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
    return (
-      <button onClick={toPDF}>Download PDF</button>
-      <div ref={targetRef}>
-         Content to be generated to PDF
+      <div>
+         <button onClick={() => toPDF()}>Download PDF</button>
+         <div ref={targetRef}>
+            Content to be generated to PDF
+         </div>
       </div>
    )
 }
 ```
+
 
 **Using default function**
 
@@ -45,9 +57,11 @@ import generatePDF from 'react-to-pdf';
 const Component = () => {
    const targetRef = useRef();
    return (
-      <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
-      <div ref={targetRef}>
-         Content to be included in the PDF
+      <div>
+         <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
+         <div ref={targetRef}>
+            Content to be included in the PDF
+         </div>
       </div>
    )
 }
@@ -79,8 +93,9 @@ const options = {
       mimeType: 'image/png'
       qualityRatio: 1
    },
-   // customize any value passed to the jsPDF instance and html2canvas
-   // function
+   // Customize any value passed to the jsPDF instance and html2canvas
+   // function. You probably will not need this and things can break, 
+   // so use with caution.
    overrides: {
       // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
       pdf: {
@@ -93,13 +108,16 @@ const options = {
    },
 };
 
+// you can use a function to return the target element besides using React refs
+const getTargetElement = () => document.getElementById('content-id');
+
 const Component = () => {
-   // you can use a function to return the target element besides using React refs
-   const getTargetElement = () => document.getElementById('content-id');
    return (
-      <button onClick={() => generatePDF(getTargetElement, options)}>Generate PDF</button>
-      <div id="content-id">
-         Content to be generated to PDF
+      <div>
+         <button onClick={() => generatePDF(getTargetElement, options)}>Generate PDF</button>
+         <div id="content-id">
+            Content to be generated to PDF
+         </div>
       </div>
    );
 }
