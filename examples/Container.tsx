@@ -1,13 +1,10 @@
-import React from 'react'
-import './container.css';
+import React from "react";
+import "./container.css";
 
 type ContainerProps = {
-    children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
-export const Container = ({children}: ContainerProps) => {
-  return (
-    <div className="container">{children}</div>
-  )
-}
-
+export const Container = ({ children }: ContainerProps) => {
+  return <div className="container">{children}</div>;
+};
