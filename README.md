@@ -50,10 +50,10 @@ const Component = () => {
    const targetRef = useRef();
    return (
       <div>
-      <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
-      <div ref={targetRef}>
-         Content to be included in the PDF
-      </div>
+         <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
+         <div ref={targetRef}>
+            Content to be included in the PDF
+         </div>
       </div>
    )
 }
