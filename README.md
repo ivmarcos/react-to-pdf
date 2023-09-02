@@ -22,10 +22,10 @@ $ npm install react-to-pdf
 ## Examples
 
 - [Code Sandbox demo](https://codesandbox.io/s/ancient-violet-sznj9q?file=/src/App.tsx)
-- [Using `usePDF` hook](blob/main/examples/ExampleUsePDF.tsx) 
-- [Using default function](blob/main/examples/ExampleFunction.tsx) 
-- [Multipage support](blob/main/examples/ExampleMultipage.tsx) 
-- [Advanced options](blob/main/examples/ExampleAdvanced.tsx) 
+- [Using `usePDF` hook](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleUsePDF.tsx) 
+- [Using default function](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleFunction.tsx) 
+- [Multipage support](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleMultipage.tsx) 
+- [Advanced options](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleAdvanced.tsx) 
 
 ## Usage
 
