@@ -52,7 +52,7 @@ Re-exports [Resolution](../enums/constants.Resolution.md)
 
 #### Defined in
 
-[index.ts:31](https://github.com/ivmarcos/react-to-pdf/blob/9ee2b59/src/index.ts#L31)
+[index.ts:31](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/index.ts#L31)
 
 ___
 
@@ -72,4 +72,4 @@ ___
 
 #### Defined in
 
-[index.ts:20](https://github.com/ivmarcos/react-to-pdf/blob/9ee2b59/src/index.ts#L20)
+[index.ts:20](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/index.ts#L20)

@@ -23,8 +23,8 @@
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `canvas` | `CanvasConversionOptions` | Canvas options |
-| `filename?` | `string` | File name of the PDF file if the method select is `save`, which is the default. Not used for the 'build' and 'open' methods. * |
-| `method` | ``"save"`` \| ``"open"`` \| ``"build"`` | Method that will follow to do with the PDF file. The `build` method just returns the PDF instance in the invoked function 'generatePDF' or 'toPDF'. By default is `open`. |
+| `filename?` | `string` | File name of the PDF file if the method select is `save`, which is the default. Not used for the `build` and `open` methods. * |
+| `method` | ``"save"`` \| ``"open"`` \| ``"build"`` | Method that will follow to do with the PDF file. The `build` method just returns the PDF instance in the invoked function `generatePDF` or `toPDF`. By default is `open`. |
 | `overrides` | { `canvas?`: `Partial`<`Html2CanvasOptions`\> ; `pdf?`: `Partial`<`jsPDFOptions`\>  } | Override values passed for the jsPDF document and html2canvas |
 | `overrides.canvas?` | `Partial`<`Html2CanvasOptions`\> | Override the values passed for the html2canvas function. See its docs for more details in https://html2canvas.hertzen.com/documentation |
 | `overrides.pdf?` | `Partial`<`jsPDFOptions`\> | Override the values passed for the jsPDF instance. See its docs for more details in https://artskydj.github.io/jsPDF/docs/jsPDF.html. |
@@ -33,7 +33,7 @@
 
 #### Defined in
 
-[types.ts:39](https://github.com/ivmarcos/react-to-pdf/blob/9ee2b59/src/types.ts#L39)
+[types.ts:39](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/types.ts#L39)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[types.ts:6](https://github.com/ivmarcos/react-to-pdf/blob/9ee2b59/src/types.ts#L6)
+[types.ts:6](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/types.ts#L6)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[types.ts:78](https://github.com/ivmarcos/react-to-pdf/blob/9ee2b59/src/types.ts#L78)
+[types.ts:78](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/types.ts#L78)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[types.ts:98](https://github.com/ivmarcos/react-to-pdf/blob/9ee2b59/src/types.ts#L98)
+[types.ts:98](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/types.ts#L98)
 
 ___
 
@@ -89,4 +89,4 @@ ___
 
 #### Defined in
 
-[types.ts:87](https://github.com/ivmarcos/react-to-pdf/blob/9ee2b59/src/types.ts#L87)
+[types.ts:87](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/types.ts#L87)
