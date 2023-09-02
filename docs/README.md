@@ -2,95 +2,125 @@ react-to-pdf / [Modules](modules.md)
 
 # React to PDF
 
-Easily create pdf documents from React components.
+Easily create PDF documents from React components.
 
 ## Install
 
 ```
-$ npm install react-to-pdf
+# Yarn
+yarn add react-to-pdf
+
+# NPM
+npm install --save react-to-pdf
+
 ```
 
 ## Important Notes
 
+- Not vectorized - the pdf is created from a screenshot of the component and therefore is not vectorized. If you are looking for something more advanced to generate pdf using React components, please check out other popular alternatives packages listed below.
 - No SSR
-- Single page
-- Not vectorized - the pdf is created from a screenshot of the component and therefore is not vectorized. If you are looking for something more advanced for generating pdf using React components, please check out other popular alternatives packages listed below.
 
 ## Alternatives and Similars Packages
 
-* [@react-pdf/renderer](https://www.npmjs.com/package/@react-pdf/renderer) - React renderer for creating PDF files on the browser and server
-* [react-pdf](https://www.npmjs.com/package/react-pdf) - Display PDFs in your React app as easily as if they were images.
+- [@react-pdf/renderer](https://www.npmjs.com/package/@react-pdf/renderer) - React renderer to create PDF files on the browser and server
+- [react-pdf](https://www.npmjs.com/package/react-pdf) - Display PDFs in your React app as easily as if they were images.
 
 ## Examples
 
-https://codesandbox.io/s/l2l4pz0jyl
+
 
 ## Usage
 
 **Using hook**
 
 ```jsx
-   import { usePDF } from 'react-to-pdf'
+import { usePDF } from 'react-to-pdf';
 
 const Component = () => {
-   const { toPDF, targetRef } = usePDF();
-
-return (
-   <button onClick={toPDF}>Generate PDF</button>
-   <div ref={targetRef}>
-     Content to be included in the PDF
-   </div>
-)
-
+   const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
+   return (
+      <div>
+         <button onClick={() => toPDF()}>Download PDF</button>
+         <div ref={targetRef}>
+            Content to be generated to PDF
+         </div>
+      </div>
+   )
 }
-
 ```
 
-**Using generatedPDF function**
+[See in action](https://codesandbox.io/s/ancient-violet-sznj9q?file=/src/App.tsx)
 
-**Using outer target ref**
+**Using default function**
 
 ```jsx
-   import { generatePDF } from 'react-to-pdf'
+import { useRef } from 'react';
+import generatePDF from 'react-to-pdf';
 
 const Component = () => {
-    const targetRef = React.createRef();
-return (
-   <button onClick={() => generatePDF(targetRef)}>Generate PDF</button>
-   <div ref={targetRef}>
-     Content to be included in the PDF
-   </div>
-)
-
+   const targetRef = useRef();
+   return (
+      <div>
+         <button onClick={() => generatePDF(targetRef, {filename: 'page.pdf'})}>Download PDF</button>
+         <div ref={targetRef}>
+            Content to be included in the PDF
+         </div>
+      </div>
+   )
 }
 ```
 
 **Advanced options**
+
 ```jsx
-const ref = React.createRef();
+import generatePDF, { Resolution, Margin } from 'react-to-pdf';
+
 const options = {
-    orientation: 'landscape',
-    unit: 'in',
-    format: [4,2]
+   // default is `save`
+   method: 'open',
+   // default is Resolution.MEDIUM = 3, which should be enough, higher values
+   // increases the image quality but also the size of the PDF, so be careful
+   // using values higher than 10 when having multiple pages generated, it
+   // might cause the page to crash or hang.
+   resolution: Resolution.HIGH,
+   page: {
+      // margin is in MM, default is Margin.NONE = 0
+      margin: Margin.SMALL,
+      // default is 'A4'
+      format: 'letter',
+      // default is 'portrait'
+      orientation: 'landscape',
+   },
+   canvas: {
+      // default is 'image/jpeg' for better size performance
+      mimeType: 'image/png'
+      qualityRatio: 1
+   },
+   // customize any value passed to the jsPDF instance and html2canvas
+   // function
+   overrides: {
+      // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
+      pdf: {
+         compress: true
+      },
+      // see https://html2canvas.hertzen.com/configuration for more options
+      canvas: {
+         useCORS: false
+      }
+   },
 };
-<div>
-    <ReactToPdf targetRef={ref} filename="div-blue.pdf" options={options} x={.5} y={.5} scale={0.8}>
-        {({toPdf}) => (
-            <button onClick={toPdf}>Generate pdf</button>
-        )}
-    </ReactToPdf>
-    <div style={{width: 500, height: 500, background: 'blue'}} ref={ref}/>
-</div>
+
+// you can use a function to return the target element besides using React refs
+const getTargetElement = () => document.getElementById('content-id');
+
+const Component = () => {
+   return (
+      <div>
+         <button onClick={() => generatePDF(getTargetElement, options)}>Generate PDF</button>
+         <div id="content-id">
+            Content to be generated to PDF
+         </div>
+      </div>
+   );
+}
 ```
-
-## Props
-
-|Prop name        |Type               |Default            |Description
-|-----------------|-------------------|-------------------|--------------------------------
-|filename         | `string`          | `'download.pdf'`  | Name of the pdf file
-|targetRef        | `RefObject`       |                   | [React ref](https://reactjs.org/docs/refs-and-the-dom.html) for the target component (use this or inner target reference)
-|x                | `number`          |         0         | X position in document
-|y                | `number`          |         0         | Y position in document
-|options          | `object`          |    `undefined`    | options for the jsPdf document - [view more details](https://rawgit.com/MrRio/jsPDF/master/docs/)
-|onComplete       | `function`        |    `undefined`    | callback executed when process is finished
-|scale            | `number`          |    1              | Image scaling

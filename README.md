@@ -18,9 +18,18 @@ $ npm install react-to-pdf
 - [@react-pdf/renderer](https://www.npmjs.com/package/@react-pdf/renderer) - React renderer to create PDF files on the browser and server
 - [react-pdf](https://www.npmjs.com/package/react-pdf) - Display PDFs in your React app as easily as if they were images.
 
+
+## Examples
+
+- [Code Sandbox demo](https://codesandbox.io/s/ancient-violet-sznj9q?file=/src/App.tsx)
+- [Using `usePDF` hook](blob/main/examples/ExampleUsePDF.tsx) 
+- [Using default function](blob/main/examples/ExampleFunction.tsx) 
+- [Multipage support](blob/main/examples/ExampleMultipage.tsx) 
+- [Advanced options](blob/main/examples/ExampleAdvanced.tsx) 
+
 ## Usage
 
-**Using hook**
+**Using `usePDF` hook**
 
 ```jsx
 import { usePDF } from 'react-to-pdf';
@@ -38,7 +47,6 @@ const Component = () => {
 }
 ```
 
-[See in action](https://codesandbox.io/s/ancient-violet-sznj9q?file=/src/App.tsx)
 
 **Using default function**
 
@@ -85,8 +93,9 @@ const options = {
       mimeType: 'image/png'
       qualityRatio: 1
    },
-   // customize any value passed to the jsPDF instance and html2canvas
-   // function
+   // Customize any value passed to the jsPDF instance and html2canvas
+   // function. You probably will not need this and things can break, 
+   // so use with caution.
    overrides: {
       // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
       pdf: {

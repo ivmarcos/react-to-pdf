@@ -7,6 +7,7 @@
 ### References
 
 - [Margin](index.md#margin)
+- [Options](index.md#options)
 - [Resolution](index.md#resolution)
 
 ### Functions
@@ -19,6 +20,12 @@
 ### Margin
 
 Re-exports [Margin](../enums/constants.Margin.md)
+
+___
+
+### Options
+
+Re-exports [Options](types.md#options)
 
 ___
 
@@ -37,7 +44,7 @@ Re-exports [Resolution](../enums/constants.Resolution.md)
 | Name | Type |
 | :------ | :------ |
 | `targetRefOrFunction` | [`TargetElementFinder`](types.md#targetelementfinder) |
-| `customOptions?` | [`ReactToPDFOptions`](types.md#reacttopdfoptions) |
+| `customOptions?` | [`Options`](types.md#options) |
 
 #### Returns
 
@@ -45,7 +52,7 @@ Re-exports [Resolution](../enums/constants.Resolution.md)
 
 #### Defined in
 
-index.ts:31
+[index.ts:31](https://github.com/ivmarcos/react-to-pdf/blob/9ee2b59/src/index.ts#L31)
 
 ___
 
@@ -57,7 +64,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `usePDFoptions?` | [`ReactToPDFOptions`](types.md#reacttopdfoptions) |
+| `usePDFoptions?` | [`Options`](types.md#options) |
 
 #### Returns
 
@@ -65,4 +72,4 @@ ___
 
 #### Defined in
 
-index.ts:20
+[index.ts:20](https://github.com/ivmarcos/react-to-pdf/blob/9ee2b59/src/index.ts#L20)
