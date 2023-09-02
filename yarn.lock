@@ -2198,6 +2198,14 @@
     "@pnpm/network.ca-file" "^1.0.1"
     config-chain "^1.1.11"
 
+"@release-it/keep-a-changelog@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@release-it/keep-a-changelog/-/keep-a-changelog-4.0.0.tgz#b3c25ef0efe49a32dcec00391bbc6695d1e436c0"
+  integrity sha512-a3n6RkBaYGf2qK2Yz/FkHDkpJjLYtMvpoZBIGfOz1zmv+918YU3In9zjoBJn4f2PldIW5yTWuk81hMYAdgPFww==
+  dependencies:
+    detect-newline "^4.0.0"
+    string-template "^1.0.0"
+
 "@sinclair/typebox@^0.25.16":
   version "0.25.24"
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.25.24.tgz#8c7688559979f7079aacaf31aa881c3aa410b718"
@@ -3532,6 +3540,11 @@ detect-newline@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
+
+detect-newline@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-4.0.0.tgz#450ac3f864d5f61112b53a524123b012c59581bc"
+  integrity sha512-1aXUEPdfGdzVPFpzGJJNgq9o81bGg1s09uxTWsqBlo9PI332uyJRQq13+LK/UN4JfxJbFdCXonUFQ9R/p7yCtw==
 
 diff-sequences@^29.4.3:
   version "29.4.3"
@@ -7197,6 +7210,11 @@ string-length@^4.0.1:
   dependencies:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
+
+string-template@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/string-template/-/string-template-1.0.0.tgz#9e9f2233dc00f218718ec379a28a5673ecca8b96"
+  integrity sha512-SLqR3GBUXuoPP5MmYtD7ompvXiG87QjT6lzOszyXjTM86Uu7At7vNnt2xgyTLq5o9T4IxTYFyGxcULqpsmsfdg==
 
 "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"

@@ -1,3 +1,16 @@
+# 1.0.0-alpha.1 (September 2, 2023)
+
+* fix examples broken links (85dee13)
+* Fix method update and add more examples (#78) (d94c930)
+* fix wrong default method that should be save (f4bdf69)
+* Bump tough-cookie from 4.1.2 to 4.1.3 (#76) (6ee98c4)
+* Bump word-wrap from 1.2.3 to 1.2.5 (#75) (13a4d7a)
+* Bump semver from 5.7.1 to 5.7.2 (#77) (05a15ab)
+* remove node 14 from ci (693eb8d)
+* upgrade dep and changelog (ef85689)
+* remove aditional file (acd4622)
+* update changelog and remove example from npm (b8632b3)
+
 # 1.0.0-alpha.0 (August 26, 2023)
 
 ## New Features
