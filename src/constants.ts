@@ -18,7 +18,7 @@ export enum Margin {
 }
 
 export const DEFAULT_OPTIONS: Readonly<ConversionOptions> = {
-  method: "open",
+  method: "save",
   resolution: Resolution.MEDIUM,
   page: {
     margin: Margin.NONE,

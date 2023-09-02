@@ -21,7 +21,7 @@
 
 #### Defined in
 
-constants.ts:17
+[constants.ts:17](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/constants.ts#L17)
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-constants.ts:16
+[constants.ts:16](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/constants.ts#L16)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-constants.ts:14
+[constants.ts:14](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/constants.ts#L14)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-constants.ts:15
+[constants.ts:15](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/constants.ts#L15)

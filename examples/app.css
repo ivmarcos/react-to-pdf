@@ -1,0 +1,13 @@
+h1,
+h3 {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h3 {
+  border-bottom: 1px solid gainsboro;
+  padding-bottom: 1rem;
+}
+
+.app-container {
+  text-align: center;
+}
