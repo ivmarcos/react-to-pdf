@@ -39,12 +39,12 @@ type CanvasConversionOptions = Pick<
 export type ConversionOptions = {
   /**
    * File name of the PDF file if the method select is `save`, which is the
-   * default. Not used for the 'build' and 'open' methods. *
+   * default. Not used for the `build` and `open` methods. *
    */
   filename?: string;
   /**
    * Method that will follow to do with the PDF file. The `build` method just
-   * returns the PDF instance in the invoked function 'generatePDF' or 'toPDF'.
+   * returns the PDF instance in the invoked function `generatePDF` or `toPDF`.
    * By default is `open`.
    */
   method: "save" | "open" | "build";
