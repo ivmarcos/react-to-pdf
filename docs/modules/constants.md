@@ -13,16 +13,17 @@
 
 - [DEFAULT\_OPTIONS](constants.md#default_options)
 - [MM\_TO\_PX](constants.md#mm_to_px)
+- [PREVIEW\_ROOT\_CLASS\_NAME](constants.md#preview_root_class_name)
 
 ## Variables
 
 ### DEFAULT\_OPTIONS
 
-• `Const` **DEFAULT\_OPTIONS**: `Readonly`<[`ConversionOptions`](types.md#conversionoptions)\>
+• `Const` **DEFAULT\_OPTIONS**: `Readonly`<[`ConversionOptions`](../interfaces/types.ConversionOptions.md)\>
 
 #### Defined in
 
-[constants.ts:20](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/constants.ts#L20)
+[src/constants.ts:21](https://github.com/ivmarcos/react-to-pdf/blob/79d4272/src/constants.ts#L21)
 
 ___
 
@@ -32,4 +33,14 @@ ___
 
 #### Defined in
 
-[constants.ts:3](https://github.com/ivmarcos/react-to-pdf/blob/36bd08b/src/constants.ts#L3)
+[src/constants.ts:3](https://github.com/ivmarcos/react-to-pdf/blob/79d4272/src/constants.ts#L3)
+
+___
+
+### PREVIEW\_ROOT\_CLASS\_NAME
+
+• `Const` **PREVIEW\_ROOT\_CLASS\_NAME**: ``"react-to-pdf-preview"``
+
+#### Defined in
+
+[src/constants.ts:4](https://github.com/ivmarcos/react-to-pdf/blob/79d4272/src/constants.ts#L4)
