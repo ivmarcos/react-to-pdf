@@ -1,16 +1,15 @@
-import { useRef, useCallback } from "react";
 import html2canvas from "html2canvas";
+import { useCallback, useRef } from "react";
 
+import jsPDF from "jspdf";
 import Converter from "./converter";
 import { Options, TargetElementFinder, UsePDFResult } from "./types";
-import { buildConvertOptions } from "./utils";
-import jsPDF from "jspdf";
-export { Resolution, Margin } from "./constants";
-export type { Options };
+import { buildConvertOptions, openPDF, savePDF } from "./utils";
+export { Margin, Resolution } from "./constants";
+export * from "./PDF";
+export * from "./types";
 
-const getTargetElement = (
-  targetRefOrFunction: TargetElementFinder
-): HTMLElement | null | undefined => {
+const getTargetElement = (targetRefOrFunction: TargetElementFinder) => {
   if (typeof targetRefOrFunction === "function") {
     return targetRefOrFunction();
   }
@@ -18,7 +17,7 @@ const getTargetElement = (
 };
 
 export const usePDF = (usePDFoptions?: Options): UsePDFResult => {
-  const targetRef = useRef();
+  const targetRef = useRef(null);
   const toPDF = useCallback(
     (toPDFoptions?: Options): Promise<InstanceType<typeof jsPDF>> => {
       return generatePDF(targetRef, usePDFoptions ?? toPDFoptions);
@@ -50,13 +49,12 @@ const generatePDF = async (
     case "build":
       return pdf;
     case "open": {
-      window.open(pdf.output("bloburl"), "_blank");
+      openPDF(pdf);
       return pdf;
     }
     case "save":
     default: {
-      const pdfFilename = options.filename ?? `${new Date().getTime()}.pdf`;
-      await pdf.save(pdfFilename, { returnPromise: true });
+      await savePDF(pdf, options);
       return pdf;
     }
   }
