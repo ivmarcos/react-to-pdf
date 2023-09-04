@@ -4,6 +4,7 @@ Easily create PDF documents from React components.
 
 ## Install
 
+
 ```
 $ npm install react-to-pdf
 ```
@@ -24,6 +25,8 @@ $ npm install react-to-pdf
 - [Code Sandbox demo](https://codesandbox.io/s/ancient-violet-sznj9q?file=/src/App.tsx)
 - [Using `usePDF` hook](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleUsePDF.tsx) 
 - [Using default function](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleFunction.tsx) 
+- [PDF component](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExamplePDF.tsx) 
+- [PDF with preview](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExamplePDFPreview.tsx) 
 - [Multipage support](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleMultipage.tsx) 
 - [Advanced options](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleAdvanced.tsx) 
 
@@ -68,6 +71,45 @@ const Component = () => {
 }
 ```
 [Code Sandbox demo](https://codesandbox.io/s/condescending-danilo-5yj655?file=/src/App.tsx:0-644)
+
+**Using PDF component**
+
+```jsx
+import { useRef } from 'react';
+import { PDFHandle } from 'react-to-pdf';
+
+const Component = () => {
+   const pdfRef = useRef<PDFHandle>(null);
+   return (
+      <div>
+         <button onClick={() => pdfRef.current?.save({filename: 'pdf.pdf'})}>Download PDF</button>
+         <PDF ref={pdfRef}>
+            Content to be included in the PDF
+         </PDF>
+      </div>
+   )
+}
+```
+
+**Using PDF with preview**
+
+```jsx
+import { useRef } from 'react';
+import { PDFHandle } from 'react-to-pdf';
+
+const Component = () => {
+   const pdfRef = useRef<PDFHandle>(null);
+   return (
+      <div>
+         <button onClick={() => pdfRef.current?.save({filename: 'pdf-preview.pdf'})}>Download PDF</button>
+         <PDF preview ref={pdfRef}>
+            Content to be included in the PDF
+         </PDF>
+      </div>
+   )
+}
+```
+
 
 **Advanced options**
 
