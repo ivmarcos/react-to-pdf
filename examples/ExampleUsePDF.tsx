@@ -1,5 +1,5 @@
 import React from "react";
-import { Margin, usePDF } from "../src";
+import { Margin, usePDF } from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
@@ -14,7 +14,7 @@ export const ExampleUsePDF = () => {
     <Container>
       <Button onClick={toPDF}>Download PDF</Button>
       <div ref={targetRef}>
-        <Card imageId={22} title="usePDF hook example" />
+        <Card imageId={12} title="usePDF hook example" />
       </div>
     </Container>
   );
