@@ -1,5 +1,5 @@
 import { MutableRefObject } from "react";
-import { jsPDFOptions } from "jspdf";
+import jsPDF, { jsPDFOptions } from "jspdf";
 import { Options as Html2CanvasOptions } from "html2canvas";
 import { Margin, Resolution } from "./constants";
 
@@ -10,19 +10,17 @@ export type DetailedMargin = {
   left: Margin | number;
 };
 
-type PageConversionOptions = {
+interface PageConversionOptions {
   /** Margin of the page in MM, defaults to 0. */
   margin: DetailedMargin | Margin | number;
   /** Format of the page (A4, letter), defaults to A4. */
   format: jsPDFOptions["format"];
   /** Orientation of the page (portrait or landscape), defaults to `portrait`. */
   orientation: jsPDFOptions["orientation"];
-};
+}
 
-type CanvasConversionOptions = Pick<
-  Html2CanvasOptions,
-  "useCORS" | "logging"
-> & {
+interface CanvasConversionOptions
+  extends Pick<Html2CanvasOptions, "useCORS" | "logging"> {
   /**
    * Mime type of the canvas captured from the screenshot, defaults to
    * 'image/jpeg' for better size performance.
@@ -34,9 +32,9 @@ type CanvasConversionOptions = Pick<
    * See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
    */
   qualityRatio: number;
-};
+}
 
-export type ConversionOptions = {
+export interface ConversionOptions {
   /**
    * File name of the PDF file if the method select is `save`, which is the
    * default. Not used for the `build` and `open` methods. *
@@ -73,18 +71,16 @@ export type ConversionOptions = {
      * */
     canvas?: Partial<Html2CanvasOptions>;
   };
-};
+}
 
-export type Options = Omit<
-  Partial<ConversionOptions>,
-  "page" | "canvas" | "overrides"
-> & {
+export interface Options
+  extends Omit<Partial<ConversionOptions>, "page" | "canvas" | "overrides"> {
   page?: Partial<PageConversionOptions>;
   canvas?: Partial<CanvasConversionOptions>;
   overrides?: Partial<ConversionOptions["overrides"]>;
-};
+}
 
-export type UsePDFResult = {
+export interface UsePDFResult {
   /**
    * React ref of the target element
    */
@@ -93,8 +89,33 @@ export type UsePDFResult = {
    * Generates the pdf
    */
   toPDF: (options?: Options) => void;
-};
+}
 
 export type TargetElementFinder =
   | MutableRefObject<any>
   | (() => HTMLElement | null);
+
+export interface PDFProps
+  extends Omit<Options, "filename" | "method">,
+    Pick<React.HTMLProps<HTMLEmbedElement>, "width" | "height" | "className"> {
+  /** Enable to render the embed generated PDF document. */
+  preview?: boolean;
+  /** Content to be generated to the PDF document. */
+  children: React.ReactNode;
+  /** Loading component to display when the PDF document is being generated. For
+   * example, `loading={<div>Loading...</div>}`. */
+  loading?: React.ReactNode;
+}
+
+export interface PDFHandle {
+  /** Update the PDF document. */
+  update: () => void;
+  /** Save the PDF document (download the file). */
+  save: (saveOptions?: PDFSaveOptions) => Promise<void>;
+  /** Open the PDF file in a new tab. */
+  open: () => void;
+  /** Return the generated PDF instance. */
+  getPDF: () => InstanceType<typeof jsPDF> | undefined;
+}
+
+export type PDFSaveOptions = Pick<Options, "filename">;
