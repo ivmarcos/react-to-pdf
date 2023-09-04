@@ -1,0 +1,9 @@
+.code-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.code-container > pre {
+  font-size: 13px !important;
+  border-radius: 8px;
+}
