@@ -10,3 +10,4 @@ umd
 cypress/downloads
 cypress/baseline/diff
 cypress/baseline/png
+cypress/screenshots
