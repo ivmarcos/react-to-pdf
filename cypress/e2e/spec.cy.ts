@@ -11,6 +11,7 @@ interface ExampleTest {
 
 interface ComparisonResult {
   status: "passed" | "failed";
+  message?: string
 }
 
 export const examples: ExampleTest[] = [
@@ -48,6 +49,7 @@ describe("template spec", () => {
       cy.task("compareFile", example.filename).then(
         (result: ComparisonResult) => {
           expect(result.status).to.equal("passed");
+          expect(result.message).to.equal('')
         }
       );
     });
