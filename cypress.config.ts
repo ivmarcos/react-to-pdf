@@ -35,7 +35,7 @@ const comparePDFConfig: ComparePdfConfig = {
 
 export default defineConfig({
   e2e: {
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on) {
       on("task", {
         async compareFile(filename: string) {
           const comparisonResults = await new ComparePdf(comparePDFConfig)

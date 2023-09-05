@@ -31,7 +31,7 @@ jobs:
       - run: yarn lint
       - run: yarn test
 
-      - name: Cypress run 
+      - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           start: npm start
