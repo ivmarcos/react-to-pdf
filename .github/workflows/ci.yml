@@ -34,5 +34,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: npm rebuild
+          build: |
+            rm -rf node_modules
+            npm install
           start: npm start
