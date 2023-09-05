@@ -25,16 +25,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
-      - run: yarn install
-      - run: yarn build
-      - run: yarn lint
-      - run: yarn test
+      - run: npm install
+      - run: npm run build
+      - run: npm run lint
+      - run: npm run test
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: |
-            rm -rf node_modules
-            npm install
-          start: npm start
+          start: npm run start
