@@ -28,11 +28,10 @@ jobs:
           cache: "yarn"
       - run: yarn install
       - run: yarn build
-      - run: yarn lint
-      - run: yarn test
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-        with:
-          build: npm i canvas
-          start: yarn start
+      - name: Run tests
+        run: |
+          yarn lint
+          yarn test
+          yarn start &
+          yarn cypress run
