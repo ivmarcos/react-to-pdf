@@ -48,8 +48,8 @@ describe("template spec", () => {
     examples.forEach((example) => {
       cy.task("compareFile", example.filename).then(
         (result: ComparisonResult) => {
-          expect(result.status).to.equal("passed");
           expect(result.message).to.equal("");
+          expect(result.status).to.equal("passed");
         }
       );
     });
