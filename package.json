@@ -37,7 +37,6 @@
     "@parcel/packager-ts": "2.8.3",
     "@parcel/transformer-typescript-types": "2.8.3",
     "@release-it/keep-a-changelog": "^4.0.0",
-    "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.5.1",
     "@types/jsdom": "^21.1.1",
     "@types/react": "^18.0.28",
