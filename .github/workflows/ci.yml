@@ -35,3 +35,27 @@ jobs:
           yarn test
           yarn start &
           yarn cypress run
+
+      - name: Upload Cypress Screenshots
+        uses: actions/upload-artifact@v1
+        # Only capture images on failure
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      - name: Upload Cypress Logs
+        uses: actions/upload-artifact@v1
+        # Only capture logs on failure
+        if: failure()
+        with:
+          name: cypress-logs
+          path: cypress/logs
+
+      - name: Upload Cypress Videos
+        uses: actions/upload-artifact@v1
+        # Only capture videos on failure
+        if: failure()
+        with:
+          name: cypress-videos
+          path: cypress/videos
