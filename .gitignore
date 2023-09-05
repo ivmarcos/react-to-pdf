@@ -7,3 +7,6 @@ package-lock.json
 yarn-error.log
 umd
 .parcel-cache/
+cypress/downloads
+cypress/baseline/diff
+cypress/baseline/png

@@ -20,6 +20,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -29,3 +30,8 @@ jobs:
       - run: yarn build
       - run: yarn lint
       - run: yarn test
+
+      - name: Cypress run 
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
