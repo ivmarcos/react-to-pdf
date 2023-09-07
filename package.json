@@ -24,6 +24,8 @@
   "scripts": {
     "start": "parcel examples/index.html",
     "build": "parcel build src/index.ts",
+    "build:examples": "parcel build",
+    "serve:examples": "PORT=1234 serve -d dist",
     "clean": "rimraf dist",
     "docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts src/types.ts src/constants.ts",
     "test": "npm run lint && jest",
@@ -59,6 +61,7 @@
     "react-test-renderer": "^16.14.0",
     "release-it": "^16.1.5",
     "rimraf": "^5.0.0",
+    "serve": "^14.2.1",
     "ts-jest": "^29.1.1",
     "typedoc": "^0.24.4",
     "typedoc-plugin-markdown": "^3.15.2",

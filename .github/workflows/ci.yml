@@ -33,7 +33,11 @@ jobs:
         run: |
           yarn lint
           yarn test
-          yarn start &
+
+      - name: Run Cypress tests
+        run: |
+          yarn build:examples
+          yarn serve:examples &
           yarn cypress run
 
       - name: Upload Cypress Screenshots
