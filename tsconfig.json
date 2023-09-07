@@ -3,6 +3,7 @@
     "experimentalDecorators": true,
     "lib": ["es2015", "DOM"],
     "jsx": "react",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["cypress", "node", "jest"]
   }
 }

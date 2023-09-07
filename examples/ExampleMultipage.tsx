@@ -14,7 +14,7 @@ export const ExampleMultipage = () => {
     <Container>
       <Button onClick={toPDF}>Download PDF</Button>
       <div ref={targetRef}>
-        {Array(10)
+        {Array(5)
           .fill(0)
           .map((_, index) => (
             <Card

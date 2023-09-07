@@ -15,11 +15,12 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -27,5 +28,26 @@ jobs:
           cache: "yarn"
       - run: yarn install
       - run: yarn build
-      - run: yarn lint
-      - run: yarn test
+
+      - name: Run tests
+        run: |
+          yarn lint
+          yarn test
+          yarn start &
+          yarn cypress run
+
+      - name: Upload Cypress Screenshots
+        uses: actions/upload-artifact@v1
+        # Only capture images on failure
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      - name: Upload Cypress Downloads
+        uses: actions/upload-artifact@v1
+        # Only capture logs on failure
+        if: failure()
+        with:
+          name: cypress-downloads
+          path: cypress/downloads
