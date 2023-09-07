@@ -48,7 +48,7 @@ describe("template spec", () => {
     examples.forEach((example) => {
       cy.task("compareFile", example.filename).then(
         (result: ComparisonResult) => {
-          expect(result.message).to.be.empty;
+          expect(result.message).to.be.undefined;
           expect(result.status).to.equal("passed");
         }
       );
