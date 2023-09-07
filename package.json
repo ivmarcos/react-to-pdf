@@ -28,6 +28,8 @@
     "docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts src/types.ts src/constants.ts",
     "test": "npm run lint && jest",
     "lint": "eslint . && prettier -c .",
+    "release": "release-it",
+    "prerelease": "npm run clean && npm run build",
     "format": "prettier --write src examples README.md CHANGELOG.md *.json *.ts cypress .github"
   },
   "devDependencies": {

@@ -1,3 +1,9 @@
+# 1.0.1 (September, 7, 2023)
+
+* fix broken build (076e1ad)
+* update docs (076e1ad)
+* update changelog (076e1ad)
+
 # 1.0.0 (September, 7, 2023)
 
 * update readme (ced5bd5)
