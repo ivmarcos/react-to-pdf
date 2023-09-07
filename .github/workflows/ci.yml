@@ -44,18 +44,10 @@ jobs:
           name: cypress-screenshots
           path: cypress/screenshots
 
-      - name: Upload Cypress Logs
+      - name: Upload Cypress Downloads
         uses: actions/upload-artifact@v1
         # Only capture logs on failure
         if: failure()
         with:
-          name: cypress-logs
-          path: cypress/logs
-
-      - name: Upload Cypress Videos
-        uses: actions/upload-artifact@v1
-        # Only capture videos on failure
-        if: failure()
-        with:
-          name: cypress-videos
-          path: cypress/videos
+          name: cypress-downloads
+          path: cypress/downloads
