@@ -48,6 +48,7 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     }, []);
 
     const update = useCallback<PDFHandle["update"]>(async () => {
+      console.log('debug updating', preview)
       const pdf = await generatePDF(containerRef, {
         ...options,
         method: "build",
@@ -75,7 +76,8 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     );
 
     const pdfPreview = useMemo<React.ReactNode | null>(() => {
-      if (!preview) {
+      console.log('pdfPreview', preview, blob)
+      if (!preview || preview === 'component') {
         return null;
       }
       if (!blob && loading) {
@@ -92,14 +94,27 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       );
     }, [className, height, width, preview, blob, loading]);
 
+    const wrapper = useMemo<React.ReactNode>(() => {
+      return (
+        <div style={previewStyle} ref={containerRef}>
+          {children}
+        </div>
+      );
+    }, [children]);
+
+    const pdfComponent = useMemo<React.ReactNode>(() => {
+      if (preview === 'component'){
+        return wrapper;
+      }
+      return <PreviewPortal>{wrapper}</PreviewPortal>;
+    }, [preview, wrapper]);
+
+    console.log('render pdf preview', preview, pdfPreview)
+
     return (
       <>
         {pdfPreview}
-        <PreviewPortal>
-          <div style={previewStyle} ref={containerRef}>
-            {children}
-          </div>
-        </PreviewPortal>
+        {pdfComponent}
       </>
     );
   }

@@ -98,8 +98,12 @@ export type TargetElementFinder =
 export interface PDFProps
   extends Omit<Options, "filename" | "method">,
     Pick<React.HTMLProps<HTMLEmbedElement>, "width" | "height" | "className"> {
-  /** Enable to render the embed generated PDF document. */
-  preview?: boolean;
+  /** Set the preview mode for the document.
+   * - `false` (default) - component is not visible
+   * - `true` or `embed` - render the embed PDF component
+   * - `component` - render the component
+   */
+  preview?: PDFPreview;
   /** Content to be generated to the PDF document. */
   children: React.ReactNode;
   /** Loading component to display when the PDF document is being generated. For
@@ -119,3 +123,5 @@ export interface PDFHandle {
 }
 
 export type PDFSaveOptions = Pick<Options, "filename">;
+
+export type PDFPreview = boolean | "embed" | "component";

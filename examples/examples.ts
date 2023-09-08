@@ -12,7 +12,7 @@ interface Example {
   content?: string;
 }
 
-const examples: Example[] = [
+export const examples: Example[] = [
   {
     title: "Using usePDF hook",
     component: ExampleUsePDF,
@@ -24,7 +24,6 @@ import { Container } from "./Container";
 
 export const ExampleUsePDF = () => {
   const { toPDF, targetRef } = usePDF({
-    method: "save",
     filename: "usepdf-example.pdf",
     page: { margin: Margin.MEDIUM },
   });
@@ -210,4 +209,3 @@ export const ExamplePDFPreview = () => {
   },
 ];
 
-export default examples;

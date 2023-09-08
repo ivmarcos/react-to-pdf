@@ -6,7 +6,6 @@ import { Container } from "./Container";
 
 export const ExampleUsePDF = () => {
   const { toPDF, targetRef } = usePDF({
-    method: "save",
     filename: "usepdf-example.pdf",
     page: { margin: Margin.MEDIUM },
   });
