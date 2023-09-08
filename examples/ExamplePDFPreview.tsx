@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Margin, PDFHandle, PDF } from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
