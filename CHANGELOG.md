@@ -1,3 +1,16 @@
+# 1.0.1 (September, 7, 2023)
+
+* fix broken build (076e1ad)
+* update docs (076e1ad)
+* update changelog (076e1ad)
+
+# 1.0.0 (September, 7, 2023)
+
+* update readme (ced5bd5)
+* Add Cypress tests  (#80) (42f19fa)
+* add codesandbox examples (79d4272)
+* update changelog (a8028f1)
+
 # 1.0.0-alpha.1 (September 2, 2023)
 
 * fix examples broken links (85dee13)

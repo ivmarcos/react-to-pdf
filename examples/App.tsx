@@ -2,9 +2,8 @@ import React from "react";
 
 import "./app.css";
 import { Code } from "./Code";
-import examples from "./examples";
-
-const slugify = (text: string) => text.toLowerCase().replace(/\s/g, "-");
+import { examples } from "./examples";
+import { slugify } from "./utils";
 
 export const App = () => {
   console.log("debug", examples);

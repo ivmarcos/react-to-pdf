@@ -1,3 +1,4 @@
+import React from "react";
 import { ExampleAdvanced } from "./ExampleAdvanced";
 import { ExampleFunction } from "./ExampleFunction";
 import { ExampleMultipage } from "./ExampleMultipage";

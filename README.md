@@ -6,7 +6,11 @@ Easily create PDF documents from React components.
 
 
 ```
-$ npm install react-to-pdf
+# Yarn
+yarn add react-to-pdf
+
+# NPM
+npm install --save react-to-pdf
 ```
 
 ## Important Notes
