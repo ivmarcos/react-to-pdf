@@ -2,9 +2,8 @@ import html2canvas from "html2canvas";
 import { useCallback, useRef } from "react";
 
 import jsPDF from "jspdf";
-import Converter from "./converter";
+import { Converter } from "./converter";
 import { Options, TargetElementFinder, UsePDFResult } from "./types";
-import { buildConvertOptions, openPDF, savePDF } from "./utils";
 export { Margin, Resolution } from "./constants";
 export * from "./PDF";
 export * from "./types";
@@ -29,33 +28,26 @@ export const usePDF = (usePDFoptions?: Options): UsePDFResult => {
 
 const generatePDF = async (
   targetRefOrFunction: TargetElementFinder,
-  customOptions?: Options
+  options?: Options
 ): Promise<InstanceType<typeof jsPDF>> => {
-  const options = buildConvertOptions(customOptions);
   const targetElement = getTargetElement(targetRefOrFunction);
   if (!targetElement) {
     console.error("Unable to get the target element.");
     return;
   }
-  const canvas = await html2canvas(targetElement, {
-    useCORS: options.canvas.useCORS,
-    logging: options.canvas.logging,
-    scale: options.resolution,
-    ...options.overrides?.canvas,
-  });
-  const converter = new Converter(canvas, options);
-  const pdf = converter.convert();
-  switch (options.method) {
+  const converter = new Converter(options);
+  const document = await converter.convert(targetElement);
+  switch (options?.method) {
     case "build":
-      return pdf;
+      return document.getInstance();
     case "open": {
-      openPDF(pdf);
-      return pdf;
+      document.open();
+      return document.getInstance();
     }
     case "save":
     default: {
-      await savePDF(pdf, options);
-      return pdf;
+      await document.save();
+      return document.getInstance();
     }
   }
 };

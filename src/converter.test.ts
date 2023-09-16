@@ -6,7 +6,7 @@ import { test, expect } from "@jest/globals";
 import { Margin, Resolution } from "./constants";
 import Converter from "./converter";
 import { Options } from "./types";
-import { buildConvertOptions } from "./utils";
+import { parseConversionOptions } from "./utils";
 
 export const createPageSnapshotObject = (
   converter: InstanceType<typeof Converter>,
@@ -53,7 +53,7 @@ const setupConverter = (
   const canvas = document.createElement("canvas");
   canvas.setAttribute("width", String(canvasDimensions.width));
   canvas.setAttribute("height", String(canvasDimensions.height));
-  const convertOptions = buildConvertOptions(options);
+  const convertOptions = parseConversionOptions(options);
   return new Converter(canvas, convertOptions);
 };
 

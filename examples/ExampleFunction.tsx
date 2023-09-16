@@ -8,7 +8,7 @@ export const ExampleFunction = () => {
   const downloadPDF = () => {
     // you can also pass React refs, e.g. `generatePDF(ref, options)`
     generatePDF(() => document.getElementById("container"), {
-      method: "save",
+      method: "open",
       filename: "function-example.pdf",
       page: { margin: Margin.MEDIUM },
     });

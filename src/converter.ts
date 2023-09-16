@@ -1,11 +1,332 @@
-import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import jsPDF, { Html2CanvasOptions } from "jspdf";
 import { MM_TO_PX } from "./constants";
 import { ConversionOptions, Options } from "./types";
 
-export default class Converter {
+
+const FILL_PAGE = 'true';
+const VERTICALLY_CENTERED = 'true';
+
+import { DEFAULT_OPTIONS } from "./constants";
+import { over } from "cypress/types/lodash";
+import { mmToPX, pxToMM } from "./utils";
+
+export const parseConversionOptions = (options?: Options): ConversionOptions => {
+  if (!options) {
+    return DEFAULT_OPTIONS;
+  }
+  return {
+    ...DEFAULT_OPTIONS,
+    ...options,
+    canvas: { ...DEFAULT_OPTIONS.canvas, ...options.canvas },
+    page: { ...DEFAULT_OPTIONS.page, ...options.page },
+  };
+};
+
+export class Converter {
+  options: ConversionOptions;
+  constructor(options?: Options) {
+    this.options = parseConversionOptions(options);
+  }
+  calculateHorizontalFitScale(elementWidth: number, maxWidth: number){
+    if (elementWidth > maxWidth){
+      return elementWidth / maxWidth;
+    }
+    return 1;
+  }
+  getResolution(){
+    return this.options.resolution;
+  }
+ 
+  calculateX(document: InstanceType<typeof Document>, imageWidth: number) {
+    switch (true) {
+      // case VERTICALLY_CENTERED:
+      //   return document.getPageWidth() / 2 - imageWidth / 2;
+      default:
+        return document.getMarginLeft();
+    }
+  }
+  calculateY(document: InstanceType<typeof Document>, imageHeight: number) {
+    switch (true) {
+      // case VERTICALLY_CENTERED:
+      //   return document.getPageHeight() / 2 - imageHeight / 2;
+      default:
+        return document.getMarginTop();
+    }
+  }
+  async convert(element: HTMLElement): Promise<InstanceType<typeof Document>> {
+    const document = new Document(this.options);
+    const documentMaxHeight = mmToPX(document.getPageMaxHeight());
+    const documentMaxWidth = mmToPX(document.getPageMaxWidth());
+    const canvasConverter = new CanvasConverter({documentMaxHeight, documentMaxWidth, options: this.options} );
+    const images = await canvasConverter.convertToImages(element);
+    console.log('debug images', images)
+    images.forEach((image, pageIndex) => {
+      if (pageIndex) {
+        document.addPage();
+      }
+      const width = pxToMM(image.getOriginalWidth());
+      const height = pxToMM(image.getOriginalHeight());
+      const x = this.calculateX(document, width);
+      const y = this.calculateY(document, height);
+      console.log('DEBUG ADD CANVAS TO PAGE', JSON.stringify({width, height, x, y, documentMaxHeight, documentMaxWidth}, null, 2))
+      const page = pageIndex + 1;
+      document.addCanvasToPage({ canvas: image.getCanvas(), page, width, height, x, y });
+    });
+    return document;
+  }
+}
+
+export class Document {
+  options: ConversionOptions;
+  instance: InstanceType<typeof jsPDF>;
+  constructor(options: ConversionOptions) {
+    this.options = options;
+    this.instance = new jsPDF({
+      format: this.options.page.format,
+      orientation: this.options.page.orientation,
+      ...this.options.overrides?.pdf,
+      unit: "mm",
+    });
+  }
+
+  addPage() {
+    this.instance.addPage(
+      this.options.page.format,
+      this.options.page.orientation
+    );
+  }
+
+  addCanvasToPage({
+    canvas,
+    page = 1,
+    width,
+    height,
+    x,
+    y,
+  }: {
+    canvas: HTMLCanvasElement;
+    page: number;
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+  }) {
+    const imageData = canvas.toDataURL(
+      this.options.canvas.mimeType,
+      this.options.canvas.qualityRatio
+    );
+    this.instance.setPage(page);
+    this.instance.addImage({
+      imageData,
+      width,
+      height,
+      x,
+      y,
+    });
+  }
+  async save(filename?: string) {
+    return this.instance.save(
+      filename ?? this.options.filename ?? `${new Date().getTime()}.pdf`,
+      { returnPromise: true }
+    );
+  }
+  open() {
+    window.open(this.instance.output("bloburl"), "_blank");
+  }
+  getBlob() {
+    return new Blob([this.instance.output("blob")]);
+  }
+  getBlobURL(){
+    return this.instance.output("bloburl")
+  }
+  getPageMaxWidth() {
+    return this.getPageWidth() - (this.getMarginLeft() + this.getMarginRight());
+  }
+  getPageMaxHeight() {
+    return (
+      this.getPageHeight() - (this.getMarginTop() + this.getMarginBottom())
+    );
+  }
+  getPageHeight() {
+    return this.instance.internal.pageSize.height;
+  }
+  getPageWidth() {
+    return this.instance.internal.pageSize.width;
+  }
+  getMarginTop() {
+    const margin =
+      typeof this.options.page.margin === "object"
+        ? this.options.page.margin.top
+        : this.options.page.margin;
+    return Number(margin);
+  }
+  getMarginLeft() {
+    const margin =
+      typeof this.options.page.margin === "object"
+        ? this.options.page.margin.left
+        : this.options.page.margin;
+    return Number(margin);
+  }
+  getMarginRight() {
+    const margin =
+      typeof this.options.page.margin === "object"
+        ? this.options.page.margin.right
+        : this.options.page.margin;
+    return Number(margin);
+  }
+  getMarginBottom() {
+    const margin =
+      typeof this.options.page.margin === "object"
+        ? this.options.page.margin.bottom
+        : this.options.page.margin;
+    return Number(margin);
+  }
+  getInstance() {
+    return this.instance;
+  }
+}
+
+class CanvasUtils {
+  static cropY({
+    width,
+    height,
+    offsetY,
+    canvas,
+  }: {
+    width: number;
+    height: number;
+    offsetY: number;
+    canvas: HTMLCanvasElement;
+  }): HTMLCanvasElement {
+    const croppedCanvas = document.createElement("canvas");
+    croppedCanvas.setAttribute("width", String(width));
+    croppedCanvas.setAttribute("height", String(height));
+    const ctx = croppedCanvas.getContext("2d");
+    ctx.drawImage(
+      canvas,
+      0,
+      offsetY,
+      canvas.width,
+      height,
+      0,
+      0,
+      canvas.width,
+      height
+    );
+    return croppedCanvas;
+  }
+  static calculateHeightOffset({ maxHeight, height, offsetY }): number {
+    if (height < maxHeight || height - offsetY < maxHeight) {
+      return height;
+    }
+    return maxHeight;
+  }
+  static calculateFitRatio({maxSize, size}: {maxSize: number, size: number}){
+    if (size > maxSize){
+      return size / maxSize;
+    }
+    return 1;
+  }
+}
+
+interface CanvasConverterArgs {
+  documentMaxWidth: number;
+  documentMaxHeight: number;
+  options: ConversionOptions
+}
+
+class Image {
+  scale: number;
+  canvas: HTMLCanvasElement;
+  constructor(canvas: HTMLCanvasElement, scale: number){
+    this.canvas = canvas;
+    this.scale = scale;
+  }
+  getCanvas(){
+    return this.canvas;
+  }
+  getWidth(){
+    return this.canvas.width
+  }
+  getHeight(){
+    return this.canvas.height
+  }
+  getOriginalWidth(){
+    return this.getWidth() / this.scale;
+  }
+  getOriginalHeight(){
+    return this.getHeight() / this.scale;
+  }
+}
+class CanvasConverter {
+  documentMaxWidth: number;
+  documentMaxHeight: number;
+  options: ConversionOptions
+
+  constructor(
+    { documentMaxHeight, documentMaxWidth, options }: CanvasConverterArgs,
+  ) {
+    this.documentMaxHeight = documentMaxHeight;
+    this.documentMaxWidth = documentMaxWidth;
+    this.options = options;
+  }
+
+  async convert(element: HTMLElement, scale: number): Promise<HTMLCanvasElement> {
+    return html2canvas(element, {
+      scale,
+      ...this.options.canvas,
+      ...this.options.overrides.canvas
+    });
+  }
+
+  calculateScale(element: HTMLElement) {
+    switch (FILL_PAGE) {
+      // case 'true': {
+      //   const elementWidth = element.offsetWidth;
+      //   const fitFactor = elementWidth / maxWidth;
+      //   return this.options.resolution * (fitFactor < 1 ? fitFactor + 1: fitFactor);
+      // }
+      default:
+        return this.options.resolution * CanvasUtils.calculateFitRatio({size: element.offsetWidth, maxSize: this.documentMaxWidth});
+    }
+  }
+  calculateMaxHeight(canvas: HTMLCanvasElement, scale){
+    const originalCanvasWidth = canvas.width / scale;
+    if (originalCanvasWidth > this.documentMaxWidth){
+      const resizeFitRatio = CanvasUtils.calculateFitRatio({size: originalCanvasWidth, maxSize: this.documentMaxWidth})
+      return this.documentMaxHeight * resizeFitRatio * scale;
+    }
+    return this.documentMaxHeight * scale;
+  }
+
+  
+  async convertToImages(element: HTMLElement): Promise<InstanceType<typeof Image>[]> {
+    const scale = this.calculateScale(element);
+    const canvas = await this.convert(element, scale);
+    const canvasMaxHeight = this.calculateMaxHeight(canvas, scale)
+    const numberPages = Math.ceil(canvas.height / canvasMaxHeight);
+    console.log('DEBUG converting to images', JSON.stringify({elementWidth: element.offsetWidth, scale, canvasWidth: canvas.width, documentMaxWidth: this.documentMaxWidth, canvasMaxHeight}, null, 2))
+    return Array(numberPages)
+      .fill(null)
+      .map((_, pageIndex) => {
+        const width = canvas.width;
+        const offsetY = canvasMaxHeight * pageIndex;
+        const height = CanvasUtils.calculateHeightOffset({
+          maxHeight: canvasMaxHeight,
+          height: canvas.height,
+          offsetY,
+        });
+        const croppedCanvas = CanvasUtils.cropY({ width, height, offsetY, canvas });
+        return new Image(croppedCanvas, scale);
+      });
+  }
+}
+
+export default class OldConverter {
   pdf: InstanceType<typeof jsPDF>;
   canvas: HTMLCanvasElement;
-  options: Options;
+  options: ConversionOptions;
   constructor(canvas: HTMLCanvasElement, options: ConversionOptions) {
     this.canvas = canvas;
     this.options = options;

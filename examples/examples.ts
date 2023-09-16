@@ -208,4 +208,3 @@ export const ExamplePDFPreview = () => {
 };`,
   },
 ];
-

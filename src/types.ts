@@ -2,6 +2,7 @@ import { MutableRefObject } from "react";
 import jsPDF, { jsPDFOptions } from "jspdf";
 import { Options as Html2CanvasOptions } from "html2canvas";
 import { Margin, Resolution } from "./constants";
+import { Document } from "./converter";
 
 export type DetailedMargin = {
   top: Margin | number;
@@ -118,8 +119,8 @@ export interface PDFHandle {
   save: (saveOptions?: PDFSaveOptions) => Promise<void>;
   /** Open the PDF file in a new tab. */
   open: () => void;
-  /** Return the generated PDF instance. */
-  getPDF: () => InstanceType<typeof jsPDF> | undefined;
+  /** Return the Document instance. */
+  getDocument: () => InstanceType<typeof Document> | undefined;
 }
 
 export type PDFSaveOptions = Pick<Options, "filename">;
