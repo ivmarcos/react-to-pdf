@@ -1,4 +1,4 @@
-import { DocumentConverterOptions, PDFOptions } from "./types";
+import { AlignmentOption, DocumentConverterOptions, PDFOptions, SizeOption } from "./types";
 
 export const MM_TO_PX = 3.77952755906;
 export const PREVIEW_ROOT_CLASS_NAME = "react-to-pdf-preview";
@@ -18,17 +18,19 @@ export enum Margin {
   LARGE = 25,
 }
 
-export enum Alignment {
-  TOP_LEFT = "top_left",
-  CENTER_Y = "center_y",
-  CENTER_X = "center_x",
-  CENTER_XY = "center_xys",
+
+export const Alignment: Record<string, AlignmentOption> = {
+  TOP_LEFT: "top-left",
+  CENTER_Y: "center-y",
+  CENTER_X: "center-x",
+  CENTER_XY: "center-xy",
 }
 
-export enum Size {
-  ORIGINAL = "original",
-  FILL_PAGE = "fill_page",
-  SHRINK_TO_FIT = 'shrink_to_fit',
+
+export const Size: Record<string, SizeOption> = {
+  ORIGINAL: "original",
+  FILL_PAGE: "fill-page",
+  SHRINK_TO_FIT: "shrink-to-fit",
 }
 
 export const DEFAULT_OPTIONS: Readonly<DocumentConverterOptions> = {
@@ -40,19 +42,19 @@ export const DEFAULT_OPTIONS: Readonly<DocumentConverterOptions> = {
   },
   canvas: {
     mimeType: "image/jpeg",
-    qualityRatio: 1,
+    qualityRatio: .9,
     useCORS: true,
     logging: false,
   },
   overrides: {},
-  position: Alignment.TOP_LEFT,
+  align: Alignment.TOP_LEFT,
   size: Size.ORIGINAL,
   header: {
     margin: 7,
-    align: 'center'
+    align: "center",
   },
   footer: {
     margin: 7,
-    align: 'center'
-  }
+    align: "center",
+  },
 };

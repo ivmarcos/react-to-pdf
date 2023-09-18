@@ -62,9 +62,9 @@ export class Document {
   open() {
     window.open(this.instance.output("bloburl"), "_blank");
   }
-  print(){
+  print() {
     this.instance.autoPrint();
-    this.instance.output('dataurlnewwindow');
+    this.instance.output("dataurlnewwindow");
   }
   getBlob() {
     return new Blob([this.instance.output("blob")]);

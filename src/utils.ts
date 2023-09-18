@@ -1,11 +1,10 @@
 import { MM_TO_PX } from "./constants";
 import { Image } from "./image";
 
-
 export const mmToPX = (mm: number) => mm * MM_TO_PX;
 export const pxToMM = (px: number) => px / MM_TO_PX;
 
-export const  cropY = ({
+export const cropY = ({
   width,
   height,
   offsetY,
@@ -32,18 +31,22 @@ export const  cropY = ({
     height
   );
   return croppedCanvas;
-}
-export const calculateHeightOffset = ({ maxHeight, height, offsetY }): number => {
+};
+export const calculateHeightOffset = ({
+  maxHeight,
+  height,
+  offsetY,
+}): number => {
   if (height < maxHeight) {
     return height;
   }
-  if (height - offsetY < maxHeight){
+  if (height - offsetY < maxHeight) {
     return height - offsetY;
   }
   return maxHeight;
-}
+};
 
-export const  calculateFitRatio = ({
+export const calculateFitRatio = ({
   maxSize,
   size,
 }: {
@@ -54,24 +57,24 @@ export const  calculateFitRatio = ({
     return maxSize / size;
   }
   return 1;
-}
-export const  calculateFillRatio = ({
+};
+export const calculateFillRatio = ({
   targetSize,
   size,
 }: {
   targetSize: number;
   size: number;
 }) => {
-  console.log('DEBUG FILL RATIO', {targetSize, size})
+  console.log("DEBUG FILL RATIO", { targetSize, size });
   if (size < targetSize) {
     return targetSize / size;
   }
   return size / targetSize;
-}
+};
 
 export const getImageDimensionsMM = (image: InstanceType<typeof Image>) => {
   return {
     width: pxToMM(image.getOriginalWidth()),
     height: pxToMM(image.getOriginalHeight()),
   };
-}
+};

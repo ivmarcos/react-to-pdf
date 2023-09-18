@@ -1,21 +1,31 @@
-import { useCallback, useRef } from "react";
+import { MutableRefObject, useCallback, useRef } from "react";
 
 import jsPDF from "jspdf";
-import { DocumentConverter, Document } from "./converter";
-import { Options, TargetElementFinder, UsePDFResult } from "./types";
+import { Document } from "./document";
+import { Options, PDFHandle, TargetElementFinder, UsePDFResult } from "./types";
+import { DocumentConverter } from "./documentConverter";
 export { Margin, Resolution, Alignment as Position, Size } from "./constants";
 export * from "./PDF";
 export * from "./types";
-export {pxToMM, mmToPX} from './utils'
+export { pxToMM, mmToPX } from "./utils";
 
-const getTargetElement = (targetRefOrFunction: TargetElementFinder): HTMLElement | undefined => {
-  if (typeof targetRefOrFunction === "function") {
-    return targetRefOrFunction();
+const getTargetElementOrPDFHandle = <T extends HTMLElement>(
+  targetRefOrGetter: TargetElementFinder<T>
+): HTMLElement | MutableRefObject<PDFHandle>['current']=> {
+  if (typeof targetRefOrGetter === "function") {
+    return targetRefOrGetter();
   }
-  const element = targetRefOrFunction?.current;
+  const element = targetRefOrGetter?.current;
   return element;
 };
 
+/**
+ * Create a document from the target element and download to a file. 
+ * @param targetRefOrGetter The target ref or a getter function to return the target element.
+ * e.g `() => document.getElementById('id')` or `containerRef`
+ * @param options Options
+ * @returns Promise<void>
+ */
 export const usePDF = (usePDFoptions?: Options): UsePDFResult => {
   const targetRef = useRef(null);
   const toPDF = useCallback(
@@ -27,36 +37,80 @@ export const usePDF = (usePDFoptions?: Options): UsePDFResult => {
   return { targetRef, toPDF };
 };
 
-export const create = async (targetRefOrFunction: TargetElementFinder, options?: Options): Promise<InstanceType<typeof Document> | null> => {
-  const targetElement = getTargetElement(targetRefOrFunction);
-  if (!targetElement) {
+/**
+ * Create a document from the target element and download to a file. 
+ * @param targetRefOrGetter The target ref or a getter function to return the target element.
+ * e.g `() => document.getElementById('id')` or `containerRef`
+ * @param options Options
+ * @returns the document instance
+ */
+export const create = async <T extends HTMLElement>(
+  targetRefOrGetter: TargetElementFinder<T>,
+  options?: Options
+): Promise<InstanceType<typeof Document> | null> => {
+  const targetElementOrPDFHandle = getTargetElementOrPDFHandle(targetRefOrGetter);
+  if (!targetElementOrPDFHandle) {
     console.error("Unable to get the target element.");
     return null;
   }
+  if ('getDocument' in targetElementOrPDFHandle){
+    return targetElementOrPDFHandle.getDocument();
+  }
   const converter = new DocumentConverter(options);
-  return converter.createDocument(targetElement);
-}
+  return converter.createDocument(targetElementOrPDFHandle);
+};
 
-export const open = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
-  const document = await create(targetRefOrFunction, options);
+/**
+ * Create a document from the target element and download to a file. 
+ * @param targetRefOrGetter The target ref or a getter function to return the target element.
+ * e.g `() => document.getElementById('id')` or `containerRef`
+ * @param options Options
+ * @returns Promise<void>
+ */
+export const open = async <T extends HTMLElement>(
+  targetRefOrGetter: TargetElementFinder<T>,
+  options?: Options
+) => {
+  const document = await create(targetRefOrGetter, options);
   document?.open();
-}
+};
 
-export const save = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
-  const document = await create(targetRefOrFunction, options);
+/**
+ * Create a document from the target element and download to a file. 
+ * @param targetRefOrGetter The target ref or a getter function to return the target element.
+ * e.g `() => document.getElementById('id')` or `containerRef`
+ * @param options Options
+ * @returns Promise<void>
+ */
+export const save = async <T extends HTMLElement>(
+  targetRefOrGetter: TargetElementFinder<T>,
+  options?: Options
+): Promise<void> => {
+  const document = await create(targetRefOrGetter, options);
+  console.log('document', document)
   return document?.save();
-}
+};
 
-export const print = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
-  const document = await create(targetRefOrFunction, options);
+/**
+ * Create a document from the target element and download to a file. 
+ * @param targetRefOrGetter The target ref or a getter function to return the target element.
+ * e.g `() => document.getElementById('id')` or `containerRef`
+ * @param options Options
+ * @returns Promise<void>
+ */
+export const print = async <T extends HTMLElement>(
+  targetRefOrGetter: TargetElementFinder<T>,
+  options?: Options
+) => {
+  const document = await create(targetRefOrGetter, options);
   document?.print();
-}
+};
 
-const generatePDF = async (
-  targetRefOrFunction: TargetElementFinder,
+const generatePDF = async <T extends HTMLElement>(
+  targetRefOrGetter: TargetElementFinder<T>,
   options?: Options
 ): Promise<InstanceType<typeof jsPDF>> => {
-  const document = await create(targetRefOrFunction, options);
+  const document = await create(targetRefOrGetter, options);
   switch (options?.method) {
     case "build":
       return document.getInstance();

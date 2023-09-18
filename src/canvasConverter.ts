@@ -35,12 +35,18 @@ export class CanvasConverter {
     });
   }
   calculateResizeScale(element: HTMLElement) {
-    switch (this.options.size){
-      case Size.SHRINK_TO_FIT: 
-        return utils.calculateFitRatio({maxSize: this.maxWidth, size: element.offsetWidth});
+    switch (this.options.size) {
+      case Size.SHRINK_TO_FIT:
+        return utils.calculateFitRatio({
+          maxSize: this.maxWidth,
+          size: element.offsetWidth,
+        });
       case Size.FILL_PAGE:
-        return utils.calculateFillRatio({targetSize: this.maxWidth, size: element.offsetWidth})
-      default: 
+        return utils.calculateFillRatio({
+          targetSize: this.maxWidth,
+          size: element.offsetWidth,
+        });
+      default:
         return 1;
     }
   }
@@ -61,10 +67,14 @@ export class CanvasConverter {
     const displayScale = this.options.resolution;
     const resizeScale = allowResize ? this.calculateResizeScale(element) : 1;
     console.log("DEBUG BEFORE CONVERTING TO CANVAS", element.offsetHeight);
-    console.log("DEBUG SCALES!", {displayScale, resizeScale});
+    console.log("DEBUG SCALES!", { displayScale, resizeScale });
     const canvas = await this.htmlToCanvas(element, displayScale * resizeScale);
-    const canvasMaxHeight = this.maxHeight * displayScale;//this.calculateMaxHeight(canvas, scale * fillScale);
-    console.log("DEBUG AFTER CONVERTING TO CANVAS", canvasMaxHeight, element.offsetHeight);
+    const canvasMaxHeight = this.maxHeight * displayScale; //this.calculateMaxHeight(canvas, scale * fillScale);
+    console.log(
+      "DEBUG AFTER CONVERTING TO CANVAS",
+      canvasMaxHeight,
+      element.offsetHeight
+    );
     const numberImages = Math.ceil(canvas.height / canvasMaxHeight);
     console.log(
       "DEBUG converting to images",
@@ -87,7 +97,7 @@ export class CanvasConverter {
       .map((_, pageIndex) => {
         const width = canvas.width;
         const offsetY = canvasMaxHeight * pageIndex;
-        console.log('DEBUG CROP CANVAS', offsetY, pageIndex +1 )
+        console.log("DEBUG CROP CANVAS", offsetY, pageIndex + 1);
         const height = utils.calculateHeightOffset({
           maxHeight: canvasMaxHeight,
           height: canvas.height,

@@ -5,11 +5,12 @@ import React, {
   useImperativeHandle,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 import { PDFHandle, PDFProps } from ".";
 import { PreviewPortal } from "./PreviewPortal";
-import { Document, DocumentConverter } from "./converter";
+import { DocumentConverter } from "./documentConverter";
+import { Document } from "./document";
 
 const previewStyle: CSSProperties = {
   position: "fixed",
@@ -28,8 +29,8 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       children,
       loading,
       embedProps = {
-        width: '100%',
-        height: 400
+        width: "100%",
+        height: 400,
       },
       footer,
       header,
@@ -37,16 +38,17 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     }: PDFProps,
     forwardedRef
   ) => {
-    const [document, setDocument] = useState<InstanceType<typeof Document>>(null);
+    const [document, setDocument] =
+      useState<InstanceType<typeof Document>>(null);
     const [blob, setBlob] = useState<URL | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const footerRefs = useRef<Record<number, HTMLDivElement>>({});
     const headerRefs = useRef<Record<number, HTMLDivElement>>({});
-    const isPreviewEmbed = preview === true || preview === 'embed';
+    const isPreviewEmbed = preview === true || preview === "embed";
 
     const addFootersAndHeaders = async () => {
       if (!document) return;
-      if (!footer && !header){
+      if (!footer && !header) {
         updateEmbed();
         return;
       }
@@ -59,7 +61,7 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
         (containerElement) =>
           containerElement.hasChildNodes() ? containerElement : null
       );
-      const converter = new DocumentConverter({...options, footer, header});
+      const converter = new DocumentConverter({ ...options, footer, header });
       await converter.addFooterAndHeaderToDocument({
         document,
         footerElements,
@@ -75,11 +77,11 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     };
 
     const updateEmbed = () => {
-      if (!document || !isPreviewEmbed){
+      if (!document || !isPreviewEmbed) {
         return;
       }
       setBlob(document.getBlobURL());
-    }
+    };
 
     const footerComponents = useMemo(() => {
       if (!footer || !document) return null;
@@ -136,11 +138,15 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     }, [embedProps, preview, blob, loading]);
 
     const bodyComponent = useMemo<React.ReactNode>(() => {
-      const previewChildren = preview === 'children';
+      const previewChildren = preview === "children";
       const wrapper = (
-      <div style={previewChildren ? undefined : previewStyle} ref={containerRef}>
-        {children}
-      </div>)
+        <div
+          style={previewChildren ? undefined : previewStyle}
+          ref={containerRef}
+        >
+          {children}
+        </div>
+      );
       if (previewChildren) {
         return wrapper;
       }
@@ -163,7 +169,7 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
           save: (filename?: string) => document?.save(filename),
           open: () => document?.open,
           getDocument: () => document,
-          print: () => document?.print()
+          print: () => document?.print(),
         };
       },
       [document]

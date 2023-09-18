@@ -1,5 +1,5 @@
 import React from "react";
-import generatePDF, { print, Margin } from "react-to-pdf";
+import generatePDF, { print, save, Margin } from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";

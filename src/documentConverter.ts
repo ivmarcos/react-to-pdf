@@ -1,20 +1,18 @@
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import { PDFOptions, Options, DocumentConverterOptions, PDFProps, FooterHeaderOptions } from "./types";
+import { DocumentConverterOptions, FooterHeaderOptions } from "./types";
 
-import { DEFAULT_OPTIONS, Alignment, Size } from "./constants";
-import * as utils from "./utils";
-import { Document } from "./document";
 import { CanvasConverter } from "./canvasConverter";
-import { Image } from "./image";
+import { Alignment, DEFAULT_OPTIONS } from "./constants";
+import { Document } from "./document";
+import * as utils from "./utils";
 
-interface DocumentConverterPartialOptions extends Omit<Partial<DocumentConverterOptions>, "footer"|  "header"> {
-  footer?: Partial<FooterHeaderOptions>,
-  header?: Partial<FooterHeaderOptions>
+interface DocumentConverterPartialOptions
+  extends Omit<Partial<DocumentConverterOptions>, "footer" | "header"> {
+  footer?: Partial<FooterHeaderOptions>;
+  header?: Partial<FooterHeaderOptions>;
 }
 
 export const parseOptions = (
-  options?: DocumentConverterPartialOptions,
+  options?: DocumentConverterPartialOptions
 ): DocumentConverterOptions => {
   if (!options) {
     return DEFAULT_OPTIONS;
@@ -26,12 +24,12 @@ export const parseOptions = (
     page: { ...DEFAULT_OPTIONS.page, ...options.page },
     footer: {
       ...DEFAULT_OPTIONS.footer,
-      ...options?.footer
+      ...options?.footer,
     },
     header: {
       ...DEFAULT_OPTIONS.header,
-      ...options?.header
-    }
+      ...options?.header,
+    },
   };
 };
 
@@ -82,7 +80,7 @@ export class DocumentConverter {
     imageWidth: number,
     imageHeight: number
   ): ImageCoordinates {
-    switch (this.options.position) {
+    switch (this.options.align) {
       case Alignment.CENTER_XY: {
         return {
           x: document.getPageWidth() / 2 - imageWidth / 2,
@@ -124,14 +122,15 @@ export class DocumentConverter {
       imageWidth,
       document.getPageWidth()
     );
-    const y = document.getPageHeight() - this.options.footer.margin - imageHeigth;
-    switch (this.options.footer?.align) {
-      case 'right':
+    const y =
+      document.getPageHeight() - this.options.footer.margin - imageHeigth;
+    switch (this.options.footer.align) {
+      case "right":
         return {
           x: document.getPageWidth() - document.getMarginRight() - imageWidth,
           y,
         };
-      case 'left':
+      case "left":
         return {
           x: document.getMarginLeft(),
           y,
@@ -139,23 +138,22 @@ export class DocumentConverter {
       default:
         return {
           x: document.getPageWidth() / 2 - imageWidth / 2,
-          y
+          y,
         };
-      }
+    }
   }
   calculateCoordinatesHeader(
     document: InstanceType<typeof Document>,
     imageWidth: number,
-    imageHeigth: number
   ): ImageCoordinates {
     const y = this.options.header.margin;
     switch (this.options.header.align) {
-      case 'right':
+      case "right":
         return {
           x: document.getPageWidth() - document.getMarginRight() - imageWidth,
           y,
         };
-      case 'left':
+      case "left":
         return {
           x: document.getMarginLeft(),
           y,
@@ -163,11 +161,13 @@ export class DocumentConverter {
       default:
         return {
           x: document.getPageWidth() / 2 - imageWidth / 2,
-          y
+          y,
         };
     }
   }
-  async createDocument(element: HTMLElement): Promise<InstanceType<typeof Document>> {
+  async createDocument(
+    element: HTMLElement
+  ): Promise<InstanceType<typeof Document>> {
     const document = new Document(this.options);
     const documentMaxHeight = utils.mmToPX(document.getPageMaxHeight());
     const documentMaxWidth = utils.mmToPX(document.getPageMaxWidth());
@@ -256,7 +256,6 @@ export class DocumentConverter {
         const headerXY = this.calculateCoordinatesHeader(
           document,
           width,
-          height
         );
         console.log("debug ADDING HEADER IMAGE", headerXY);
         document.addCanvasToPage({
@@ -272,4 +271,3 @@ export class DocumentConverter {
     return document;
   }
 }
-

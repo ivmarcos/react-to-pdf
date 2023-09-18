@@ -1,8 +1,8 @@
-import React, { MutableRefObject } from "react";
-import jsPDF, { jsPDFOptions } from "jspdf";
 import { Options as Html2CanvasOptions } from "html2canvas";
-import { Margin, Alignment, Resolution, Size } from "./constants";
-import { Document } from "./converter";
+import { jsPDFOptions } from "jspdf";
+import React, { MutableRefObject } from "react";
+import { Margin, Resolution } from "./constants";
+import { Document } from "./document";
 
 export type DetailedMargin = {
   top: Margin | number;
@@ -11,7 +11,10 @@ export type DetailedMargin = {
   left: Margin | number;
 };
 
-export type HorizontalAlignment = 'left' | 'center' | 'right';
+export type HorizontalAlignmentOption = "left" | "center" | "right";
+export type AlignmentOption = 'top-left' | 'center-y' | 'center-x' | 'center-xy';
+export type SizeOption = 'original' | 'fill-page' | 'shrink-to-fit';
+
 interface PageConversionOptions {
   /** Margin of the page in MM, defaults to 0. */
   margin: DetailedMargin | Margin | number;
@@ -67,8 +70,8 @@ export interface PDFOptions {
      * */
     canvas?: Partial<Html2CanvasOptions>;
   };
-  position?: Alignment;
-  size?: Size;
+  align?: AlignmentOption;
+  size?: SizeOption;
 }
 
 export interface Options
@@ -95,24 +98,21 @@ export interface UsePDFResult {
   toPDF: (options?: Options) => void;
 }
 
-export type TargetElementFinder =
-  | MutableRefObject<any>
-  | (() => HTMLElement | null);
+export type TargetElementFinder<T extends HTMLElement> =
+  | MutableRefObject<T | PDFHandle>
+  | (() => T | null);
 
 export interface RenderFooterHeaderProps {
   page: number;
   pages: number;
 }
 
-
 export interface FooterHeaderOptions {
   render: (RenderFooterHeaderProps) => React.ReactElement;
   margin: Margin | number;
-  align: HorizontalAlignment;
+  align: HorizontalAlignmentOption;
 }
-export interface PDFProps
-  extends Omit<Options, "filename" | "method"> {
-    
+export interface PDFProps extends Omit<Options, "filename" | "method"> {
   /** Set the preview mode for the document.
    * - `false` (default) - component is not visible
    * - `true` or `embed` - render the embed PDF component
@@ -135,15 +135,15 @@ export interface PDFProps
 // }
 
 export interface DocumentConverterOptions extends Options {
-  footer: Omit<FooterHeaderOptions, "render">,
-  header: Omit<FooterHeaderOptions, "render">
+  footer: Omit<FooterHeaderOptions, "render">;
+  header: Omit<FooterHeaderOptions, "render">;
 }
 
 export interface PDFHandle {
   /** Update the PDF document. */
   update: () => Promise<void>;
   /** Save the PDF document. */
-  save: (filename?: string) => Promise<void>,
+  save: (filename?: string) => Promise<void>;
   /** Open the PDF document. */
   open: () => void;
   /** Print the PDF document. */
