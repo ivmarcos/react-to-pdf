@@ -13,6 +13,7 @@ import generatePDF, { PDFProps, PDFHandle } from ".";
 import { PreviewPortal } from "./PreviewPortal";
 import jsPDF from "jspdf";
 import { DocumentConverter, Document } from "./converter";
+import { update } from "cypress/types/lodash";
 
 const previewStyle: CSSProperties = {
   position: "fixed",
@@ -29,27 +30,29 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       preview = false,
       children,
       loading,
-      width,
-      height,
-      className,
+      embedProps = {
+        width: '100%',
+        height: 400
+      },
       footer,
       header,
       ...options
     }: PDFProps,
     forwardedRef
   ) => {
-    const [document, setDocument] = useState<InstanceType<typeof Document>>();
+    const [document, setDocument] = useState<InstanceType<typeof Document>>(null);
     const [blob, setBlob] = useState<URL | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const footerRefs = useRef<Record<number, HTMLDivElement>>({});
     const headerRefs = useRef<Record<number, HTMLDivElement>>({});
+    const isPreviewEmbed = preview === true || preview === 'embed';
 
-    const getDocument = useCallback<PDFHandle["getDocument"]>(() => {
-      return document;
-    }, [document]);
-
-    const updateFooterAndHeader = async () => {
-      if (!document || (!footer && !header)) return;
+    const addFootersAndHeaders = async () => {
+      if (!document) return;
+      if (!footer && !header){
+        updateEmbed();
+        return;
+      }
       console.log("update footer", document, footerRefs.current);
       const footerElements = Object.values(footerRefs.current).map(
         (containerElement) =>
@@ -59,21 +62,27 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
         (containerElement) =>
           containerElement.hasChildNodes() ? containerElement : null
       );
-      const converter = new DocumentConverter(options);
-      // await converter.addFooterAndHeaderToDocument({
-      //   document,
-      //   footerElements,
-      //   headerElements,
-      // });
-      setBlob(document.getBlobURL());
+      const converter = new DocumentConverter({...options, footer, header});
+      await converter.addFooterAndHeaderToDocument({
+        document,
+        footerElements,
+        headerElements,
+      });
+      updateEmbed();
     };
 
-    const update = async () => {
+    const createDocument = async () => {
       const converter = new DocumentConverter(options);
       const document = await converter.createDocument(containerRef.current);
       setDocument(document);
-      // setBlob(document.getBlobURL());
     };
+
+    const updateEmbed = () => {
+      if (!document || !isPreviewEmbed){
+        return;
+      }
+      setBlob(document.getBlobURL());
+    }
 
     const footerComponents = useMemo(() => {
       if (!footer || !document) return null;
@@ -113,8 +122,8 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       return <PreviewPortal>{headers}</PreviewPortal>;
     }, [document]);
 
-    const pdfPreview = useMemo<React.ReactNode | null>(() => {
-      if (!preview || preview === "component") {
+    const previewComponent = useMemo<React.ReactNode | null>(() => {
+      if (!isPreviewEmbed) {
         return null;
       }
       if (!blob && loading) {
@@ -123,13 +132,11 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       return (
         <embed
           src={blob ? blob.toString() : undefined}
-          width={width}
-          height={height}
-          className={className}
           type="application/pdf"
+          {...embedProps}
         />
       );
-    }, [className, height, width, preview, blob, loading]);
+    }, [embedProps, preview, blob, loading]);
 
     const wrapper = useMemo<React.ReactNode>(() => {
       return (
@@ -147,29 +154,31 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     }, [preview, wrapper]);
 
     useEffect(() => {
-      update();
+      createDocument();
     }, [children]);
 
     useEffect(() => {
-      updateFooterAndHeader();
+      addFootersAndHeaders();
     }, [footerComponents, headerComponents]);
 
     useImperativeHandle(
       forwardedRef,
       () => {
         return {
-          update,
-          getDocument,
+          update: () => createDocument(),
+          save: (filename?: string) => document?.save(filename),
+          open: () => document?.open,
+          getDocument: () => document
         };
       },
-      [update, getDocument]
+      [document]
     );
 
-    console.log("render pdf preview", preview, pdfPreview);
+    console.log("render pdf preview", preview, previewComponent);
 
     return (
       <>
-        {pdfPreview}
+        {previewComponent}
         {footerComponents}
         {headerComponents}
         {bodyComponent}

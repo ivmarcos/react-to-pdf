@@ -1,13 +1,18 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { ConversionOptions, Options } from "./types";
+import { PDFOptions, Options, DocumentConverterOptions, PDFProps, FooterHeaderOptions } from "./types";
 
 import { DEFAULT_OPTIONS, Position, Size } from "./constants";
 import { mmToPX, pxToMM } from "./utils";
 
-export const parseConversionOptions = (
-  options?: Partial<Options>
-): ConversionOptions => {
+interface DocumentConverterPartialOptions extends Omit<Partial<DocumentConverterOptions>, "footer"|  "header"> {
+  footer?: Partial<FooterHeaderOptions>,
+  header?: Partial<FooterHeaderOptions>
+}
+
+export const parseOptions = (
+  options?: DocumentConverterPartialOptions,
+): DocumentConverterOptions => {
   if (!options) {
     return DEFAULT_OPTIONS;
   }
@@ -16,6 +21,14 @@ export const parseConversionOptions = (
     ...options,
     canvas: { ...DEFAULT_OPTIONS.canvas, ...options.canvas },
     page: { ...DEFAULT_OPTIONS.page, ...options.page },
+    footer: {
+      ...DEFAULT_OPTIONS.footer,
+      ...options?.footer
+    },
+    header: {
+      ...DEFAULT_OPTIONS.header,
+      ...options?.header
+    }
   };
 };
 
@@ -23,10 +36,11 @@ interface ImageCoordinates {
   x: number;
   y: number;
 }
+
 export class DocumentConverter {
-  options: ConversionOptions;
-  constructor(options?: Partial<Options>) {
-    this.options = parseConversionOptions(options);
+  options: DocumentConverterOptions;
+  constructor(options?: DocumentConverterPartialOptions) {
+    this.options = parseOptions(options);
   }
   calculateHorizontalFitScale(elementWidth: number, maxWidth: number) {
     if (elementWidth > maxWidth) {
@@ -113,28 +127,46 @@ export class DocumentConverter {
       imageWidth,
       document.getPageWidth()
     );
-    switch (true) {
-      // case VERTICALLY_CENTERED:
-      //   return document.getPageWidth() / 2 - imageWidth / 2;
+    const y = document.getPageHeight() - this.options.footer.margin - imageHeigth;
+    switch (this.options.footer?.position) {
+      case 'right':
+        return {
+          x: document.getPageWidth() - document.getMarginRight() - imageWidth,
+          y,
+        };
+      case 'left':
+        return {
+          x: document.getMarginLeft(),
+          y,
+        };
       default:
         return {
           x: document.getPageWidth() / 2 - imageWidth / 2,
-          y: document.getPageHeight() - document.getMarginBottom() - 5,
+          y
         };
-    }
+      }
   }
   calculateCoordinatesHeader(
     document: InstanceType<typeof Document>,
     imageWidth: number,
     imageHeigth: number
   ): ImageCoordinates {
-    switch (true) {
-      // case VERTICALLY_CENTERED:
-      //   return document.getPageWidth() / 2 - imageWidth / 2;
+    const y = this.options.header.margin;
+    switch (this.options.header.position) {
+      case 'right':
+        return {
+          x: document.getPageWidth() - document.getMarginRight() - imageWidth,
+          y,
+        };
+      case 'left':
+        return {
+          x: document.getMarginLeft(),
+          y,
+        };
       default:
         return {
           x: document.getPageWidth() / 2 - imageWidth / 2,
-          y: document.getMarginTop() - 5,
+          y
         };
     }
   }
@@ -245,9 +277,9 @@ export class DocumentConverter {
 }
 
 export class Document {
-  options: ConversionOptions;
+  options: DocumentConverterOptions;
   instance: InstanceType<typeof jsPDF>;
-  constructor(options: ConversionOptions) {
+  constructor(options: DocumentConverterOptions) {
     this.options = options;
     this.instance = new jsPDF({
       format: this.options.page.format,
@@ -449,7 +481,7 @@ class Image {
 class CanvasConverter {
   maxWidth: number;
   maxHeight: number;
-  options: ConversionOptions;
+  options: DocumentConverterOptions;
 
   constructor({
     maxHeight,
@@ -458,7 +490,7 @@ class CanvasConverter {
   }: {
     maxHeight: number;
     maxWidth: number;
-    options: ConversionOptions;
+    options: DocumentConverterOptions;
   }) {
     this.maxHeight = maxHeight;
     this.maxWidth = maxWidth;

@@ -1,18 +1,22 @@
-import html2canvas from "html2canvas";
 import { useCallback, useRef } from "react";
 
 import jsPDF from "jspdf";
 import { DocumentConverter } from "./converter";
 import { Options, TargetElementFinder, UsePDFResult } from "./types";
-export { Margin, Resolution } from "./constants";
+export { Margin, Resolution, Position, Size } from "./constants";
 export * from "./PDF";
 export * from "./types";
+export {pxToMM, mmToPX} from './utils'
 
-const getTargetElement = (targetRefOrFunction: TargetElementFinder) => {
+const getTargetElement = (targetRefOrFunction: TargetElementFinder): HTMLElement | undefined => {
   if (typeof targetRefOrFunction === "function") {
     return targetRefOrFunction();
   }
-  return targetRefOrFunction?.current;
+  const element = targetRefOrFunction?.current;
+  if (!element) {
+    console.error("Unable to get the target element.");
+  }
+  return element;
 };
 
 export const usePDF = (usePDFoptions?: Options): UsePDFResult => {
@@ -26,13 +30,41 @@ export const usePDF = (usePDFoptions?: Options): UsePDFResult => {
   return { targetRef, toPDF };
 };
 
+export const open = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
+  const targetElement = getTargetElement(targetRefOrFunction);
+  if (!targetElement) {
+    return;
+  }
+  const converter = new DocumentConverter(options);
+  const document = await converter.createDocument(targetElement);
+  document.open();
+}
+
+export const save = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
+  const targetElement = getTargetElement(targetRefOrFunction);
+  if (!targetElement) {
+    return;
+  }
+  const converter = new DocumentConverter(options);
+  const document = await converter.createDocument(targetElement);
+  return document.save();
+}
+
+export const create = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
+  const targetElement = getTargetElement(targetRefOrFunction);
+  if (!targetElement) {
+    return;
+  }
+  const converter = new DocumentConverter(options);
+  return converter.createDocument(targetElement);
+}
+
 const generatePDF = async (
   targetRefOrFunction: TargetElementFinder,
   options?: Options
 ): Promise<InstanceType<typeof jsPDF>> => {
   const targetElement = getTargetElement(targetRefOrFunction);
   if (!targetElement) {
-    console.error("Unable to get the target element.");
     return;
   }
   const converter = new DocumentConverter(options);

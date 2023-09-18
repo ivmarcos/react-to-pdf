@@ -11,6 +11,7 @@ export type DetailedMargin = {
   left: Margin | number;
 };
 
+export type HorizontalPosition = 'left' | 'center' | 'right';
 interface PageConversionOptions {
   /** Margin of the page in MM, defaults to 0. */
   margin: DetailedMargin | Margin | number;
@@ -35,7 +36,7 @@ interface CanvasConversionOptions
   qualityRatio: number;
 }
 
-export interface ConversionOptions {
+export interface PDFOptions {
   /**
    * File name of the PDF file if the method select is `save`, which is the
    * default. Not used for the `build` and `open` methods. *
@@ -71,16 +72,16 @@ export interface ConversionOptions {
 }
 
 export interface Options
-  extends Omit<ConversionOptions, "page" | "canvas" | "overrides"> {
+  extends Omit<Partial<PDFOptions>, "page" | "canvas" | "overrides"> {
   page?: Partial<PageConversionOptions>;
   canvas?: Partial<CanvasConversionOptions>;
-  overrides?: Partial<ConversionOptions["overrides"]>;
+  overrides?: Partial<PDFOptions["overrides"]>;
   /**
    * Method that will follow to do with the PDF file. The `build` method just
    * returns the PDF instance in the invoked function `generatePDF` or `toPDF`.
    * By default is `open`.
    */
-    method: "save" | "open" | "build";
+  method?: "save" | "open" | "build";
 }
 
 export interface UsePDFResult {
@@ -103,19 +104,15 @@ export interface RenderFooterHeaderProps {
   pages: number;
 }
 
-export enum FooterHeaderPosition {
-  LEFT = "left",
-  CENTER = "center",
-  RIGHT = "right",
-}
-export interface FooterHeaderProps {
+
+export interface FooterHeaderOptions {
   render: (RenderFooterHeaderProps) => React.ReactElement;
-  margin?: Margin | number;
-  position?: FooterHeaderPosition;
+  margin: Margin | number;
+  position: HorizontalPosition;
 }
 export interface PDFProps
-  extends Omit<Options, "filename" | "method">,
-    Pick<React.HTMLProps<HTMLEmbedElement>, "width" | "height" | "className"> {
+  extends Omit<Options, "filename" | "method"> {
+    
   /** Set the preview mode for the document.
    * - `false` (default) - component is not visible
    * - `true` or `embed` - render the embed PDF component
@@ -127,13 +124,28 @@ export interface PDFProps
   /** Loading component to display when the PDF document is being generated. For
    * example, `loading={<div>Loading...</div>}`. */
   loading?: React.ReactNode;
-  footer?: FooterHeaderProps;
-  header?: FooterHeaderProps;
+  footer?: Partial<FooterHeaderOptions>;
+  header?: Partial<FooterHeaderOptions>;
+  embedProps?: React.HTMLProps<HTMLEmbedElement>;
+}
+
+// export interface DocumentConverterOptions extends Options {
+//   footer: Omit<FooterHeaderOptions, "render">,
+//   header: Omit<FooterHeaderOptions, "render">
+// }
+
+export interface DocumentConverterOptions extends Options {
+  footer: Omit<FooterHeaderOptions, "render">,
+  header: Omit<FooterHeaderOptions, "render">
 }
 
 export interface PDFHandle {
   /** Update the PDF document. */
-  update: () => void;
+  update: () => Promise<void>;
+  /** Save the PDF document. */
+  save: (filename?: string) => Promise<void>,
+  /** Open the PDF document. */
+  open: () => void;
   /** Return the instance of the Document. */
   getDocument: () => InstanceType<typeof Document> | undefined;
 }

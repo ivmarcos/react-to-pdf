@@ -10,7 +10,7 @@ export const App = () => {
   return (
     <div className="app-container">
       <h1>React to PDF - Examples</h1>
-      {(examples || []).slice(5, 6).map((example) => (
+      {(examples || []).slice(5,6).map((example) => (
         <a id={`example-${slugify(example.title)}`} key={example.title}>
           <h3>{example.title}</h3>
           {example.content && <Code>{example.content}</Code>}

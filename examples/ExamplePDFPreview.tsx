@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Margin, PDFHandle, PDF, Resolution } from "react-to-pdf";
+import { Margin, PDFHandle, PDF, Resolution, mmToPX } from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
@@ -16,24 +16,34 @@ export const ExamplePDFPreview = () => {
         preview
         ref={pdfRef}
         resolution={Resolution.MEDIUM}
-        page={{ margin: Margin.MEDIUM }}
+        page={{ margin: {
+          top: 15,
+          left: 15,
+          right: 15,
+          bottom: 15
+        } }}
+        canvas={{
+          qualityRatio: 0.8
+        }}
         size={Size.ORIGINAL_SIZE}
-        // position={Position.TOP_LEFT}
+        position={Position.CENTERED_X_AXIS}
         footer={{
-          render: ({ page, pages }) =>
-            page === 1 ? null : (
-              <div>
-                {page} of {pages}
-              </div>
-            ),
+          render: ({ page, pages }) => 
+           <div style={{width: mmToPX(190), display: 'flex', justifyContent: 'space-between'}}>
+                <div>React to PDF - {new Date().getTime()}</div>
+                <div>{page} of {pages}</div>
+           </div>
+          ,
+          position: 'center',
         }}
         header={{
           render: ({ page }) => (
             <div style={{ background: "red" }}>Header {page}</div>
           ),
+          position: 'left',
+          margin: 5
         }}
-        width="100%"
-        height="400"
+        embedProps={{width: '100%', height: '400'}}
         loading={<div>Loading...</div>}
       >
         {Array(1)
@@ -42,7 +52,7 @@ export const ExamplePDFPreview = () => {
             // <div style={{backgroundColor: 'green', width: 10000, height: 100}} key={index}>
             //   test
             // </div>
-            <Card key={index} imageId={45} title="PDF preview example ====" />
+            <Card key={index} imageId={45} title="PDF preview example" />
           ))}
       </PDF>
     </Container>

@@ -1,4 +1,4 @@
-import { ConversionOptions } from "./types";
+import { DocumentConverterOptions, PDFOptions } from "./types";
 
 export const MM_TO_PX = 3.77952755906;
 export const PREVIEW_ROOT_CLASS_NAME = "react-to-pdf-preview";
@@ -31,7 +31,7 @@ export enum Size {
   SHRINK_TO_FIT = 'shrink_to_fit',
 }
 
-export const DEFAULT_OPTIONS: Readonly<ConversionOptions> = {
+export const DEFAULT_OPTIONS: Readonly<DocumentConverterOptions> = {
   resolution: Resolution.MEDIUM,
   page: {
     margin: Margin.NONE,
@@ -46,5 +46,13 @@ export const DEFAULT_OPTIONS: Readonly<ConversionOptions> = {
   },
   overrides: {},
   position: Position.TOP_LEFT,
-  size: Size.ORIGINAL_SIZE
+  size: Size.ORIGINAL_SIZE,
+  header: {
+    margin: 7,
+    position: 'center'
+  },
+  footer: {
+    margin: 7,
+    position: 'center'
+  }
 };
