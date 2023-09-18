@@ -7,13 +7,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { FooterHeaderOptions, PDFHandle, PDFProps } from ".";
+import { PDFHandle, PDFProps } from ".";
 import { PreviewPortal } from "./PreviewPortal";
+import { Document } from "./document";
 import {
   DocumentConverter,
   DocumentConverterPartialOptions,
 } from "./documentConverter";
-import { Document } from "./document";
 
 const previewStyle: CSSProperties = {
   position: "fixed",
@@ -186,8 +186,6 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       },
       [document]
     );
-
-    console.log("render pdf preview", preview, previewComponent);
 
     return (
       <>

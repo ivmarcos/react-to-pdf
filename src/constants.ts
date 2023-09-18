@@ -1,12 +1,11 @@
 import {
   AlignmentOption,
   DocumentConverterOptions,
-  PDFOptions,
-  SizeOption,
+  SizeOption
 } from "./types";
 
 export const MM_TO_PX = 3.77952755906;
-export const PREVIEW_ROOT_CLASS_NAME = "react-to-pdf-preview";
+export const PREVIEW_ROOT_CLASS_NAME = "react-to-pdf--preview";
 
 export enum Resolution {
   LOW = 1,

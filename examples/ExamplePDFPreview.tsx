@@ -27,7 +27,7 @@ export const ExamplePDFPreview = () => {
   const containerRef = useRef<HTMLDivElement>();
   return (
     <Container>
-      <Button onClick={() => save(pdfRef)}>Download PDF</Button>
+      <Button onClick={() => print(pdfRef)}>Download PDF</Button>
       <Button onClick={() => print(containerRef)}>Download PDF - 2</Button>
       <div ref={containerRef}>test</div>
       <PDF
@@ -41,6 +41,7 @@ export const ExamplePDFPreview = () => {
             right: 15,
             bottom: 15,
           },
+          format: 'letter'
         }}
         canvas={{
           qualityRatio: 0.93,

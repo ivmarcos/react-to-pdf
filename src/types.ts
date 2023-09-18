@@ -18,11 +18,12 @@ export type AlignmentOption =
   | "center-x"
   | "center-xy";
 export type SizeOption = "original" | "fill-page" | "shrink-to-fit";
+export type PreviewOption = boolean | "embed" | "children";
 
-interface PageConversionOptions {
+interface PageOptions {
   /** Margin of the page in MM, defaults to 0. */
   margin: DetailedMargin | Margin | number;
-  /** Format of the page (A4, letter), defaults to A4. */
+  /** Format of the page, e.g `a4`, `letter`, defaults to `a4`. */
   format: jsPDFOptions["format"];
   /** Orientation of the page (portrait or landscape), defaults to `portrait`. */
   orientation: jsPDFOptions["orientation"];
@@ -58,7 +59,7 @@ export interface PDFOptions {
    */
   resolution: Resolution | number;
   /** Page options */
-  page: PageConversionOptions;
+  page: PageOptions;
   /** Canvas options */
   canvas: CanvasConversionOptions;
   /** Override values passed for the jsPDF document and html2canvas */
@@ -80,7 +81,7 @@ export interface PDFOptions {
 
 export interface Options
   extends Omit<Partial<PDFOptions>, "page" | "canvas" | "overrides"> {
-  page?: Partial<PageConversionOptions>;
+  page?: Partial<PageOptions>;
   canvas?: Partial<CanvasConversionOptions>;
   overrides?: Partial<PDFOptions["overrides"]>;
   /**
@@ -122,7 +123,7 @@ export interface PDFProps extends Omit<Options, "filename" | "method"> {
    * - `true` or `embed` - render the embed PDF component
    * - `component` - render the component
    */
-  preview?: PDFPreview;
+  preview?: PreviewOption;
   /** Content to be generated to the PDF document. */
   children: React.ReactNode;
   /** Loading component to display when the PDF document is being generated. For
@@ -132,11 +133,6 @@ export interface PDFProps extends Omit<Options, "filename" | "method"> {
   header?: FooterHeaderOptions | React.FC<FooterHeaderProps>;
   embedProps?: React.HTMLProps<HTMLEmbedElement>;
 }
-
-// export interface DocumentConverterOptions extends Options {
-//   footer: Omit<FooterHeaderOptions, "render">,
-//   header: Omit<FooterHeaderOptions, "render">
-// }
 
 export interface DocumentConverterOptions extends Options {
   footer: Required<Omit<FooterHeaderOptions, "component">>;
@@ -158,4 +154,3 @@ export interface PDFHandle {
 
 export type PDFSaveOptions = Pick<Options, "filename">;
 
-export type PDFPreview = boolean | "embed" | "children";

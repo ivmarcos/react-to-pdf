@@ -31,7 +31,6 @@ export class CanvasConverter {
       scale,
       ...this.options.canvas,
       ...this.options.overrides.canvas,
-      logging: true,
     });
   }
   calculateResizeScale(element: HTMLElement) {

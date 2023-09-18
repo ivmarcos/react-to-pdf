@@ -67,7 +67,7 @@ export class Document {
     this.instance.output("dataurlnewwindow");
   }
   getBlob() {
-    return new Blob([this.instance.output("blob")]);
+    return new Blob([this.instance.output("blob")], {type: 'application/pdf'});
   }
   getBlobURL() {
     return this.instance.output("bloburl");
