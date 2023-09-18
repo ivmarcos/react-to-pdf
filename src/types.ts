@@ -1,7 +1,7 @@
 import React, { MutableRefObject } from "react";
 import jsPDF, { jsPDFOptions } from "jspdf";
 import { Options as Html2CanvasOptions } from "html2canvas";
-import { Margin, Resolution } from "./constants";
+import { Margin, Position, Resolution, Size } from "./constants";
 import { Document } from "./converter";
 
 export type DetailedMargin = {
@@ -42,12 +42,6 @@ export interface ConversionOptions {
    */
   filename?: string;
   /**
-   * Method that will follow to do with the PDF file. The `build` method just
-   * returns the PDF instance in the invoked function `generatePDF` or `toPDF`.
-   * By default is `open`.
-   */
-  method: "save" | "open" | "build";
-  /**
    * Resolution in a scale where 1 gives a low resolution and possible blurred
    * image, 3 a medium and 10 an extreme quality. The size of the file increases
    * as the resolution is higher. Not recommended to use extreme resolution, e.g
@@ -72,13 +66,21 @@ export interface ConversionOptions {
      * */
     canvas?: Partial<Html2CanvasOptions>;
   };
+  position?: Position;
+  size?: Size;
 }
 
 export interface Options
-  extends Omit<Partial<ConversionOptions>, "page" | "canvas" | "overrides"> {
+  extends Omit<ConversionOptions, "page" | "canvas" | "overrides"> {
   page?: Partial<PageConversionOptions>;
   canvas?: Partial<CanvasConversionOptions>;
   overrides?: Partial<ConversionOptions["overrides"]>;
+  /**
+   * Method that will follow to do with the PDF file. The `build` method just
+   * returns the PDF instance in the invoked function `generatePDF` or `toPDF`.
+   * By default is `open`.
+   */
+    method: "save" | "open" | "build";
 }
 
 export interface UsePDFResult {
@@ -132,11 +134,7 @@ export interface PDFProps
 export interface PDFHandle {
   /** Update the PDF document. */
   update: () => void;
-  /** Save the PDF document (download the file). */
-  save: (saveOptions?: PDFSaveOptions) => Promise<void>;
-  /** Open the PDF file in a new tab. */
-  open: () => void;
-  /** Return the Document instance. */
+  /** Return the instance of the Document. */
   getDocument: () => InstanceType<typeof Document> | undefined;
 }
 

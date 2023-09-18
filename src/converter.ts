@@ -1,32 +1,12 @@
 import html2canvas from "html2canvas";
-import jsPDF, { Html2CanvasOptions } from "jspdf";
-import { MM_TO_PX } from "./constants";
+import jsPDF from "jspdf";
 import { ConversionOptions, Options } from "./types";
 
-enum Position {
-  TOP_LEFT = "top_left",
-  CENTERED_Y_AXIS = "centered_y_axis",
-  CENTERED_X_AXIS = "centered_x_axis",
-  CENTERED_XY_AXIS = "centered_xy_axis",
-}
-
-enum Fit {
-  DEFAULT = "default",
-  FILL_PAGE = "fill_page",
-}
-let position = Position.CENTERED_X_AXIS;
-let fit = Fit.FILL_PAGE;
-
-const FILL_PAGE = "true";
-const VERTICALLY_CENTERED = "true";
-
-import { DEFAULT_OPTIONS } from "./constants";
-import { over } from "cypress/types/lodash";
+import { DEFAULT_OPTIONS, Position, Size } from "./constants";
 import { mmToPX, pxToMM } from "./utils";
-import { Coordinates } from "compare-pdf";
 
 export const parseConversionOptions = (
-  options?: Options
+  options?: Partial<Options>
 ): ConversionOptions => {
   if (!options) {
     return DEFAULT_OPTIONS;
@@ -45,7 +25,7 @@ interface ImageCoordinates {
 }
 export class DocumentConverter {
   options: ConversionOptions;
-  constructor(options?: Options) {
+  constructor(options?: Partial<Options>) {
     this.options = parseConversionOptions(options);
   }
   calculateHorizontalFitScale(elementWidth: number, maxWidth: number) {
@@ -91,7 +71,7 @@ export class DocumentConverter {
     imageWidth: number,
     imageHeight: number
   ): ImageCoordinates {
-    switch (position) {
+    switch (this.options.position) {
       case Position.CENTERED_XY_AXIS: {
         return {
           x: document.getPageWidth() / 2 - imageWidth / 2,
@@ -158,7 +138,7 @@ export class DocumentConverter {
         };
     }
   }
-  async convert(element: HTMLElement): Promise<InstanceType<typeof Document>> {
+  async createDocument(element: HTMLElement): Promise<InstanceType<typeof Document>> {
     const document = new Document(this.options);
     const documentMaxHeight = mmToPX(document.getPageMaxHeight());
     const documentMaxWidth = mmToPX(document.getPageMaxWidth());
@@ -167,7 +147,7 @@ export class DocumentConverter {
       maxWidth: documentMaxWidth,
       options: this.options,
     });
-    const images = await canvasConverter.htmlToCanvasImages(element);
+    const images = await canvasConverter.htmlToCanvasImages(element, true);
     console.log("debug images", images);
     images.forEach((image, pageIndex) => {
       if (pageIndex) {
@@ -408,8 +388,11 @@ class CanvasUtils {
     return croppedCanvas;
   }
   static calculateHeightOffset({ maxHeight, height, offsetY }): number {
-    if (height < maxHeight || height - offsetY < maxHeight) {
+    if (height < maxHeight) {
       return height;
+    }
+    if (height - offsetY < maxHeight){
+      return height - offsetY;
     }
     return maxHeight;
   }
@@ -421,7 +404,7 @@ class CanvasUtils {
     size: number;
   }) {
     if (size > maxSize) {
-      return size / maxSize;
+      return maxSize / size;
     }
     return 1;
   }
@@ -432,10 +415,11 @@ class CanvasUtils {
     targetSize: number;
     size: number;
   }) {
-    if (size > targetSize) {
-      return size / targetSize;
+    console.log('DEBUG FILL RATIO', {targetSize, size})
+    if (size < targetSize) {
+      return targetSize / size;
     }
-    return targetSize / size;
+    return size / targetSize;
   }
 }
 
@@ -492,68 +476,48 @@ class CanvasConverter {
       logging: true,
     });
   }
-  calculateScale(element: HTMLElement) {
-    return (
-      this.options.resolution *
-      CanvasUtils.calculateFitRatio({
-        size: element.offsetWidth,
-        maxSize: this.maxWidth,
-      })
-    );
-  }
-  calculateFitScale(element: HTMLElement) {
-    const elementWidth = element.offsetWidth;
-    switch (fit) {
-      case Fit.FILL_PAGE: {
-        const fillRatio = CanvasUtils.calculateFillRatio({
-          size: elementWidth,
-          targetSize: this.maxWidth,
-        });
-        return this.options.resolution * fillRatio;
-      }
+  calculateDisplayScale(element: HTMLElement){
+    switch (this.options.size){
+      // case Size.SHRINK_TO_FIT: {
+      //   const fitRatio = CanvasUtils.calculateFitRatio({maxSize: this.maxWidth, size: element.offsetWidth});
+      //   console.log('SHRINK TO FIT!', {maxSize: this.maxWidth, size: element.offsetWidth, fitRatio})
+      //   return this.options.resolution * fitRatio;
+      // }
       default:
-        return (
-          this.options.resolution *
-          CanvasUtils.calculateFitRatio({
-            size: element.offsetWidth,
-            maxSize: this.maxWidth,
-          })
-        );
+         return this.options.resolution;
     }
   }
-  calculateMaxHeight(canvas: HTMLCanvasElement, scale) {
-    const originalCanvasWidth = canvas.width / scale;
-    if (originalCanvasWidth > this.maxWidth) {
-      const resizeFitRatio = CanvasUtils.calculateFitRatio({
-        size: originalCanvasWidth,
-        maxSize: this.maxWidth,
-      });
-      return this.maxHeight * resizeFitRatio * scale;
+  calculateResizeScale(element: HTMLElement) {
+    switch (this.options.size){
+      case Size.SHRINK_TO_FIT: 
+        return CanvasUtils.calculateFitRatio({maxSize: this.maxWidth, size: element.offsetWidth});
+      case Size.FILL_PAGE:
+        return CanvasUtils.calculateFillRatio({targetSize: this.maxWidth, size: element.offsetWidth})
+      default: 
+        return 1;
     }
-    return this.maxHeight * scale;
   }
 
   async htmlToCanvasImage(
     element: HTMLElement
   ): Promise<InstanceType<typeof Image>> {
-    const scale = this.calculateScale(element);
+    const scale = this.calculateDisplayScale(element);
     const canvas = await this.htmlToCanvas(element, scale);
     console.log("SIMPLE CANVAS", scale, canvas.width, canvas.height);
     return new Image(canvas, scale);
   }
 
   async htmlToCanvasImages(
-    element: HTMLElement
+    element: HTMLElement,
+    allowResize?: boolean
   ): Promise<InstanceType<typeof Image>[]> {
-    const scale = this.calculateScale(element);
+    const displayScale = this.calculateDisplayScale(element);
+    const resizeScale = allowResize ? this.calculateResizeScale(element) : 1;
     console.log("DEBUG BEFORE CONVERTING TO CANVAS", element.offsetHeight);
-    const fillScale = CanvasUtils.calculateFillRatio({
-      targetSize: this.maxWidth,
-      size: element.offsetWidth,
-    });
-    const canvas = await this.htmlToCanvas(element, scale * fillScale);
-    console.log("DEBUG AFTER CONVERTING TO CANVAS", element.offsetHeight);
-    const canvasMaxHeight = this.calculateMaxHeight(canvas, scale * fillScale);
+    console.log("DEBUG SCALES!", {displayScale, resizeScale});
+    const canvas = await this.htmlToCanvas(element, displayScale * resizeScale);
+    const canvasMaxHeight = this.maxHeight * displayScale;//this.calculateMaxHeight(canvas, scale * fillScale);
+    console.log("DEBUG AFTER CONVERTING TO CANVAS", canvasMaxHeight, element.offsetHeight);
     const numberImages = Math.ceil(canvas.height / canvasMaxHeight);
     console.log(
       "DEBUG converting to images",
@@ -561,9 +525,8 @@ class CanvasConverter {
         {
           elementWidth: element.offsetWidth,
           elementHeight: element.offsetHeight,
-          scale,
+          scale: displayScale,
           canvasWidth: canvas.width,
-          canvasOriginalHeight: canvas.height / scale,
           canvasHeight: canvas.height,
           documentMaxWidth: this.maxWidth,
           canvasMaxHeight,
@@ -577,6 +540,7 @@ class CanvasConverter {
       .map((_, pageIndex) => {
         const width = canvas.width;
         const offsetY = canvasMaxHeight * pageIndex;
+        console.log('DEBUG CROP CANVAS', offsetY, pageIndex +1 )
         const height = CanvasUtils.calculateHeightOffset({
           maxHeight: canvasMaxHeight,
           height: canvas.height,
@@ -588,183 +552,7 @@ class CanvasConverter {
           offsetY,
           canvas,
         });
-        return new Image(croppedCanvas, scale);
+        return new Image(croppedCanvas, displayScale);
       });
-  }
-}
-
-export default class OldConverter {
-  pdf: InstanceType<typeof jsPDF>;
-  canvas: HTMLCanvasElement;
-  options: ConversionOptions;
-  constructor(canvas: HTMLCanvasElement, options: ConversionOptions) {
-    this.canvas = canvas;
-    this.options = options;
-    this.pdf = new jsPDF({
-      format: this.options.page.format,
-      orientation: this.options.page.orientation,
-      ...this.options.overrides?.pdf,
-      unit: "mm",
-    });
-  }
-  getMarginTopMM() {
-    const margin =
-      typeof this.options.page.margin === "object"
-        ? this.options.page.margin.top
-        : this.options.page.margin;
-    return Number(margin);
-  }
-  getMarginLeftMM() {
-    const margin =
-      typeof this.options.page.margin === "object"
-        ? this.options.page.margin.left
-        : this.options.page.margin;
-    return Number(margin);
-  }
-  getMarginRightMM() {
-    const margin =
-      typeof this.options.page.margin === "object"
-        ? this.options.page.margin.right
-        : this.options.page.margin;
-    return Number(margin);
-  }
-  getMarginBottomMM() {
-    const margin =
-      typeof this.options.page.margin === "object"
-        ? this.options.page.margin.bottom
-        : this.options.page.margin;
-    return Number(margin);
-  }
-  getMarginTop() {
-    return this.getMarginTopMM() * MM_TO_PX;
-  }
-  getMarginBottom() {
-    return this.getMarginBottomMM() * MM_TO_PX;
-  }
-  getMarginLeft() {
-    return this.getMarginLeftMM() * MM_TO_PX;
-  }
-  getMarginRight() {
-    return this.getMarginRightMM() * MM_TO_PX;
-  }
-  getScale() {
-    return this.options.resolution;
-  }
-  getPageHeight() {
-    return this.getPageHeightMM() * MM_TO_PX;
-  }
-  getPageHeightMM() {
-    return this.pdf.internal.pageSize.height;
-  }
-  getPageWidthMM() {
-    return this.pdf.internal.pageSize.width;
-  }
-  getPageWidth() {
-    return this.getPageWidthMM() * MM_TO_PX;
-  }
-  getOriginalCanvasWidth() {
-    return this.canvas.width / this.getScale();
-  }
-  getOriginalCanvasHeight() {
-    return this.canvas.height / this.getScale();
-  }
-  getCanvasPageAvailableHeight() {
-    return (
-      this.getPageAvailableHeight() *
-      this.getScale() *
-      this.getHorizontalFitFactor()
-    );
-  }
-  getPageAvailableWidth() {
-    return this.getPageWidth() - (this.getMarginLeft() + this.getMarginRight());
-  }
-  getPageAvailableHeight() {
-    return (
-      this.getPageHeight() - (this.getMarginTop() + this.getMarginBottom())
-    );
-  }
-  getPageAvailableWidthMM() {
-    return this.getPageAvailableWidth() / MM_TO_PX;
-  }
-  getPageAvailableHeightMM() {
-    return this.getPageAvailableHeight() / MM_TO_PX;
-  }
-  getNumberPages() {
-    return Math.ceil(this.canvas.height / this.getCanvasPageAvailableHeight());
-  }
-  getHorizontalFitFactor() {
-    if (this.getPageAvailableWidth() < this.getOriginalCanvasWidth()) {
-      return this.getOriginalCanvasWidth() / this.getPageAvailableWidth();
-    }
-    return 1;
-  }
-  getCanvasOffsetY(pageNumber: number) {
-    return this.getCanvasPageAvailableHeight() * (pageNumber - 1);
-  }
-  getCanvasHeightLeft(pageNumber: number) {
-    return this.canvas.height - this.getCanvasOffsetY(pageNumber);
-  }
-  getCanvasPageHeight(pageNumber: number) {
-    if (this.canvas.height < this.getCanvasPageAvailableHeight()) {
-      return this.canvas.height;
-    }
-    const canvasHeightPending = this.getCanvasHeightLeft(pageNumber);
-    return canvasHeightPending < this.getCanvasPageAvailableHeight()
-      ? canvasHeightPending
-      : this.getCanvasPageAvailableHeight();
-  }
-  getCanvasPageWidth() {
-    return this.canvas.width;
-  }
-  createCanvasPage(pageNumber: number): HTMLCanvasElement {
-    const canvasPageWidth = this.getCanvasPageWidth();
-    const canvasPageHeight = this.getCanvasPageHeight(pageNumber);
-    const canvasPage = document.createElement("canvas");
-    canvasPage.setAttribute("width", String(canvasPageWidth));
-    canvasPage.setAttribute("height", String(canvasPageHeight));
-    const ctx = canvasPage.getContext("2d");
-    ctx.drawImage(
-      this.canvas,
-      0,
-      this.getCanvasOffsetY(pageNumber),
-      this.canvas.width,
-      canvasPageHeight,
-      0,
-      0,
-      this.canvas.width,
-      canvasPageHeight
-    );
-    return canvasPage;
-  }
-  convert(): InstanceType<typeof jsPDF> {
-    let pageNumber = 1;
-    const numberPages = this.getNumberPages();
-    while (pageNumber <= numberPages) {
-      if (pageNumber > 1) {
-        this.pdf.addPage(
-          this.options.page.format,
-          this.options.page.orientation
-        );
-      }
-      const canvasPage = this.createCanvasPage(pageNumber);
-      const pageImageDataURL = canvasPage.toDataURL(
-        this.options.canvas.mimeType,
-        this.options.canvas.qualityRatio
-      );
-      this.pdf.setPage(pageNumber);
-      this.pdf.addImage({
-        imageData: pageImageDataURL,
-        width:
-          canvasPage.width /
-          (this.getScale() * MM_TO_PX * this.getHorizontalFitFactor()),
-        height:
-          canvasPage.height /
-          (this.getScale() * MM_TO_PX * this.getHorizontalFitFactor()),
-        x: this.getMarginLeftMM(),
-        y: this.getMarginTopMM(),
-      });
-      pageNumber += 1;
-    }
-    return this.pdf;
   }
 }

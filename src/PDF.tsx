@@ -43,23 +43,14 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     const containerRef = useRef<HTMLDivElement>(null);
     const footerRefs = useRef<Record<number, HTMLDivElement>>({});
     const headerRefs = useRef<Record<number, HTMLDivElement>>({});
-    // const optionsString = JSON.stringify(options);
-
-    const save = useCallback<PDFHandle["save"]>(async (saveOptions) => {
-      document.save(saveOptions.filename);
-    }, []);
-
-    const open = useCallback<PDFHandle["open"]>(() => {
-      document.open();
-    }, []);
 
     const getDocument = useCallback<PDFHandle["getDocument"]>(() => {
       return document;
-    }, []);
+    }, [document]);
 
     const updateFooterAndHeader = async () => {
-      console.log("update footer", document);
-      if (!document) return;
+      if (!document || (!footer && !header)) return;
+      console.log("update footer", document, footerRefs.current);
       const footerElements = Object.values(footerRefs.current).map(
         (containerElement) =>
           containerElement.hasChildNodes() ? containerElement : null
@@ -69,18 +60,17 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
           containerElement.hasChildNodes() ? containerElement : null
       );
       const converter = new DocumentConverter(options);
-      await converter.addFooterAndHeaderToDocument({
-        document,
-        footerElements,
-        headerElements,
-      });
+      // await converter.addFooterAndHeaderToDocument({
+      //   document,
+      //   footerElements,
+      //   headerElements,
+      // });
       setBlob(document.getBlobURL());
     };
 
     const update = async () => {
-      console.log("debug updating", preview);
       const converter = new DocumentConverter(options);
-      const document = await converter.convert(containerRef.current);
+      const document = await converter.createDocument(containerRef.current);
       setDocument(document);
       // setBlob(document.getBlobURL());
     };
@@ -124,7 +114,6 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     }, [document]);
 
     const pdfPreview = useMemo<React.ReactNode | null>(() => {
-      console.log("pdfPreview", preview, blob);
       if (!preview || preview === "component") {
         return null;
       }
@@ -170,12 +159,10 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       () => {
         return {
           update,
-          open,
-          save,
           getDocument,
         };
       },
-      [update, open, save, getDocument]
+      [update, getDocument]
     );
 
     console.log("render pdf preview", preview, pdfPreview);

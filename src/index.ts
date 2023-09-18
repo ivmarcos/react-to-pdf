@@ -36,7 +36,7 @@ const generatePDF = async (
     return;
   }
   const converter = new DocumentConverter(options);
-  const document = await converter.convert(targetElement);
+  const document = await converter.createDocument(targetElement);
   switch (options?.method) {
     case "build":
       return document.getInstance();
