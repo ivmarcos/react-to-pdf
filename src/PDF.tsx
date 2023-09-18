@@ -7,14 +7,16 @@ import React, {
   forwardRef,
   useCallback,
   useMemo,
+  useLayoutEffect,
 } from "react";
 import generatePDF, { PDFProps, PDFHandle } from ".";
 import { PreviewPortal } from "./PreviewPortal";
 import jsPDF from "jspdf";
-import { Converter, Document } from "./converter";
+import { DocumentConverter, Document } from "./converter";
 
 const previewStyle: CSSProperties = {
   position: "fixed",
+  left: '-10000rem'
 };
 
 export const PDF = forwardRef<PDFHandle, PDFProps>(
@@ -26,6 +28,8 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       width,
       height,
       className,
+      footer,
+      header,
       ...options
     }: PDFProps,
     forwardedRef
@@ -33,7 +37,10 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     const containerRef = useRef<HTMLDivElement>(null);
     const documentRef = useRef<InstanceType<typeof Document>>();
     const [blob, setBlob] = useState<URL | null>(null);
-    const optionsString = JSON.stringify(options);
+    const [pages, setPages] = useState(0);
+    const footerRefs = useRef<Record<number, HTMLDivElement>>({})
+    const headerRefs = useRef<Record<number, HTMLDivElement>>({})
+    // const optionsString = JSON.stringify(options);
 
     const save = useCallback<PDFHandle["save"]>(async (saveOptions) => {
       documentRef.current.save(saveOptions.filename)
@@ -47,16 +54,32 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       return documentRef.current;
     }, []);
 
-    const update = useCallback<PDFHandle["update"]>(async () => {
+    const calculateNumberOfPages = () => {
+      const converter = new DocumentConverter(options);
+      const numberOfPages = converter.calculateNumberOfPages(containerRef.current);
+      setPages(numberOfPages)
+    };
+
+    const update = async () => {
       console.log("debug updating", preview);
-      const converter = new Converter(options)
-      const document = await converter.convert(containerRef.current);
+      const converter = new DocumentConverter(options)
+      const footerElements = Object.values(footerRefs.current);
+      const headerElements = Object.values(footerRefs.current);
+      const bodyElement = containerRef.current;
+      console.log('DEBUG FOOTER ELEMENTS', footerElements, footerRefs, bodyElement.offsetHeight, bodyElement.style.height);
+      const document = await converter.createDocument({bodyElement, footerElements, headerElements})
       setBlob(document.getBlobURL());
-    }, [optionsString]);
+    };
+
+    useEffect(() => {
+      setTimeout(() => {
+        calculateNumberOfPages();
+      })
+    }, [children]);
 
     useEffect(() => {
       update();
-    }, [children, update]);
+    }, [pages])
 
     useImperativeHandle(
       forwardedRef,
@@ -98,19 +121,47 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       );
     }, [children]);
 
-    const pdfComponent = useMemo<React.ReactNode>(() => {
+    const bodyComponent = useMemo<React.ReactNode>(() => {
       if (preview === "component") {
         return wrapper;
       }
       return <PreviewPortal>{wrapper}</PreviewPortal>;
     }, [preview, wrapper]);
 
+    const footerComponents = useMemo(() => {
+      console.log('render footer', pages, footer)
+      if (!footer) return null;
+      const footers = Array(pages).fill(null).map((_, pageIndex) => {
+        return (
+          <div ref={element => footerRefs.current[pageIndex] = (element)} key={pageIndex}>
+            {footer.render({page: pageIndex +1, pages})}
+          </div>
+        )
+      })
+      return <PreviewPortal>{footers}</PreviewPortal>
+    }, [pages])
+
+    const headerComponents = useMemo(() => {
+      console.log('render footer', pages, footer)
+      if (!header) return null;
+      const headers = Array(pages).fill(null).map((_, pageIndex) => {
+        return (
+          <div ref={element => headerRefs.current[pageIndex] = (element)} key={pageIndex}>
+            {header.render({page: pageIndex +1, pages})}
+          </div>
+        )
+      })
+      return <PreviewPortal>{headers}</PreviewPortal>
+    }, [pages])
+
     console.log("render pdf preview", preview, pdfPreview);
 
     return (
       <>
         {pdfPreview}
-        {pdfComponent}
+        {footerComponents}
+        {headerComponents}
+        {bodyComponent}
       </>
     );
   }

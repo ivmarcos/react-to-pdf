@@ -15,11 +15,12 @@ export const ExamplePDFPreview = () => {
         preview
         ref={pdfRef}
         page={{ margin: Margin.MEDIUM }}
+        footer={{render: ({page}) => <div>{page}</div>}}
         width="100%"
         height="400"
         loading={<div>Loading...</div>}
       >
-        <Card imageId={45} title="PDF preview example" />
+        {Array(10).fill(null).map((_, index) => <Card key={index} imageId={45} title="PDF preview example ====" />)}
       </PDF>
     </Container>
   );

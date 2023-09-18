@@ -2,7 +2,7 @@ import html2canvas from "html2canvas";
 import { useCallback, useRef } from "react";
 
 import jsPDF from "jspdf";
-import { Converter } from "./converter";
+import { DocumentConverter } from "./converter";
 import { Options, TargetElementFinder, UsePDFResult } from "./types";
 export { Margin, Resolution } from "./constants";
 export * from "./PDF";
@@ -35,7 +35,7 @@ const generatePDF = async (
     console.error("Unable to get the target element.");
     return;
   }
-  const converter = new Converter(options);
+  const converter = new DocumentConverter(options);
   const document = await converter.convert(targetElement);
   switch (options?.method) {
     case "build":

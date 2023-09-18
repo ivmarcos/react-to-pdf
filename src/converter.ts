@@ -23,10 +23,11 @@ export const parseConversionOptions = (options?: Options): ConversionOptions => 
   };
 };
 
-export class Converter {
+export class DocumentConverter {
   options: ConversionOptions;
   constructor(options?: Options) {
     this.options = parseConversionOptions(options);
+
   }
   calculateHorizontalFitScale(elementWidth: number, maxWidth: number){
     if (elementWidth > maxWidth){
@@ -37,6 +38,19 @@ export class Converter {
   getResolution(){
     return this.options.resolution;
   }
+
+  calculateNumberOfPages(element: HTMLElement){
+    const document = new Document(this.options);
+    const documentMaxHeight = mmToPX(document.getPageMaxHeight());
+    const documentMaxWidth = mmToPX(document.getPageMaxWidth());
+    const elementHeight = element.offsetHeight;
+    const elementWidth = element.offsetWidth;
+    const resizeFitRatio = CanvasUtils.calculateFitRatio({size: elementWidth, maxSize: documentMaxWidth})
+    console.log('CALCULATE NUMBER OF PAGES', elementHeight, element.style.height, documentMaxHeight, resizeFitRatio)
+
+    const elementHeightResizedToFit = elementHeight * resizeFitRatio;
+    return Math.ceil(elementHeightResizedToFit / documentMaxHeight )
+   }
  
   calculateX(document: InstanceType<typeof Document>, imageWidth: number) {
     switch (true) {
@@ -58,8 +72,8 @@ export class Converter {
     const document = new Document(this.options);
     const documentMaxHeight = mmToPX(document.getPageMaxHeight());
     const documentMaxWidth = mmToPX(document.getPageMaxWidth());
-    const canvasConverter = new CanvasConverter({documentMaxHeight, documentMaxWidth, options: this.options} );
-    const images = await canvasConverter.convertToImages(element);
+    const canvasConverter = new CanvasConverter({maxHeight: documentMaxHeight, maxWidth: documentMaxWidth, options: this.options} );
+    const images = await canvasConverter.htmlToCanvasImages(element);
     console.log('debug images', images)
     images.forEach((image, pageIndex) => {
       if (pageIndex) {
@@ -72,6 +86,30 @@ export class Converter {
       console.log('DEBUG ADD CANVAS TO PAGE', JSON.stringify({width, height, x, y, documentMaxHeight, documentMaxWidth}, null, 2))
       const page = pageIndex + 1;
       document.addCanvasToPage({ canvas: image.getCanvas(), page, width, height, x, y });
+    });
+    return document;
+  }
+  async createDocument({bodyElement, footerElements, headerElements}: {bodyElement: HTMLElement, footerElements: HTMLElement[], headerElements: HTMLElement[]}): Promise<InstanceType<typeof Document>> {
+    const document = new Document(this.options);
+    const documentMaxHeight = mmToPX(document.getPageMaxHeight());
+    const documentMaxWidth = mmToPX(document.getPageMaxWidth());
+    console.log('DEBUG CREATE DOCUMENT CONVERTER', bodyElement.offsetHeight)
+    const canvasConverter = new CanvasConverter({maxHeight: documentMaxHeight, maxWidth: documentMaxWidth, options: this.options} );
+    const bodyImages = await canvasConverter.htmlToCanvasImages(bodyElement);
+    const footerCanvases = await Promise.all(footerElements.map(footerElement => canvasConverter.htmlToCanvas(footerElement, this.options.resolution)));
+    bodyImages.forEach((bodyImage, pageIndex) => {
+      if (pageIndex) {
+        document.addPage();
+      }
+      const width = pxToMM(bodyImage.getOriginalWidth());
+      const height = pxToMM(bodyImage.getOriginalHeight());
+      const x = this.calculateX(document, width);
+      const y = this.calculateY(document, height);
+      console.log('DEBUG ADD CANVAS TO PAGE', JSON.stringify({width, height, x, y, documentMaxHeight, documentMaxWidth}, null, 2))
+      const page = pageIndex + 1;
+      document.addCanvasToPage({ canvas: bodyImage.getCanvas(), page, width, height, x, y });
+      const footerCanvas = footerCanvases[pageIndex];
+      if (footerCanvas) document.addCanvasToPage({ canvas: footerCanvas, page, width: footerCanvas.width / this.options.resolution, height: footerCanvas.height / this.options.resolution, x: 5, y: 5 });
     });
     return document;
   }
@@ -95,6 +133,10 @@ export class Document {
       this.options.page.format,
       this.options.page.orientation
     );
+  }
+
+  getNumberOfPages(){
+    return this.instance.getNumberOfPages();
   }
 
   addCanvasToPage({
@@ -230,11 +272,6 @@ class CanvasUtils {
   }
 }
 
-interface CanvasConverterArgs {
-  documentMaxWidth: number;
-  documentMaxHeight: number;
-  options: ConversionOptions
-}
 
 class Image {
   scale: number;
@@ -260,23 +297,28 @@ class Image {
   }
 }
 class CanvasConverter {
-  documentMaxWidth: number;
-  documentMaxHeight: number;
+  maxWidth: number;
+  maxHeight: number;
   options: ConversionOptions
 
   constructor(
-    { documentMaxHeight, documentMaxWidth, options }: CanvasConverterArgs,
+    { maxHeight, maxWidth, options }: {
+      maxHeight: number,
+      maxWidth: number,
+      options: ConversionOptions
+    },
   ) {
-    this.documentMaxHeight = documentMaxHeight;
-    this.documentMaxWidth = documentMaxWidth;
+    this.maxHeight = maxHeight;
+    this.maxWidth = maxWidth;
     this.options = options;
   }
 
-  async convert(element: HTMLElement, scale: number): Promise<HTMLCanvasElement> {
+  async htmlToCanvas(element: HTMLElement, scale: number): Promise<HTMLCanvasElement> {
     return html2canvas(element, {
       scale,
       ...this.options.canvas,
-      ...this.options.overrides.canvas
+      ...this.options.overrides.canvas,
+      logging: true
     });
   }
 
@@ -288,26 +330,28 @@ class CanvasConverter {
       //   return this.options.resolution * (fitFactor < 1 ? fitFactor + 1: fitFactor);
       // }
       default:
-        return this.options.resolution * CanvasUtils.calculateFitRatio({size: element.offsetWidth, maxSize: this.documentMaxWidth});
+        return this.options.resolution * CanvasUtils.calculateFitRatio({size: element.offsetWidth, maxSize: this.maxWidth});
     }
   }
   calculateMaxHeight(canvas: HTMLCanvasElement, scale){
     const originalCanvasWidth = canvas.width / scale;
-    if (originalCanvasWidth > this.documentMaxWidth){
-      const resizeFitRatio = CanvasUtils.calculateFitRatio({size: originalCanvasWidth, maxSize: this.documentMaxWidth})
-      return this.documentMaxHeight * resizeFitRatio * scale;
+    if (originalCanvasWidth > this.maxWidth){
+      const resizeFitRatio = CanvasUtils.calculateFitRatio({size: originalCanvasWidth, maxSize: this.maxWidth})
+      return this.maxHeight * resizeFitRatio * scale;
     }
-    return this.documentMaxHeight * scale;
+    return this.maxHeight * scale;
   }
 
   
-  async convertToImages(element: HTMLElement): Promise<InstanceType<typeof Image>[]> {
+  async htmlToCanvasImages(element: HTMLElement): Promise<InstanceType<typeof Image>[]> {
     const scale = this.calculateScale(element);
-    const canvas = await this.convert(element, scale);
+    console.log('DEBUG BEFORE CONVERTING TO CANVAS', element.offsetHeight)
+    const canvas = await this.htmlToCanvas(element, scale);
+    console.log('DEBUG AFTER CONVERTING TO CANVAS', element.offsetHeight)
     const canvasMaxHeight = this.calculateMaxHeight(canvas, scale)
-    const numberPages = Math.ceil(canvas.height / canvasMaxHeight);
-    console.log('DEBUG converting to images', JSON.stringify({elementWidth: element.offsetWidth, scale, canvasWidth: canvas.width, documentMaxWidth: this.documentMaxWidth, canvasMaxHeight}, null, 2))
-    return Array(numberPages)
+    const numberImages = Math.ceil(canvas.height / canvasMaxHeight);
+    console.log('DEBUG converting to images', JSON.stringify({elementWidth: element.offsetWidth, elementHeight: element.offsetHeight, scale, canvasWidth: canvas.width, canvasOriginalHeight: canvas.height / scale, canvasHeight: canvas.height, documentMaxWidth: this.maxWidth, canvasMaxHeight}, null, 2))
+    return Array(numberImages)
       .fill(null)
       .map((_, pageIndex) => {
         const width = canvas.width;

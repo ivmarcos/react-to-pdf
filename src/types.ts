@@ -1,4 +1,4 @@
-import { MutableRefObject } from "react";
+import React, { MutableRefObject } from "react";
 import jsPDF, { jsPDFOptions } from "jspdf";
 import { Options as Html2CanvasOptions } from "html2canvas";
 import { Margin, Resolution } from "./constants";
@@ -96,6 +96,21 @@ export type TargetElementFinder =
   | MutableRefObject<any>
   | (() => HTMLElement | null);
 
+  export interface RenderFooterHeaderProps {
+    page: number,
+    pages: number,
+  }
+
+export enum FooterHeaderPosition {
+  LEFT = 'left',
+  CENTER = 'center',
+  RIGHT = 'right'
+}
+export interface FooterHeaderProps {
+  render: (RenderFooterHeaderProps) => React.ReactElement,
+  margin?: Margin | number,
+  position?: FooterHeaderPosition
+}
 export interface PDFProps
   extends Omit<Options, "filename" | "method">,
     Pick<React.HTMLProps<HTMLEmbedElement>, "width" | "height" | "className"> {
@@ -110,6 +125,8 @@ export interface PDFProps
   /** Loading component to display when the PDF document is being generated. For
    * example, `loading={<div>Loading...</div>}`. */
   loading?: React.ReactNode;
+  footer?: FooterHeaderProps
+  header?: FooterHeaderProps
 }
 
 export interface PDFHandle {
