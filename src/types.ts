@@ -146,10 +146,12 @@ export interface PDFHandle {
   save: (filename?: string) => Promise<void>,
   /** Open the PDF document. */
   open: () => void;
+  /** Print the PDF document. */
+  print: () => void;
   /** Return the instance of the Document. */
   getDocument: () => InstanceType<typeof Document> | undefined;
 }
 
 export type PDFSaveOptions = Pick<Options, "filename">;
 
-export type PDFPreview = boolean | "embed" | "component";
+export type PDFPreview = boolean | "embed" | "children";

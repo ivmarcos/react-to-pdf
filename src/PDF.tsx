@@ -1,19 +1,15 @@
 import React, {
   CSSProperties,
-  useEffect,
-  useRef,
-  useState,
-  useImperativeHandle,
   forwardRef,
-  useCallback,
+  useEffect,
+  useImperativeHandle,
   useMemo,
-  useLayoutEffect,
+  useRef,
+  useState
 } from "react";
-import generatePDF, { PDFProps, PDFHandle } from ".";
+import { PDFHandle, PDFProps } from ".";
 import { PreviewPortal } from "./PreviewPortal";
-import jsPDF from "jspdf";
-import { DocumentConverter, Document } from "./converter";
-import { update } from "cypress/types/lodash";
+import { Document, DocumentConverter } from "./converter";
 
 const previewStyle: CSSProperties = {
   position: "fixed",
@@ -21,6 +17,7 @@ const previewStyle: CSSProperties = {
 };
 
 const containerStyle: CSSProperties = {
+  ...previewStyle,
   width: "fit-content",
 };
 
@@ -138,20 +135,17 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       );
     }, [embedProps, preview, blob, loading]);
 
-    const wrapper = useMemo<React.ReactNode>(() => {
-      return (
-        <div style={previewStyle} ref={containerRef}>
-          {children}
-        </div>
-      );
-    }, [children]);
-
     const bodyComponent = useMemo<React.ReactNode>(() => {
-      if (preview === "component") {
+      const previewChildren = preview === 'children';
+      const wrapper = (
+      <div style={previewChildren ? undefined : previewStyle} ref={containerRef}>
+        {children}
+      </div>)
+      if (previewChildren) {
         return wrapper;
       }
       return <PreviewPortal>{wrapper}</PreviewPortal>;
-    }, [preview, wrapper]);
+    }, [preview, children]);
 
     useEffect(() => {
       createDocument();
@@ -168,7 +162,8 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
           update: () => createDocument(),
           save: (filename?: string) => document?.save(filename),
           open: () => document?.open,
-          getDocument: () => document
+          getDocument: () => document,
+          print: () => document?.print()
         };
       },
       [document]

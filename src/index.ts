@@ -1,7 +1,7 @@
 import { useCallback, useRef } from "react";
 
 import jsPDF from "jspdf";
-import { DocumentConverter } from "./converter";
+import { DocumentConverter, Document } from "./converter";
 import { Options, TargetElementFinder, UsePDFResult } from "./types";
 export { Margin, Resolution, Position, Size } from "./constants";
 export * from "./PDF";
@@ -13,9 +13,6 @@ const getTargetElement = (targetRefOrFunction: TargetElementFinder): HTMLElement
     return targetRefOrFunction();
   }
   const element = targetRefOrFunction?.current;
-  if (!element) {
-    console.error("Unable to get the target element.");
-  }
   return element;
 };
 
@@ -30,45 +27,36 @@ export const usePDF = (usePDFoptions?: Options): UsePDFResult => {
   return { targetRef, toPDF };
 };
 
-export const open = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
+export const create = async (targetRefOrFunction: TargetElementFinder, options?: Options): Promise<InstanceType<typeof Document> | null> => {
   const targetElement = getTargetElement(targetRefOrFunction);
   if (!targetElement) {
-    return;
-  }
-  const converter = new DocumentConverter(options);
-  const document = await converter.createDocument(targetElement);
-  document.open();
-}
-
-export const save = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
-  const targetElement = getTargetElement(targetRefOrFunction);
-  if (!targetElement) {
-    return;
-  }
-  const converter = new DocumentConverter(options);
-  const document = await converter.createDocument(targetElement);
-  return document.save();
-}
-
-export const create = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
-  const targetElement = getTargetElement(targetRefOrFunction);
-  if (!targetElement) {
-    return;
+    console.error("Unable to get the target element.");
+    return null;
   }
   const converter = new DocumentConverter(options);
   return converter.createDocument(targetElement);
+}
+
+export const open = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
+  const document = await create(targetRefOrFunction, options);
+  document?.open();
+}
+
+export const save = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
+  const document = await create(targetRefOrFunction, options);
+  return document?.save();
+}
+
+export const print = async (targetRefOrFunction: TargetElementFinder, options?: Options) => {
+  const document = await create(targetRefOrFunction, options);
+  document?.print();
 }
 
 const generatePDF = async (
   targetRefOrFunction: TargetElementFinder,
   options?: Options
 ): Promise<InstanceType<typeof jsPDF>> => {
-  const targetElement = getTargetElement(targetRefOrFunction);
-  if (!targetElement) {
-    return;
-  }
-  const converter = new DocumentConverter(options);
-  const document = await converter.createDocument(targetElement);
+  const document = await create(targetRefOrFunction, options);
   switch (options?.method) {
     case "build":
       return document.getInstance();

@@ -9,7 +9,7 @@ export const ExamplePDFPreview = () => {
   const pdfRef = useRef<PDFHandle>();
   return (
     <Container>
-      <Button onClick={() => pdfRef.current.getDocument().save("pdf-example.pdf")}>
+      <Button onClick={() => pdfRef.current.print()}>
         Download PDF
       </Button>
       <PDF

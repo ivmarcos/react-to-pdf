@@ -337,6 +337,10 @@ export class Document {
   open() {
     window.open(this.instance.output("bloburl"), "_blank");
   }
+  print(){
+    this.instance.autoPrint();
+    this.instance.output('dataurlnewwindow');
+  }
   getBlob() {
     return new Blob([this.instance.output("blob")]);
   }
