@@ -8,7 +8,7 @@ export const ExampleUsePDF = () => {
   const { toPDF, targetRef } = usePDF({
     filename: "usepdf-example.pdf",
     page: { margin: Margin.MEDIUM },
-    position: Position.CENTERED_X_AXIS,
+    position: Position.CENTER_X,
     size: Size.FILL_PAGE
   });
   return (

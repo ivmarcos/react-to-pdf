@@ -2,7 +2,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { PDFOptions, Options, DocumentConverterOptions, PDFProps, FooterHeaderOptions } from "./types";
 
-import { DEFAULT_OPTIONS, Position, Size } from "./constants";
+import { DEFAULT_OPTIONS, Alignment, Size } from "./constants";
 import { mmToPX, pxToMM } from "./utils";
 
 interface DocumentConverterPartialOptions extends Omit<Partial<DocumentConverterOptions>, "footer"|  "header"> {
@@ -86,19 +86,19 @@ export class DocumentConverter {
     imageHeight: number
   ): ImageCoordinates {
     switch (this.options.position) {
-      case Position.CENTERED_XY_AXIS: {
+      case Alignment.CENTER_XY: {
         return {
           x: document.getPageWidth() / 2 - imageWidth / 2,
           y: document.getPageHeight() / 2 - imageHeight / 2,
         };
       }
-      case Position.CENTERED_X_AXIS: {
+      case Alignment.CENTER_X: {
         return {
           x: document.getPageWidth() / 2 - imageWidth / 2,
           y: document.getMarginTop(),
         };
       }
-      case Position.CENTERED_Y_AXIS: {
+      case Alignment.CENTER_Y: {
         if (document.getNumberOfPages() > 1) {
           return {
             x: document.getMarginLeft(),
@@ -128,7 +128,7 @@ export class DocumentConverter {
       document.getPageWidth()
     );
     const y = document.getPageHeight() - this.options.footer.margin - imageHeigth;
-    switch (this.options.footer?.position) {
+    switch (this.options.footer?.align) {
       case 'right':
         return {
           x: document.getPageWidth() - document.getMarginRight() - imageWidth,
@@ -152,7 +152,7 @@ export class DocumentConverter {
     imageHeigth: number
   ): ImageCoordinates {
     const y = this.options.header.margin;
-    switch (this.options.header.position) {
+    switch (this.options.header.align) {
       case 'right':
         return {
           x: document.getPageWidth() - document.getMarginRight() - imageWidth,

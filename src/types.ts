@@ -1,7 +1,7 @@
 import React, { MutableRefObject } from "react";
 import jsPDF, { jsPDFOptions } from "jspdf";
 import { Options as Html2CanvasOptions } from "html2canvas";
-import { Margin, Position, Resolution, Size } from "./constants";
+import { Margin, Alignment, Resolution, Size } from "./constants";
 import { Document } from "./converter";
 
 export type DetailedMargin = {
@@ -11,7 +11,7 @@ export type DetailedMargin = {
   left: Margin | number;
 };
 
-export type HorizontalPosition = 'left' | 'center' | 'right';
+export type HorizontalAlignment = 'left' | 'center' | 'right';
 interface PageConversionOptions {
   /** Margin of the page in MM, defaults to 0. */
   margin: DetailedMargin | Margin | number;
@@ -67,7 +67,7 @@ export interface PDFOptions {
      * */
     canvas?: Partial<Html2CanvasOptions>;
   };
-  position?: Position;
+  position?: Alignment;
   size?: Size;
 }
 
@@ -108,7 +108,7 @@ export interface RenderFooterHeaderProps {
 export interface FooterHeaderOptions {
   render: (RenderFooterHeaderProps) => React.ReactElement;
   margin: Margin | number;
-  position: HorizontalPosition;
+  align: HorizontalAlignment;
 }
 export interface PDFProps
   extends Omit<Options, "filename" | "method"> {

@@ -3,7 +3,7 @@ import { useCallback, useRef } from "react";
 import jsPDF from "jspdf";
 import { DocumentConverter, Document } from "./converter";
 import { Options, TargetElementFinder, UsePDFResult } from "./types";
-export { Margin, Resolution, Position, Size } from "./constants";
+export { Margin, Resolution, Alignment as Position, Size } from "./constants";
 export * from "./PDF";
 export * from "./types";
 export {pxToMM, mmToPX} from './utils'

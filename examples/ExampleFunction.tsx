@@ -3,7 +3,7 @@ import generatePDF, { print, Margin } from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
-import { Position } from "../src/constants";
+import { Alignment } from "../src/constants";
 
 export const ExampleFunction = () => {
   const downloadPDF = () => {

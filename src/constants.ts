@@ -18,15 +18,15 @@ export enum Margin {
   LARGE = 25,
 }
 
-export enum Position {
+export enum Alignment {
   TOP_LEFT = "top_left",
-  CENTERED_Y_AXIS = "centered_y_axis",
-  CENTERED_X_AXIS = "centered_x_axis",
-  CENTERED_XY_AXIS = "centered_xy_axis",
+  CENTER_Y = "center_y",
+  CENTER_X = "center_x",
+  CENTER_XY = "center_xys",
 }
 
 export enum Size {
-  ORIGINAL_SIZE = "original_size",
+  ORIGINAL = "original",
   FILL_PAGE = "fill_page",
   SHRINK_TO_FIT = 'shrink_to_fit',
 }
@@ -45,14 +45,14 @@ export const DEFAULT_OPTIONS: Readonly<DocumentConverterOptions> = {
     logging: false,
   },
   overrides: {},
-  position: Position.TOP_LEFT,
-  size: Size.ORIGINAL_SIZE,
+  position: Alignment.TOP_LEFT,
+  size: Size.ORIGINAL,
   header: {
     margin: 7,
-    position: 'center'
+    align: 'center'
   },
   footer: {
     margin: 7,
-    position: 'center'
+    align: 'center'
   }
 };

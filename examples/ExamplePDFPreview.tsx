@@ -3,7 +3,7 @@ import { Margin, PDFHandle, PDF, Resolution, mmToPX } from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
-import { Position, Size } from "../src/constants";
+import { Alignment, Size } from "../src/constants";
 
 export const ExamplePDFPreview = () => {
   const pdfRef = useRef<PDFHandle>();
@@ -26,7 +26,7 @@ export const ExamplePDFPreview = () => {
           qualityRatio: 0.8
         }}
         size={Size.ORIGINAL_SIZE}
-        position={Position.CENTERED_X_AXIS}
+        position={Alignment.CENTER_X}
         footer={{
           render: ({ page, pages }) => 
            <div style={{width: mmToPX(190), display: 'flex', justifyContent: 'space-between'}}>
@@ -34,13 +34,13 @@ export const ExamplePDFPreview = () => {
                 <div>{page} of {pages}</div>
            </div>
           ,
-          position: 'center',
+          align: 'center',
         }}
         header={{
           render: ({ page }) => (
             <div style={{ background: "red" }}>Header {page}</div>
           ),
-          position: 'left',
+          align: 'left',
           margin: 5
         }}
         embedProps={{width: '100%', height: '400'}}
