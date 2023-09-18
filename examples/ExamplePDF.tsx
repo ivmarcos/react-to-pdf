@@ -11,7 +11,11 @@ export const ExamplePDF = () => {
       <Button onClick={() => pdfRef.current.save({ filename: "pdf-example" })}>
         Download PDF
       </Button>
-      <PDF ref={pdfRef} page={{ margin: Margin.MEDIUM }} footer={{render: ({page}) => <div>{page}</div>}}>
+      <PDF
+        ref={pdfRef}
+        page={{ margin: Margin.MEDIUM }}
+        footer={{ render: ({ page }) => <div>{page}</div> }}
+      >
         <Card imageId={50} title="PDF example" />
       </PDF>
     </Container>

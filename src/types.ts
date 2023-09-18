@@ -96,20 +96,20 @@ export type TargetElementFinder =
   | MutableRefObject<any>
   | (() => HTMLElement | null);
 
-  export interface RenderFooterHeaderProps {
-    page: number,
-    pages: number,
-  }
+export interface RenderFooterHeaderProps {
+  page: number;
+  pages: number;
+}
 
 export enum FooterHeaderPosition {
-  LEFT = 'left',
-  CENTER = 'center',
-  RIGHT = 'right'
+  LEFT = "left",
+  CENTER = "center",
+  RIGHT = "right",
 }
 export interface FooterHeaderProps {
-  render: (RenderFooterHeaderProps) => React.ReactElement,
-  margin?: Margin | number,
-  position?: FooterHeaderPosition
+  render: (RenderFooterHeaderProps) => React.ReactElement;
+  margin?: Margin | number;
+  position?: FooterHeaderPosition;
 }
 export interface PDFProps
   extends Omit<Options, "filename" | "method">,
@@ -125,8 +125,8 @@ export interface PDFProps
   /** Loading component to display when the PDF document is being generated. For
    * example, `loading={<div>Loading...</div>}`. */
   loading?: React.ReactNode;
-  footer?: FooterHeaderProps
-  header?: FooterHeaderProps
+  footer?: FooterHeaderProps;
+  header?: FooterHeaderProps;
 }
 
 export interface PDFHandle {

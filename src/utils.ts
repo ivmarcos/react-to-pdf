@@ -2,7 +2,9 @@ import jsPDF from "jspdf";
 import { DEFAULT_OPTIONS, MM_TO_PX } from "./constants";
 import { ConversionOptions, Options } from "./types";
 
-export const parseConversionOptions = (options?: Options): ConversionOptions => {
+export const parseConversionOptions = (
+  options?: Options
+): ConversionOptions => {
   if (!options) {
     return DEFAULT_OPTIONS;
   }
