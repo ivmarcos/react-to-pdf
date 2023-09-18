@@ -16,8 +16,12 @@ import { DocumentConverter, Document } from "./converter";
 
 const previewStyle: CSSProperties = {
   position: "fixed",
-  left: '-10000rem'
+  left: '-10000rem',
 };
+
+const containerStyle: CSSProperties ={
+  width: 'fit-content'
+}
 
 export const PDF = forwardRef<PDFHandle, PDFProps>(
   (
@@ -54,31 +58,31 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       return documentRef.current;
     }, []);
 
-    const calculateNumberOfPages = () => {
+    const updateFooterAndHeader = async () => {
+      if (!documentRef.current) return;
+      const footerElements = Object.values(footerRefs.current);
+      const headerElements = Object.values(headerRefs.current);
+      console.log('DEBUG FOOTER ELEMENTS', footerElements, footerRefs, pages);
       const converter = new DocumentConverter(options);
-      const numberOfPages = converter.calculateNumberOfPages(containerRef.current);
-      setPages(numberOfPages)
-    };
+      await converter.addFooterAndHeaderToDocument({document: documentRef.current, footerElements, headerElements})
+      setBlob(documentRef.current.getBlobURL());
+    }
 
     const update = async () => {
       console.log("debug updating", preview);
       const converter = new DocumentConverter(options)
-      const footerElements = Object.values(footerRefs.current);
-      const headerElements = Object.values(footerRefs.current);
-      const bodyElement = containerRef.current;
-      console.log('DEBUG FOOTER ELEMENTS', footerElements, footerRefs, bodyElement.offsetHeight, bodyElement.style.height);
-      const document = await converter.createDocument({bodyElement, footerElements, headerElements})
-      setBlob(document.getBlobURL());
+      const document = await converter.convert(containerRef.current);
+      setPages(document.getNumberOfPages())
+      documentRef.current = document;
+      // setBlob(document.getBlobURL());
     };
 
     useEffect(() => {
-      setTimeout(() => {
-        calculateNumberOfPages();
-      })
+      update();
     }, [children]);
 
     useEffect(() => {
-      update();
+      updateFooterAndHeader();
     }, [pages])
 
     useImperativeHandle(
@@ -133,7 +137,7 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       if (!footer) return null;
       const footers = Array(pages).fill(null).map((_, pageIndex) => {
         return (
-          <div ref={element => footerRefs.current[pageIndex] = (element)} key={pageIndex}>
+          <div ref={element => footerRefs.current[pageIndex] = (element)} key={pageIndex} style={containerStyle}>
             {footer.render({page: pageIndex +1, pages})}
           </div>
         )
@@ -146,7 +150,7 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       if (!header) return null;
       const headers = Array(pages).fill(null).map((_, pageIndex) => {
         return (
-          <div ref={element => headerRefs.current[pageIndex] = (element)} key={pageIndex}>
+          <div ref={element => headerRefs.current[pageIndex] = (element)} key={pageIndex} style={containerStyle}>
             {header.render({page: pageIndex +1, pages})}
           </div>
         )

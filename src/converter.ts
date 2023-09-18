@@ -3,6 +3,14 @@ import jsPDF, { Html2CanvasOptions } from "jspdf";
 import { MM_TO_PX } from "./constants";
 import { ConversionOptions, Options } from "./types";
 
+enum Position {
+  TOP_LEFT = 'top_left',
+  CENTERED_Y_AXIS = 'centered_y_axis',
+  CENTERED_X_AXIS = 'centered_x_axis',
+  CENTERED_XY_AXIS = 'centered_xy_axis',
+}
+
+let position = Position.CENTERED_XY_AXIS;
 
 const FILL_PAGE = 'true';
 const VERTICALLY_CENTERED = 'true';
@@ -10,6 +18,7 @@ const VERTICALLY_CENTERED = 'true';
 import { DEFAULT_OPTIONS } from "./constants";
 import { over } from "cypress/types/lodash";
 import { mmToPX, pxToMM } from "./utils";
+import { Coordinates } from "compare-pdf";
 
 export const parseConversionOptions = (options?: Options): ConversionOptions => {
   if (!options) {
@@ -23,6 +32,10 @@ export const parseConversionOptions = (options?: Options): ConversionOptions => 
   };
 };
 
+interface ImageCoordinates {
+  x: number,
+  y: number,
+}
 export class DocumentConverter {
   options: ConversionOptions;
   constructor(options?: Options) {
@@ -51,23 +64,69 @@ export class DocumentConverter {
     const elementHeightResizedToFit = elementHeight * resizeFitRatio;
     return Math.ceil(elementHeightResizedToFit / documentMaxHeight )
    }
- 
-  calculateX(document: InstanceType<typeof Document>, imageWidth: number) {
+
+   getImageDimensionsMM(image: InstanceType<typeof Image>){
+    return {
+      width: pxToMM(image.getOriginalWidth()),
+      height: pxToMM(image.getOriginalHeight())
+    }
+   }
+   calculateCoordinatesBody(document: InstanceType<typeof Document>, imageWidth: number, imageHeight: number): ImageCoordinates{
+    switch (position) {
+      case Position.CENTERED_XY_AXIS: {
+        return {
+          x: (document.getPageWidth() / 2) - (imageWidth /2),
+          y: (document.getPageHeight() / 2) - (imageHeight / 2),
+        }
+      }
+      case Position.CENTERED_X_AXIS: {
+        return {
+          x: (document.getPageWidth() / 2) - (imageWidth /2),
+          y: document.getMarginTop()
+        }
+      }
+      case Position.CENTERED_Y_AXIS: {
+        if (document.getNumberOfPages() > 1){
+          return {
+            x: document.getMarginLeft(),
+            y: document.getMarginTop()
+          }
+        }
+        return {
+          x: document.getMarginLeft(),
+          y: (document.getPageHeight() / 2) - (imageHeight / 2),
+        }
+      }
+      default:
+        return {
+          x: document.getMarginLeft(),
+          y: document.getMarginTop()
+        }
+    }
+   }
+   calculateCoordinatesFooter(document: InstanceType<typeof Document>, imageWidth: number, imageHeigth: number): ImageCoordinates{
+    console.log('DEBUG FOOTER image width', imageWidth, document.getPageWidth())
     switch (true) {
       // case VERTICALLY_CENTERED:
       //   return document.getPageWidth() / 2 - imageWidth / 2;
       default:
-        return document.getMarginLeft();
+        return {
+          x: (document.getPageWidth() / 2) - (imageWidth / 2),
+          y: document.getPageHeight() - document.getMarginBottom() - 5
+        }
     }
-  }
-  calculateY(document: InstanceType<typeof Document>, imageHeight: number) {
+   }
+   calculateCoordinatesHeader(document: InstanceType<typeof Document>, imageWidth: number, imageHeigth: number): ImageCoordinates{
     switch (true) {
       // case VERTICALLY_CENTERED:
-      //   return document.getPageHeight() / 2 - imageHeight / 2;
+      //   return document.getPageWidth() / 2 - imageWidth / 2;
       default:
-        return document.getMarginTop();
+        return {
+          x: (document.getPageWidth() / 2) - (imageWidth / 2),
+          y: document.getMarginTop() - 5
+        }
     }
-  }
+   }
   async convert(element: HTMLElement): Promise<InstanceType<typeof Document>> {
     const document = new Document(this.options);
     const documentMaxHeight = mmToPX(document.getPageMaxHeight());
@@ -79,38 +138,39 @@ export class DocumentConverter {
       if (pageIndex) {
         document.addPage();
       }
-      const width = pxToMM(image.getOriginalWidth());
-      const height = pxToMM(image.getOriginalHeight());
-      const x = this.calculateX(document, width);
-      const y = this.calculateY(document, height);
+      const {width, height} = this.getImageDimensionsMM(image);
+      const {x, y} = this.calculateCoordinatesBody(document, width, height);
       console.log('DEBUG ADD CANVAS TO PAGE', JSON.stringify({width, height, x, y, documentMaxHeight, documentMaxWidth}, null, 2))
       const page = pageIndex + 1;
       document.addCanvasToPage({ canvas: image.getCanvas(), page, width, height, x, y });
     });
     return document;
   }
-  async createDocument({bodyElement, footerElements, headerElements}: {bodyElement: HTMLElement, footerElements: HTMLElement[], headerElements: HTMLElement[]}): Promise<InstanceType<typeof Document>> {
-    const document = new Document(this.options);
+  async addFooterAndHeaderToDocument({document, footerElements = [], headerElements = []}: {document: InstanceType<typeof Document>, footerElements: HTMLElement[], headerElements: HTMLElement[]}): Promise<InstanceType<typeof Document>> {
     const documentMaxHeight = mmToPX(document.getPageMaxHeight());
     const documentMaxWidth = mmToPX(document.getPageMaxWidth());
-    console.log('DEBUG CREATE DOCUMENT CONVERTER', bodyElement.offsetHeight)
     const canvasConverter = new CanvasConverter({maxHeight: documentMaxHeight, maxWidth: documentMaxWidth, options: this.options} );
-    const bodyImages = await canvasConverter.htmlToCanvasImages(bodyElement);
-    const footerCanvases = await Promise.all(footerElements.map(footerElement => canvasConverter.htmlToCanvas(footerElement, this.options.resolution)));
-    bodyImages.forEach((bodyImage, pageIndex) => {
-      if (pageIndex) {
-        document.addPage();
-      }
-      const width = pxToMM(bodyImage.getOriginalWidth());
-      const height = pxToMM(bodyImage.getOriginalHeight());
-      const x = this.calculateX(document, width);
-      const y = this.calculateY(document, height);
-      console.log('DEBUG ADD CANVAS TO PAGE', JSON.stringify({width, height, x, y, documentMaxHeight, documentMaxWidth}, null, 2))
+    const [footerImages, headerImages] = await Promise.all([footerElements, headerElements].map(elements => Promise.all(elements.map(element => canvasConverter.htmlToCanvasImage(element)))));
+    const numberOfPages = document.getNumberOfPages();
+    let pageIndex = 0
+    while (pageIndex < numberOfPages){
       const page = pageIndex + 1;
-      document.addCanvasToPage({ canvas: bodyImage.getCanvas(), page, width, height, x, y });
-      const footerCanvas = footerCanvases[pageIndex];
-      if (footerCanvas) document.addCanvasToPage({ canvas: footerCanvas, page, width: footerCanvas.width / this.options.resolution, height: footerCanvas.height / this.options.resolution, x: 5, y: 5 });
-    });
+      const footerImage = footerImages[pageIndex];
+      const headerImage = headerImages[pageIndex];
+      if (footerImage) {
+        const {width, height} = this.getImageDimensionsMM(footerImage);
+        const footerXY = this.calculateCoordinatesFooter(document, width, height);
+        console.log('debug ADDING FOOTER IMAGE', footerXY, width, height)
+        document.addCanvasToPage({ canvas: footerImage.getCanvas(), page, width, height, ...footerXY });
+      }
+      if (headerImage){
+          const {width, height} = this.getImageDimensionsMM(headerImage);
+          const headerXY = this.calculateCoordinatesHeader(document, width, height);
+          console.log('debug ADDING HEADER IMAGE', headerXY)
+          document.addCanvasToPage({ canvas: headerImage.getCanvas(), page, width, height, ...headerXY });
+      }
+      pageIndex++;
+    }
     return document;
   }
 }
@@ -342,7 +402,13 @@ class CanvasConverter {
     return this.maxHeight * scale;
   }
 
-  
+  async htmlToCanvasImage(element: HTMLElement): Promise<InstanceType<typeof Image>>{
+    const scale = this.calculateScale(element);
+    const canvas = await this.htmlToCanvas(element, scale);
+    console.log('SIMPLE CANVAS', scale, canvas.width, canvas.height)
+    return new Image(canvas, scale);
+  }
+
   async htmlToCanvasImages(element: HTMLElement): Promise<InstanceType<typeof Image>[]> {
     const scale = this.calculateScale(element);
     console.log('DEBUG BEFORE CONVERTING TO CANVAS', element.offsetHeight)
