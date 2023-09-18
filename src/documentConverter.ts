@@ -5,7 +5,7 @@ import { Alignment, DEFAULT_OPTIONS } from "./constants";
 import { Document } from "./document";
 import * as utils from "./utils";
 
-interface DocumentConverterPartialOptions
+export interface DocumentConverterPartialOptions
   extends Omit<Partial<DocumentConverterOptions>, "footer" | "header"> {
   footer?: Partial<FooterHeaderOptions>;
   header?: Partial<FooterHeaderOptions>;
@@ -144,7 +144,7 @@ export class DocumentConverter {
   }
   calculateCoordinatesHeader(
     document: InstanceType<typeof Document>,
-    imageWidth: number,
+    imageWidth: number
   ): ImageCoordinates {
     const y = this.options.header.margin;
     switch (this.options.header.align) {
@@ -253,10 +253,7 @@ export class DocumentConverter {
       }
       if (headerImage) {
         const { width, height } = utils.getImageDimensionsMM(headerImage);
-        const headerXY = this.calculateCoordinatesHeader(
-          document,
-          width,
-        );
+        const headerXY = this.calculateCoordinatesHeader(document, width);
         console.log("debug ADDING HEADER IMAGE", headerXY);
         document.addCanvasToPage({
           canvas: headerImage.getCanvas(),

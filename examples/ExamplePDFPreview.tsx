@@ -1,15 +1,35 @@
 import React, { useRef } from "react";
-import { Margin, PDFHandle, PDF, Resolution, mmToPX, save, print } from "react-to-pdf";
+import {
+  Margin,
+  PDFHandle,
+  PDF,
+  Resolution,
+  mmToPX,
+  save,
+  print,
+  FooterHeaderProps,
+} from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { Alignment, Size } from "../src/constants";
 
+const HeaderComponent = ({ page, pages }: FooterHeaderProps) => {
+  return (
+    <div>
+      Header {page} {pages}
+    </div>
+  );
+};
+
 export const ExamplePDFPreview = () => {
   const pdfRef = useRef<PDFHandle>();
+  const containerRef = useRef<HTMLDivElement>();
   return (
     <Container>
       <Button onClick={() => save(pdfRef)}>Download PDF</Button>
+      <Button onClick={() => print(containerRef)}>Download PDF - 2</Button>
+      <div ref={containerRef}>test</div>
       <PDF
         preview
         ref={pdfRef}
@@ -28,7 +48,7 @@ export const ExamplePDFPreview = () => {
         size="fill-page"
         align="center-x"
         footer={{
-          render: ({ page, pages }) => (
+          component: ({ page, pages }) => (
             <div
               style={{
                 width: mmToPX(190),
@@ -44,12 +64,16 @@ export const ExamplePDFPreview = () => {
           ),
           align: "center",
         }}
+        // header={{
+        //   render: ({ page }) => (
+        //     <div style={{ background: "red" }}>Header {page}</div>
+        //   ),
+        //   align: "left",
+        //   margin: 5,
+        // }}
         header={{
-          render: ({ page }) => (
-            <div style={{ background: "red" }}>Header {page}</div>
-          ),
+          component: HeaderComponent,
           align: "left",
-          margin: 5,
         }}
         embedProps={{ width: "100%", height: "400" }}
         loading={<div>Loading...</div>}

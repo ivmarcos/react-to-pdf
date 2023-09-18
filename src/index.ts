@@ -11,7 +11,7 @@ export { pxToMM, mmToPX } from "./utils";
 
 const getTargetElementOrPDFHandle = <T extends HTMLElement>(
   targetRefOrGetter: TargetElementFinder<T>
-): HTMLElement | MutableRefObject<PDFHandle>['current']=> {
+): T | MutableRefObject<PDFHandle>["current"] => {
   if (typeof targetRefOrGetter === "function") {
     return targetRefOrGetter();
   }
@@ -20,7 +20,7 @@ const getTargetElementOrPDFHandle = <T extends HTMLElement>(
 };
 
 /**
- * Create a document from the target element and download to a file. 
+ * Create a document from the target element and download to a file.
  * @param targetRefOrGetter The target ref or a getter function to return the target element.
  * e.g `() => document.getElementById('id')` or `containerRef`
  * @param options Options
@@ -38,7 +38,7 @@ export const usePDF = (usePDFoptions?: Options): UsePDFResult => {
 };
 
 /**
- * Create a document from the target element and download to a file. 
+ * Create a document from the target element and download to a file.
  * @param targetRefOrGetter The target ref or a getter function to return the target element.
  * e.g `() => document.getElementById('id')` or `containerRef`
  * @param options Options
@@ -48,12 +48,13 @@ export const create = async <T extends HTMLElement>(
   targetRefOrGetter: TargetElementFinder<T>,
   options?: Options
 ): Promise<InstanceType<typeof Document> | null> => {
-  const targetElementOrPDFHandle = getTargetElementOrPDFHandle(targetRefOrGetter);
+  const targetElementOrPDFHandle =
+    getTargetElementOrPDFHandle(targetRefOrGetter);
   if (!targetElementOrPDFHandle) {
     console.error("Unable to get the target element.");
     return null;
   }
-  if ('getDocument' in targetElementOrPDFHandle){
+  if ("getDocument" in targetElementOrPDFHandle) {
     return targetElementOrPDFHandle.getDocument();
   }
   const converter = new DocumentConverter(options);
@@ -61,7 +62,7 @@ export const create = async <T extends HTMLElement>(
 };
 
 /**
- * Create a document from the target element and download to a file. 
+ * Create a document from the target element and download to a file.
  * @param targetRefOrGetter The target ref or a getter function to return the target element.
  * e.g `() => document.getElementById('id')` or `containerRef`
  * @param options Options
@@ -76,7 +77,7 @@ export const open = async <T extends HTMLElement>(
 };
 
 /**
- * Create a document from the target element and download to a file. 
+ * Create a document from the target element and download to a file.
  * @param targetRefOrGetter The target ref or a getter function to return the target element.
  * e.g `() => document.getElementById('id')` or `containerRef`
  * @param options Options
@@ -87,12 +88,12 @@ export const save = async <T extends HTMLElement>(
   options?: Options
 ): Promise<void> => {
   const document = await create(targetRefOrGetter, options);
-  console.log('document', document)
+  console.log("document", document);
   return document?.save();
 };
 
 /**
- * Create a document from the target element and download to a file. 
+ * Create a document from the target element and download to a file.
  * @param targetRefOrGetter The target ref or a getter function to return the target element.
  * e.g `() => document.getElementById('id')` or `containerRef`
  * @param options Options

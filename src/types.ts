@@ -12,8 +12,12 @@ export type DetailedMargin = {
 };
 
 export type HorizontalAlignmentOption = "left" | "center" | "right";
-export type AlignmentOption = 'top-left' | 'center-y' | 'center-x' | 'center-xy';
-export type SizeOption = 'original' | 'fill-page' | 'shrink-to-fit';
+export type AlignmentOption =
+  | "top-left"
+  | "center-y"
+  | "center-x"
+  | "center-xy";
+export type SizeOption = "original" | "fill-page" | "shrink-to-fit";
 
 interface PageConversionOptions {
   /** Margin of the page in MM, defaults to 0. */
@@ -102,15 +106,15 @@ export type TargetElementFinder<T extends HTMLElement> =
   | MutableRefObject<T | PDFHandle>
   | (() => T | null);
 
-export interface RenderFooterHeaderProps {
+export interface FooterHeaderProps {
   page: number;
   pages: number;
 }
 
 export interface FooterHeaderOptions {
-  render: (RenderFooterHeaderProps) => React.ReactElement;
-  margin: Margin | number;
-  align: HorizontalAlignmentOption;
+  component: React.FC<FooterHeaderProps>;
+  margin?: Margin | number;
+  align?: HorizontalAlignmentOption;
 }
 export interface PDFProps extends Omit<Options, "filename" | "method"> {
   /** Set the preview mode for the document.
@@ -124,8 +128,8 @@ export interface PDFProps extends Omit<Options, "filename" | "method"> {
   /** Loading component to display when the PDF document is being generated. For
    * example, `loading={<div>Loading...</div>}`. */
   loading?: React.ReactNode;
-  footer?: Partial<FooterHeaderOptions>;
-  header?: Partial<FooterHeaderOptions>;
+  footer?: FooterHeaderOptions | React.FC<FooterHeaderProps>;
+  header?: FooterHeaderOptions | React.FC<FooterHeaderProps>;
   embedProps?: React.HTMLProps<HTMLEmbedElement>;
 }
 
@@ -135,8 +139,8 @@ export interface PDFProps extends Omit<Options, "filename" | "method"> {
 // }
 
 export interface DocumentConverterOptions extends Options {
-  footer: Omit<FooterHeaderOptions, "render">;
-  header: Omit<FooterHeaderOptions, "render">;
+  footer: Required<Omit<FooterHeaderOptions, "component">>;
+  header: Required<Omit<FooterHeaderOptions, "component">>;
 }
 
 export interface PDFHandle {

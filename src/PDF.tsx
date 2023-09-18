@@ -7,9 +7,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { PDFHandle, PDFProps } from ".";
+import { FooterHeaderOptions, PDFHandle, PDFProps } from ".";
 import { PreviewPortal } from "./PreviewPortal";
-import { DocumentConverter } from "./documentConverter";
+import {
+  DocumentConverter,
+  DocumentConverterPartialOptions,
+} from "./documentConverter";
 import { Document } from "./document";
 
 const previewStyle: CSSProperties = {
@@ -61,7 +64,14 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
         (containerElement) =>
           containerElement.hasChildNodes() ? containerElement : null
       );
-      const converter = new DocumentConverter({ ...options, footer, header });
+      const footerOptions = "component" in footer ? footer : undefined;
+      const headerOptions = "component" in header ? header : undefined;
+      const converterOptions: DocumentConverterPartialOptions = {
+        ...options,
+        footer: footerOptions,
+        header: headerOptions,
+      };
+      const converter = new DocumentConverter(converterOptions);
       await converter.addFooterAndHeaderToDocument({
         document,
         footerElements,
@@ -86,6 +96,7 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     const footerComponents = useMemo(() => {
       if (!footer || !document) return null;
       const pages = document.getNumberOfPages();
+      const FooterComponent = "component" in footer ? footer.component : footer;
       const footers = Array(pages)
         .fill(null)
         .map((_, pageIndex) => {
@@ -95,7 +106,7 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
               key={pageIndex}
               style={containerStyle}
             >
-              {footer.render({ page: pageIndex + 1, pages })}
+              <FooterComponent page={pageIndex + 1} pages={pages} />
             </div>
           );
         });
@@ -105,6 +116,7 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     const headerComponents = useMemo(() => {
       if (!header || !document) return null;
       const pages = document.getNumberOfPages();
+      const HeaderComponent = "component" in header ? header.component : header;
       const headers = Array(pages)
         .fill(null)
         .map((_, pageIndex) => {
@@ -114,7 +126,7 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
               key={pageIndex}
               style={containerStyle}
             >
-              {header.render({ page: pageIndex + 1, pages })}
+              <HeaderComponent page={pageIndex + 1} pages={pages} />
             </div>
           );
         });
