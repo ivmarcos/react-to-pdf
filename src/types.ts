@@ -20,10 +20,14 @@ export type AlignmentOption =
 export type SizeOption = "original" | "fill-page" | "shrink-to-fit";
 export type PreviewOption = boolean | "embed" | "children";
 
+export type DashCaseToUpperSnakeCase<S extends string> =
+    S extends `${infer A}-${infer B}`
+    ? `${Uppercase<A>}_${DashCaseToUpperSnakeCase<B>}`
+    : Uppercase<S>
 interface PageOptions {
   /** Margin of the page in MM, defaults to 0. */
   margin: DetailedMargin | Margin | number;
-  /** Format of the page, e.g `a4`, `letter`, defaults to `a4`. */
+  /** Format of the page, e.g `a4`, `letter`, defaults to . */
   format: jsPDFOptions["format"];
   /** Orientation of the page (portrait or landscape), defaults to `portrait`. */
   orientation: jsPDFOptions["orientation"];

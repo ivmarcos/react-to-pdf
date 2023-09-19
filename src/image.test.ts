@@ -3,7 +3,6 @@
  */
 
 import { test, expect } from "@jest/globals";
-import * as utils from './utils'
 import { Image } from "./image";
 
 describe('Image', () => {

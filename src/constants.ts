@@ -1,5 +1,6 @@
 import {
   AlignmentOption,
+  DashCaseToUpperSnakeCase,
   DocumentConverterOptions,
   SizeOption
 } from "./types";
@@ -22,14 +23,14 @@ export enum Margin {
   LARGE = 25,
 }
 
-export const Alignment: Record<string, AlignmentOption> = {
+export const Alignment: Record<DashCaseToUpperSnakeCase<AlignmentOption>, AlignmentOption> = {
   TOP_LEFT: "top-left",
   CENTER_Y: "center-y",
   CENTER_X: "center-x",
   CENTER_XY: "center-xy",
 };
 
-export const Size: Record<string, SizeOption> = {
+export const Size: Record<DashCaseToUpperSnakeCase<SizeOption>, SizeOption> = {
   ORIGINAL: "original",
   FILL_PAGE: "fill-page",
   SHRINK_TO_FIT: "shrink-to-fit",
