@@ -27,6 +27,7 @@
     "clean": "rimraf dist",
     "docs": "typedoc --plugin typedoc-plugin-markdown --exclude examples/ --out docs src/index.ts src/types.ts src/constants.ts ",
     "test": "npm run lint && jest",
+    "test:watch": "jest --watch",
     "lint": "eslint . && prettier -c .",
     "release": "release-it",
     "prerelease": "npm run clean && npm run build",

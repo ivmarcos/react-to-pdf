@@ -65,11 +65,7 @@ export const calculateFillRatio = ({
   targetSize: number;
   size: number;
 }) => {
-  console.log("DEBUG FILL RATIO", { targetSize, size });
-  if (size < targetSize) {
     return targetSize / size;
-  }
-  return size / targetSize;
 };
 
 export const getImageDimensionsMM = (image: InstanceType<typeof Image>) => {
