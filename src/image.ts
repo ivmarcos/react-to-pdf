@@ -1,9 +1,12 @@
 export class Image {
-  scale: number;
-  canvas: HTMLCanvasElement;
+  private scale: number;
+  private canvas: HTMLCanvasElement;
   constructor(canvas: HTMLCanvasElement, scale: number) {
     this.canvas = canvas;
     this.scale = scale;
+  }
+  getScale(){
+    return this.scale;
   }
   getCanvas() {
     return this.canvas;

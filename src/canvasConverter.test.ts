@@ -19,6 +19,32 @@ describe('CanvasConverter', () => {
       const element = document.createElement('div');
       element.style.width = `1000px`
       expect(canvasConverter.calculateResizeScale(element)).toBe(.1)
+      element.style.width = `99px`
+      expect(canvasConverter.calculateResizeScale(element)).toBe(1)
+    })
+
+    test('should correctly return the scale when size option is FILL_PAGE', () => {
+      const options = parseOptions({
+        size: Size.FILL_PAGE
+      })
+      const canvasConverter = new CanvasConverter({maxHeight: 500, maxWidth: 100, options});
+      const element = document.createElement('div');
+      element.style.width = `1000px`
+      expect(canvasConverter.calculateResizeScale(element)).toBe(.1)
+      element.style.width = `50px`
+      expect(canvasConverter.calculateResizeScale(element)).toBe(2)
+    })
+
+    test('should correctly return the scale when size option is ORIGINAL', () => {
+      const options = parseOptions({
+        size: Size.ORIGINAL
+      })
+      const canvasConverter = new CanvasConverter({maxHeight: 500, maxWidth: 100, options});
+      const element = document.createElement('div');
+      element.style.width = `1000px`
+      expect(canvasConverter.calculateResizeScale(element)).toBe(1)
+      element.style.width = `99px`
+      expect(canvasConverter.calculateResizeScale(element)).toBe(1)
     })
   })
 })

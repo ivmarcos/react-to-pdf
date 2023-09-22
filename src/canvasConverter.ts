@@ -29,11 +29,13 @@ export class CanvasConverter {
   ): Promise<HTMLCanvasElement> {
     return html2canvas(element, {
       scale,
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
       ...this.options.canvas,
       ...this.options.overrides.canvas,
     });
   }
-  calculateResizeScale(element: HTMLElement) {
+  private calculateResizeScale(element: HTMLElement) {
     switch (this.options.size) {
       case Size.SHRINK_TO_FIT:
         return utils.calculateFitRatio({
@@ -51,12 +53,13 @@ export class CanvasConverter {
   }
 
   async htmlToCanvasImage(
-    element: HTMLElement
+    element: HTMLElement,
+    allowResize?: boolean
   ): Promise<InstanceType<typeof Image>> {
-    const scale = this.options.resolution;
-    const canvas = await this.htmlToCanvas(element, scale);
-    console.log("SIMPLE CANVAS", scale, canvas.width, canvas.height);
-    return new Image(canvas, scale);
+    const displayScale = this.options.resolution;
+    const resizeScale = allowResize ? this.calculateResizeScale(element) : 1;
+    const canvas = await this.htmlToCanvas(element, displayScale * resizeScale);
+    return new Image(canvas, displayScale);
   }
 
   async htmlToCanvasImages(

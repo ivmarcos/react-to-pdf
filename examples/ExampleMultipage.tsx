@@ -9,12 +9,22 @@ export const ExampleMultipage = () => {
     method: "save",
     filename: "multipage-example.pdf",
     page: { margin: Margin.MEDIUM },
+    resolution: 3,
+    canvas: {
+      mimeType: 'image/jpeg',
+      qualityRatio: .9
+    },
+    overrides: {
+      canvas: {
+        logging: true
+      }
+    }
   });
   return (
     <Container>
       <Button onClick={toPDF}>Download PDF</Button>
       <div ref={targetRef}>
-        {Array(5)
+        {Array(50)
           .fill(0)
           .map((_, index) => (
             <Card

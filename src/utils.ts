@@ -19,6 +19,7 @@ export const cropY = ({
   croppedCanvas.setAttribute("width", String(width));
   croppedCanvas.setAttribute("height", String(height));
   const ctx = croppedCanvas.getContext("2d");
+  // const ctx = croppedCanvas.getContext("webgl", {preserveDrawingBuffer: true});
   ctx.drawImage(
     canvas,
     0,
