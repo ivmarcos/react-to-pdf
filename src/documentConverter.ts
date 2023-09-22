@@ -66,35 +66,25 @@ class PageImagesBuilder{
     this.pages.push(newPage);
     return newPage;
   }
-  private splitIntoImages(image: Image): Image[]{
-    const imageHeight = image.getHeight();
-    const imageWidth = image.getHeight();
-    const canvases: HTMLCanvasElement[] = []
-    let imageY = 0;
-    while (imageY < imageHeight){
-      const croppedCanvas = utils.cropY({width: imageWidth, height: this.pageHeight, offsetY: imageY, canvas: image.getCanvas()})
-      canvases.push(croppedCanvas)
-      imageY = imageY + croppedCanvas.height;
-    }
-    const images = canvases.map(canvas => new Image(canvas, image.getScale()))
-    return images;
-  }
   createPages(): Page[]{
     let currentPage: Page = null;
     this.pages = [];
     this.targetImages.forEach((targetImage) => {
-      const currentImage = targetImage.image;
       const requiresNewPage = targetImage.options.startOnNewPage;
       if (requiresNewPage || !currentPage){
         currentPage = this.createPage();
       }
-      const images = this.splitIntoImages(currentImage);
-      images.forEach((image) => {
-        if (currentPage.canFit(image)){
-          currentPage = this.createPage();
-        }
-        currentPage.addImage(image);
-      });
+      // const images = this.splitIntoImages(currentImage);
+      const image = targetImage.image;
+      const imageHeight = image.getHeight();
+      const imageWidth = image.getHeight();
+      let imageY = currentPage.getCursorY();
+      while (imageY < imageHeight){
+        const offsetY = utils.calculateHeightOffset({maxHeight: currentPage.getAvailableHeight(), height: imageHeight, offsetY: imageY })
+        const pageCanvas = utils.cropY({width: imageWidth, height: this.pageHeight, offsetY, canvas: image.getCanvas()})
+        const pageImage = new Image(pageCanvas, image.getScale());
+        imageY = imageY + pageImage.getHeight();
+      }
     })
     return this.pages;
   }
@@ -114,6 +104,9 @@ class Page {
   }
   getAvailableHeight(){
     return this.height - this.contentHeight;
+  }
+  getCursorY(){
+    return this.contentHeight;
   }
   canFit(image: Image){
     return this.getAvailableHeight() > image.getHeight();
