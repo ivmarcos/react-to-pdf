@@ -11,14 +11,14 @@ export const ExampleMultipage = () => {
     page: { margin: Margin.MEDIUM },
     resolution: 3,
     canvas: {
-      mimeType: 'image/jpeg',
-      qualityRatio: .9
+      mimeType: "image/jpeg",
+      qualityRatio: 0.9,
     },
     overrides: {
       canvas: {
-        logging: true
-      }
-    }
+        logging: true,
+      },
+    },
   });
   return (
     <Container>

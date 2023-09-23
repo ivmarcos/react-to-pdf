@@ -2,7 +2,7 @@ import {
   AlignmentOption,
   DashCaseToUpperSnakeCase,
   DocumentConverterOptions,
-  SizeOption
+  SizeOption,
 } from "./types";
 
 export const MM_TO_PX = 3.77952755906;
@@ -23,7 +23,10 @@ export enum Margin {
   LARGE = 25,
 }
 
-export const Alignment: Record<DashCaseToUpperSnakeCase<AlignmentOption>, AlignmentOption> = {
+export const Alignment: Record<
+  DashCaseToUpperSnakeCase<AlignmentOption>,
+  AlignmentOption
+> = {
   TOP_LEFT: "top-left",
   CENTER_Y: "center-y",
   CENTER_X: "center-x",

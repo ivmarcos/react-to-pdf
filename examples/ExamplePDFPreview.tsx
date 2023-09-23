@@ -41,7 +41,7 @@ export const ExamplePDFPreview = () => {
             right: 15,
             bottom: 15,
           },
-          format: 'letter'
+          format: "letter",
         }}
         canvas={{
           qualityRatio: 0.93,

@@ -1,35 +1,41 @@
 import jsPDF from "jspdf";
 import { DocumentConverterOptions } from "./types";
 
-const canvasToImage = async (canvas: HTMLCanvasElement): Promise<HTMLImageElement> => {
+const canvasToImage = async (
+  canvas: HTMLCanvasElement
+): Promise<HTMLImageElement> => {
   return new Promise((resolve) => {
-    canvas.toBlob((blob) => {
-      const newImg = document.createElement("img");
-      const url = URL.createObjectURL(blob);
-    
-      newImg.onload = () => {
-        // no longer need to read the blob so it's revoked
-        URL.revokeObjectURL(url);
-      };
-    
-      newImg.src = url;
-      resolve(newImg)
-    }, "image/jpeg", 0.7);
-  
-  })
-  
-}
+    canvas.toBlob(
+      (blob) => {
+        const newImg = document.createElement("img");
+        const url = URL.createObjectURL(blob);
+
+        newImg.onload = () => {
+          // no longer need to read the blob so it's revoked
+          URL.revokeObjectURL(url);
+        };
+
+        newImg.src = url;
+        resolve(newImg);
+      },
+      "image/jpeg",
+      0.7
+    );
+  });
+};
 
 const canvasToBlob = async (canvas: HTMLCanvasElement): Promise<Uint8Array> => {
   return new Promise((resolve) => {
-    canvas.toBlob(async(blob) => {
-      const arr = new Uint8Array(await blob.arrayBuffer());
-      resolve(arr)
-    }, "image/jpeg", 0.7);
-  
-  })
-  
-}
+    canvas.toBlob(
+      async (blob) => {
+        const arr = new Uint8Array(await blob.arrayBuffer());
+        resolve(arr);
+      },
+      "image/jpeg",
+      0.7
+    );
+  });
+};
 export class Document {
   options: DocumentConverterOptions;
   instance: InstanceType<typeof jsPDF>;
@@ -112,7 +118,9 @@ export class Document {
     this.instance.output("dataurlnewwindow");
   }
   getBlob() {
-    return new Blob([this.instance.output("blob")], {type: 'application/pdf'});
+    return new Blob([this.instance.output("blob")], {
+      type: "application/pdf",
+    });
   }
   getBlobURL() {
     return this.instance.output("bloburl");

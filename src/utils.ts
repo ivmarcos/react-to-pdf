@@ -66,7 +66,7 @@ export const calculateFillRatio = ({
   targetSize: number;
   size: number;
 }) => {
-    return targetSize / size;
+  return targetSize / size;
 };
 
 export const getImageDimensionsMM = (image: InstanceType<typeof Image>) => {

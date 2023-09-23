@@ -5,7 +5,7 @@ export class Image {
     this.canvas = canvas;
     this.scale = scale;
   }
-  getScale(){
+  getScale() {
     return this.scale;
   }
   getCanvas() {

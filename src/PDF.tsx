@@ -64,8 +64,10 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
         (containerElement) =>
           containerElement.hasChildNodes() ? containerElement : null
       );
-      const footerOptions = footer && "component" in footer ? footer : undefined;
-      const headerOptions = header && "component" in header ? header : undefined;
+      const footerOptions =
+        footer && "component" in footer ? footer : undefined;
+      const headerOptions =
+        header && "component" in header ? header : undefined;
       const converterOptions: DocumentConverterPartialOptions = {
         ...options,
         footer: footerOptions,

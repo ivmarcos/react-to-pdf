@@ -21,9 +21,9 @@ export type SizeOption = "original" | "fill-page" | "shrink-to-fit";
 export type PreviewOption = boolean | "embed" | "children";
 
 export type DashCaseToUpperSnakeCase<S extends string> =
-    S extends `${infer A}-${infer B}`
+  S extends `${infer A}-${infer B}`
     ? `${Uppercase<A>}_${DashCaseToUpperSnakeCase<B>}`
-    : Uppercase<S>
+    : Uppercase<S>;
 interface PageOptions {
   /** Margin of the page in MM, defaults to 0. */
   margin: DetailedMargin | Margin | number;
@@ -46,6 +46,11 @@ interface CanvasConversionOptions
    * See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
    */
   qualityRatio: number;
+}
+
+export interface HookOptions {
+  beforeAddCanvasToPage({document, page, canvas}: {document: InstanceType<typeof Document>, page: number, canvas: HTMLCanvasElement}): void | Promise<void>
+  afterAddCanvasToPage({document, page, canvas}: {document: InstanceType<typeof Document>, page: number, canvas: HTMLCanvasElement}): void | Promise<void>
 }
 
 export interface PDFOptions {
@@ -81,6 +86,7 @@ export interface PDFOptions {
   };
   align?: AlignmentOption;
   size?: SizeOption;
+  hooks?: HookOptions
 }
 
 export interface Options
@@ -157,4 +163,3 @@ export interface PDFHandle {
 }
 
 export type PDFSaveOptions = Pick<Options, "filename">;
-
