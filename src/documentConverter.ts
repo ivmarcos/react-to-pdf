@@ -163,6 +163,13 @@ class Page {
   getImages() {
     return this.images;
   }
+  getImageY(image: Image): number{
+    if (!this.images.includes(image)){
+      throw new Error('Image does not exist in page')
+    }
+    const index = this.images.indexOf(image);
+    return this.images.slice(0, index - 1).map(image => image.getOriginalHeight()).reduce((h1, h2) => h1 + h2, 0);
+  }
 }
 export class DocumentConverter {
   options: DocumentConverterOptions;
@@ -237,11 +244,10 @@ export class DocumentConverter {
     document: InstanceType<typeof Document>,
     page: Page
   ): Array<ImageCoordinates & {image: Image, width: number, height: number}> {
-    return page.getImages().map((image, index) => {
-      const imageWidth = image.getWidth();
-      const imageHeight = image.getHeight();
-      const imageHeightOffset = page.getImages().slice(0, index - 1).map(image => image.getHeight()).reduce((h1, h2) => h1 + h2, 0);
-      const regularCoordinates = this.calculateImageCoordinates(document, imageWidth, imageHeight);
+    return page.getImages().map((image) => {
+      const {width, height } = utils.getImageDimensionsMM(image);
+      const imageHeightOffset = utils.pxToMM(page.getImageY(image));
+      const regularCoordinates = this.calculateImageCoordinates(document, width, height);
       const calculateOverrideCoordinates = (): Partial<ImageCoordinates> => {
         switch (this.options.align) {
           case Alignment.CENTER_XY: {
@@ -273,7 +279,8 @@ export class DocumentConverter {
       return {
         ...regularCoordinates,
         ...calculateOverrideCoordinates(),
-        ...utils.getImageDimensionsMM(image),
+        width,
+        height,
         image,
       }
     });
