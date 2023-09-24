@@ -1,5 +1,6 @@
 import React, {
   CSSProperties,
+  createContext,
   forwardRef,
   useEffect,
   useImperativeHandle,
@@ -7,13 +8,16 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { PDFHandle, PDFProps } from ".";
+import { PDFHandle, PDFProps, TargetProps } from ".";
 import { PreviewPortal } from "./PreviewPortal";
 import { Document } from "./document";
 import {
   DocumentConverter,
   DocumentConverterPartialOptions,
+  TargetElement,
+  TargetOptions,
 } from "./documentConverter";
+import { log } from "./testUtils";
 
 const previewStyle: CSSProperties = {
   position: "fixed",
@@ -24,6 +28,12 @@ const containerStyle: CSSProperties = {
   ...previewStyle,
   width: "fit-content",
 };
+
+export interface PDFContextValues {
+  registerTarget(target: HTMLElement, options?: TargetOptions):void
+}
+
+export const PDFContext = createContext<PDFContextValues>(null);
 
 export const PDF = forwardRef<PDFHandle, PDFProps>(
   (
@@ -45,9 +55,21 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       useState<InstanceType<typeof Document>>(null);
     const [blob, setBlob] = useState<URL | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const targetElementsRef = useRef<TargetElement[]>([]);
     const footerRefs = useRef<Record<number, HTMLDivElement>>({});
     const headerRefs = useRef<Record<number, HTMLDivElement>>({});
     const isPreviewEmbed = preview === true || preview === "embed";
+
+    const registerTarget = (target: HTMLElement, index, options?: TargetOptions) => {
+      targetElementsRef.current[index] = {
+        element: target,
+        options
+      }
+      // targetElementsRef.current.push({
+      //   element: target,
+      //   options
+      // });
+    }
 
     const addFootersAndHeaders = async () => {
       if (!document) return;
@@ -84,7 +106,10 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
 
     const createDocument = async () => {
       const converter = new DocumentConverter(options);
-      const document = await converter.createDocument(containerRef.current);
+      // const element = targetElementsRef.current.length ? targetElementsRef.current[0] : containerRef.current;
+      const targets = targetElementsRef.current.length ? targetElementsRef.current : [{element: containerRef.current}]
+      console.log('debug targets', targets)
+      const document = await converter.createDocumentAdvanced(targets);
       setDocument(document);
     };
 
@@ -151,6 +176,19 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       );
     }, [embedProps, preview, blob, loading]);
 
+    const targetChildren = useMemo(() => {
+      return React.Children.map(children, (child, index) => {
+        // Checking isValidElement is the safe way and avoids a
+        // typescript error too.
+        log('PDF', child?.type)
+
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child as React.ReactElement<TargetProps>, {registerTarget, targetIndex: index});
+        }
+        return child;
+      });
+    }, [children])
+
     const bodyComponent = useMemo<React.ReactNode>(() => {
       const previewChildren = preview === "children";
       const wrapper = (
@@ -158,18 +196,20 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
           style={previewChildren ? undefined : previewStyle}
           ref={containerRef}
         >
-          {children}
+          {targetChildren}
         </div>
       );
       if (previewChildren) {
         return wrapper;
       }
       return <PreviewPortal>{wrapper}</PreviewPortal>;
-    }, [preview, children]);
+    }, [preview, targetChildren]);
+
+    
 
     useEffect(() => {
       createDocument();
-    }, [children]);
+    }, [targetChildren]);
 
     useEffect(() => {
       addFootersAndHeaders();
@@ -190,12 +230,12 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     );
 
     return (
-      <>
+      <PDFContext.Provider value={{registerTarget}}>
         {previewComponent}
         {footerComponents}
         {headerComponents}
         {bodyComponent}
-      </>
+      </PDFContext.Provider>
     );
   }
 );

@@ -1,12 +1,12 @@
-import { DocumentConverterOptions, FooterHeaderOptions } from "./types";
+import { DocumentConverterOptions, FooterHeaderOptions, TargetElement } from "./types";
 
 import { CanvasConverter } from "./canvasConverter";
 import { Alignment, DEFAULT_OPTIONS } from "./constants";
 import { Document } from "./document";
 import * as utils from "./utils";
-import { off } from "process";
-import { Image } from "./image";
-import { get } from "cypress/types/lodash";
+import { PageImagesBuilder } from "./pageImagesBuilder";
+import { PageImagesPositioner } from "./pageImagesPositioner";
+
 
 export interface DocumentConverterPartialOptions
   extends Omit<Partial<DocumentConverterOptions>, "footer" | "header"> {
@@ -36,141 +36,9 @@ export const parseOptions = (
   };
 };
 
-interface ImageCoordinates {
-  x: number;
-  y: number;
-}
 
-interface TargetOptions {
-  startOnNewPage: boolean;
-}
-interface TargetElement {
-  element: HTMLElement;
-  options: TargetOptions;
-}
 
-export interface TargetImage extends Pick<TargetElement, "options"> {
-  image: Image;
-}
 
-export class PageImagesBuilder {
-  private pageHeight: number;
-  private targetImages: TargetImage[];
-  private pages: Page[];
-  constructor(targetImages: TargetImage[], pageHeight) {
-    this.targetImages = targetImages;
-    this.pageHeight = pageHeight;
-  }
-  private createPage(): InstanceType<typeof Page> {
-    const currentNumber = this.pages.length;
-    const newPage = new Page({
-      number: currentNumber + 1,
-      height: this.pageHeight,
-    });
-    this.pages.push(newPage);
-    return newPage;
-  }
-  private calculateCropHeight({
-    page,
-    image,
-    imageY,
-  }: {
-    page: Page;
-    image: Image;
-    imageY: number;
-  }) {
-    const imageHeight = image.getHeight();
-    const availableHeight = page.getAvailableHeight();
-    if (imageHeight <= availableHeight) {
-      return imageHeight;
-    }
-    if (imageHeight - imageY <= availableHeight) {
-      return imageHeight - imageY;
-    }
-    return availableHeight;
-  }
-  private createPageImage({
-    page,
-    image,
-    imageY,
-  }: {
-    page: Page;
-    image: Image;
-    imageY: number;
-  }): InstanceType<typeof Image> {
-    const imageHeight = image.getHeight();
-    const imageWidth = image.getHeight();
-    const availableHeight = page.getAvailableHeight();
-    if (imageHeight <= availableHeight) {
-      return image;
-    }
-    const cropHeight = this.calculateCropHeight({ page, image, imageY });
-    const pageCanvas = utils.cropY({
-      width: imageWidth,
-      height: cropHeight,
-      offsetY: imageY,
-      canvas: image.getCanvas(),
-    });
-    return new Image(pageCanvas, image.getScale());
-  }
-
-  createPages(): Page[] {
-    let page: Page = null;
-    this.pages = [];
-    this.targetImages.forEach((targetImage) => {
-      const requiresNewPage = targetImage.options.startOnNewPage;
-      if (requiresNewPage || !page) {
-        page = this.createPage();
-      }
-      const image = targetImage.image;
-      const imageHeight = image.getHeight();
-      let imageY = 0;
-      while (imageY < imageHeight) {
-        if (page.isFull()) {
-          page = this.createPage();
-        }
-        const pageImage = this.createPageImage({ page, image, imageY });
-        imageY = pageImage.getHeight() + imageY;
-        page.addImage(pageImage);
-      }
-    });
-    return this.pages;
-  }
-}
-class Page {
-  private number: number;
-  private images: Image[] = [];
-  private height: number;
-
-  constructor({ number, height }: { number: number; height: number }) {
-    this.number = number;
-    this.height = height;
-  }
-  addImage(image) {
-    this.images.push(image);
-  }
-  getContentHeight() {
-    return this.images
-      .map((image) => image.getHeight())
-      .reduce((h1, h2) => h1 + h2, 0);
-  }
-  getAvailableHeight() {
-    return this.height - this.getContentHeight();
-  }
-  isFull() {
-    return this.getAvailableHeight() === 0;
-  }
-  getImages() {
-    return this.images;
-  }
-  getImageY(image: Image): number{
-    if (!this.images.includes(image)){
-      throw new Error('Image does not exist in page')
-    }
-    const index = this.images.indexOf(image);
-    return this.images.slice(0, index - 1).map(image => image.getOriginalHeight()).reduce((h1, h2) => h1 + h2, 0);
-  }
-}
 export class DocumentConverter {
   options: DocumentConverterOptions;
   constructor(options?: DocumentConverterPartialOptions) {
@@ -207,175 +75,8 @@ export class DocumentConverter {
     const elementHeightResizedToFit = elementHeight * resizeFitRatio;
     return Math.ceil(elementHeightResizedToFit / documentMaxHeight);
   }
-  private calculateImageCoordinates = (document: InstanceType<typeof Document>, imageWidth: number, imageHeight: number): ImageCoordinates => {
-    switch (this.options.align) {
-      case Alignment.CENTER_XY: {
-        return {
-          x: document.getPageWidth() / 2 - imageWidth / 2,
-          y: document.getPageHeight() / 2 - imageHeight / 2,
-        };
-      }
-      case Alignment.CENTER_X: {
-        return {
-          x: document.getPageWidth() / 2 - imageWidth / 2,
-          y: document.getMarginTop(),
-        };
-      }
-      case Alignment.CENTER_Y: {
-        if (document.getNumberOfPages() > 1) {
-          return {
-            x: document.getMarginLeft(),
-            y: document.getMarginTop(),
-          };
-        }
-        return {
-          x: document.getMarginLeft(),
-          y: document.getPageHeight() / 2 - imageHeight / 2,
-        };
-      }
-      default:
-        return {
-          x: document.getMarginLeft(),
-          y: document.getMarginTop(),
-        };
-    }
-  }
-  private addCoordinatesToPageImages(
-    document: InstanceType<typeof Document>,
-    page: Page
-  ): Array<ImageCoordinates & {image: Image, width: number, height: number}> {
-    return page.getImages().map((image) => {
-      const {width, height } = utils.getImageDimensionsMM(image);
-      const imageHeightOffset = utils.pxToMM(page.getImageY(image));
-      const regularCoordinates = this.calculateImageCoordinates(document, width, height);
-      const calculateOverrideCoordinates = (): Partial<ImageCoordinates> => {
-        switch (this.options.align) {
-          case Alignment.CENTER_XY: {
-            return {
-              y: (document.getPageHeight() / 2 - page.getContentHeight() / 2) + imageHeightOffset,
-            };
-          }
-          case Alignment.CENTER_X: {
-            return {
-              y: document.getMarginTop() + imageHeightOffset,
-            };
-          }
-          case Alignment.CENTER_Y: {
-            if (document.getNumberOfPages() > 1) {
-              return {
-                y: document.getMarginTop() + imageHeightOffset,
-              };
-            }
-            return {
-              y: (document.getPageHeight() / 2 - page.getContentHeight() / 2) + imageHeightOffset,
-            };
-          }
-          default:
-            return {
-              y: document.getMarginTop() + imageHeightOffset
-            };
-        }
-      }
-      return {
-        ...regularCoordinates,
-        ...calculateOverrideCoordinates(),
-        width,
-        height,
-        image,
-      }
-    });
-  }
-  private calculateCoordinatesBody(
-    document: InstanceType<typeof Document>,
-    imageWidth: number,
-    imageHeight: number
-  ): ImageCoordinates {
-    switch (this.options.align) {
-      case Alignment.CENTER_XY: {
-        return {
-          x: document.getPageWidth() / 2 - imageWidth / 2,
-          y: document.getPageHeight() / 2 - imageHeight / 2,
-        };
-      }
-      case Alignment.CENTER_X: {
-        return {
-          x: document.getPageWidth() / 2 - imageWidth / 2,
-          y: document.getMarginTop(),
-        };
-      }
-      case Alignment.CENTER_Y: {
-        if (document.getNumberOfPages() > 1) {
-          return {
-            x: document.getMarginLeft(),
-            y: document.getMarginTop(),
-          };
-        }
-        return {
-          x: document.getMarginLeft(),
-          y: document.getPageHeight() / 2 - imageHeight / 2,
-        };
-      }
-      default:
-        return {
-          x: document.getMarginLeft(),
-          y: document.getMarginTop(),
-        };
-    }
-  }
-  private calculateCoordinatesFooter(
-    document: InstanceType<typeof Document>,
-    imageWidth: number,
-    imageHeigth: number
-  ): ImageCoordinates {
-    console.log(
-      "DEBUG FOOTER image width",
-      imageWidth,
-      document.getPageWidth()
-    );
-    const y =
-      document.getPageHeight() - this.options.footer.margin - imageHeigth;
-    switch (this.options.footer.align) {
-      case "right":
-        return {
-          x: document.getPageWidth() - document.getMarginRight() - imageWidth,
-          y,
-        };
-      case "left":
-        return {
-          x: document.getMarginLeft(),
-          y,
-        };
-      default:
-        return {
-          x: document.getPageWidth() / 2 - imageWidth / 2,
-          y,
-        };
-    }
-  }
-  private calculateCoordinatesHeader(
-    document: InstanceType<typeof Document>,
-    imageWidth: number
-  ): ImageCoordinates {
-    const y = this.options.header.margin;
-    switch (this.options.header.align) {
-      case "right":
-        return {
-          x: document.getPageWidth() - document.getMarginRight() - imageWidth,
-          y,
-        };
-      case "left":
-        return {
-          x: document.getMarginLeft(),
-          y,
-        };
-      default:
-        return {
-          x: document.getPageWidth() / 2 - imageWidth / 2,
-          y,
-        };
-    }
-  }
-  async createDocumentAdvanced(targets: TargetElement[]) {
+
+  async createDocumentAdvanced(targets: TargetElement[]): Promise<InstanceType<typeof Document>> {
     const document = new Document(this.options);
     const documentMaxHeight = utils.mmToPX(document.getPageMaxHeight());
     const documentMaxWidth = utils.mmToPX(document.getPageMaxWidth());
@@ -396,31 +97,50 @@ export class DocumentConverter {
         };
       })
     );
+    console.log('targetsWithImages', targetsWithImages)
+    // document.addCanvasToPage({canvas: targetsWithImages[0].image.getCanvas(), page: 1, width: 200, height: 100, x: 0, y: 0})
     // const canvasMaxHeight = documentMaxHeight * this.options.resolution; //this.calculateMaxHeight(canvas, scale * fillScale);
     // const allCanvasHeight = targetsWithImages.map(target => target.image.getHeight()).reduce((h1, h2) => h1 + h2, 0);
-    const pageBuilder = new PageImagesBuilder(targetsWithImages, document);
+    const pageBuilder = new PageImagesBuilder(targetsWithImages, Math.floor(documentMaxHeight * this.options.resolution));
+    const positioner = new PageImagesPositioner(document, this.options);
     const pages = pageBuilder.createPages();
-    await Promise.all(pages.map(async(page, pageIndex) => {
-      if (pageIndex) {
-        document.addPage();
-      }
-      page.getImages();
-      const pageNumber = pageIndex + 1;
-      const imagesWithCoordinates = this.addCoordinatesToPageImages(document, page);
-      await Promise.all(imagesWithCoordinates.map(async imageWithCoordinates => {
-        const {width, height, x, y } = imageWithCoordinates;
-        await this.options.hooks?.beforeAddCanvasToPage({document, page: pageNumber, canvas: imageWithCoordinates.image.getCanvas()})
-        await document.addCanvasToPage({
-          canvas: imageWithCoordinates.image.getCanvas(),
-          page: pageNumber,
-          width,
-          height,
-          x,
-          y,
-        });
-        await this.options.hooks?.afterAddCanvasToPage({document, page: pageNumber, canvas: imageWithCoordinates.image.getCanvas()})
-      }))
-    }));
+    console.log('debug pages', pages)
+    await Promise.all(
+      pages.map(async (page) => {
+        const pageNumber = page.getNumber();
+        if (pageNumber > 1) {
+          document.addPage();
+        }
+        page.getImages();
+        const imagesWithCoordinates = positioner.calculateCoordinatesPageImages(
+          page
+        );
+        await Promise.all(
+          imagesWithCoordinates.map(async (imageWithCoordinates, imageIndex) => {
+            const { width, height, x, y } = imageWithCoordinates;
+            console.log('coordinates', JSON.stringify({page: pageNumber, imageIndex, width, height, x, y }, null, 2))
+            await this.options.hooks?.beforeAddCanvasToPage({
+              document,
+              page: pageNumber,
+              canvas: imageWithCoordinates.image.getCanvas(),
+            });
+            await document.addCanvasToPage({
+              canvas: imageWithCoordinates.image.getCanvas(),
+              page: pageNumber,
+              width,
+              height,
+              x,
+              y
+            });
+            await this.options.hooks?.afterAddCanvasToPage({
+              document,
+              page: pageNumber,
+              canvas: imageWithCoordinates.image.getCanvas(),
+            });
+          })
+        );
+      }));
+      return document;
   }
   async createDocument(
     element: HTMLElement
@@ -437,13 +157,14 @@ export class DocumentConverter {
     // const image = await canvasConverter.htmlToCanvasImage(element);
     // const images = [image];
     console.log("debug images", images);
+    const positioner = new PageImagesPositioner(document, this.options);
     await Promise.all(
       images.map(async (image, pageIndex) => {
         if (pageIndex) {
           document.addPage();
         }
         const { width, height } = utils.getImageDimensionsMM(image);
-        const { x, y } = this.calculateCoordinatesBody(document, width, height);
+        const { x, y } = positioner.calculateCoordinatesBody(width, height);
         console.log(
           "DEBUG ADD CANVAS TO PAGE",
           JSON.stringify(
@@ -492,14 +213,14 @@ export class DocumentConverter {
     );
     const numberOfPages = document.getNumberOfPages();
     let pageIndex = 0;
+    const positioner = new PageImagesPositioner(document, this.options);
     while (pageIndex < numberOfPages) {
       const page = pageIndex + 1;
       const footerImage = footerImages[pageIndex];
       const headerImage = headerImages[pageIndex];
       if (footerImage) {
         const { width, height } = utils.getImageDimensionsMM(footerImage);
-        const footerXY = this.calculateCoordinatesFooter(
-          document,
+        const footerXY = positioner.calculateCoordinatesFooter(
           width,
           height
         );
@@ -514,7 +235,7 @@ export class DocumentConverter {
       }
       if (headerImage) {
         const { width, height } = utils.getImageDimensionsMM(headerImage);
-        const headerXY = this.calculateCoordinatesHeader(document, width);
+        const headerXY = positioner.calculateCoordinatesHeader(width);
         console.log("debug ADDING HEADER IMAGE", headerXY);
         document.addCanvasToPage({
           canvas: headerImage.getCanvas(),

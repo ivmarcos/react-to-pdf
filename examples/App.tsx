@@ -14,6 +14,7 @@ const ContainerContext = React.createContext<ContainerContextValues>({
     return;
   },
 });
+
 const Container = ({ children }: { children: React.ReactNode }) => {
   const refs = React.useRef([]);
   const registerNode = (element, args) => {
@@ -48,7 +49,7 @@ export const App = () => {
         <Child id={2} />
       </Container>
       <button onClick={() => setCount(count + 1)}>increase</button>
-      {(examples || []).slice(0, 3).map((example) => (
+      {(examples || []).slice(5, 6).map((example) => (
         <a id={`example-${slugify(example.title)}`} key={example.title}>
           <h3>{example.title}</h3>
           {example.content && <Code>{example.content}</Code>}

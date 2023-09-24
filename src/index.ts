@@ -6,6 +6,7 @@ import { Options, PDFHandle, TargetElementFinder, UsePDFResult } from "./types";
 import { DocumentConverter } from "./documentConverter";
 export { Margin, Resolution, Alignment as Position, Size } from "./constants";
 export * from "./PDF";
+export * from "./Target";
 export * from "./types";
 export { pxToMM, mmToPX } from "./utils";
 

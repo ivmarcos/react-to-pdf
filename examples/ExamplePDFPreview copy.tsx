@@ -13,7 +13,6 @@ import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { Alignment, Size } from "../src/constants";
-import Target from "../src/Target";
 
 const HeaderComponent = ({ page, pages }: FooterHeaderProps) => {
   return (
@@ -28,11 +27,11 @@ export const ExamplePDFPreview = () => {
   const containerRef = useRef<HTMLDivElement>();
   return (
     <Container>
-      <Button onClick={() => pdfRef.current.save('test.pdf')}>Download PDF</Button>
+      <Button onClick={() => print(pdfRef)}>Download PDF</Button>
       <Button onClick={() => print(containerRef)}>Download PDF - 2</Button>
       <div ref={containerRef}>test</div>
       <PDF
-        preview="children"
+        preview
         ref={pdfRef}
         resolution={Resolution.MEDIUM}
         page={{
@@ -47,7 +46,7 @@ export const ExamplePDFPreview = () => {
         canvas={{
           qualityRatio: 0.93,
         }}
-        size="original"
+        size="fill-page"
         align="center-x"
         footer={{
           component: ({ page, pages }) => (
@@ -80,15 +79,13 @@ export const ExamplePDFPreview = () => {
         embedProps={{ width: "100%", height: "400" }}
         loading={<div>Loading...</div>}
       >
-        {Array(100)
+        {Array(10)
           .fill(null)
           .map((_, index) => (
             // <div style={{backgroundColor: 'green', width: 10000, height: 100}} key={index}>
             //   test
             // </div>
-            <Target key={index}>
-              <Card imageId={17} title={`PDF preview example - #${index +1}`} />
-            </Target>
+            <Card key={index} imageId={45} title="PDF preview example" />
           ))}
       </PDF>
     </Container>

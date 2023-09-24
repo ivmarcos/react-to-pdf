@@ -3,6 +3,8 @@ import { jsPDFOptions } from "jspdf";
 import React, { MutableRefObject } from "react";
 import { Margin, Resolution } from "./constants";
 import { Document } from "./document";
+import { Image } from "./image";
+import { TargetProps } from "./Target";
 
 export type DetailedMargin = {
   top: Margin | number;
@@ -10,6 +12,23 @@ export type DetailedMargin = {
   bottom: Margin | number;
   left: Margin | number;
 };
+
+export interface TargetOptions {
+  startOnNewPage: boolean;
+}
+export interface TargetElement {
+  element: HTMLElement;
+  options?: TargetOptions;
+}
+
+export interface ImageCoordinates {
+  x: number;
+  y: number;
+}
+
+export interface TargetImage extends Pick<TargetElement, "options"> {
+  image: Image;
+}
 
 export type HorizontalAlignmentOption = "left" | "center" | "right";
 export type AlignmentOption =
@@ -49,8 +68,24 @@ interface CanvasConversionOptions
 }
 
 export interface HookOptions {
-  beforeAddCanvasToPage({document, page, canvas}: {document: InstanceType<typeof Document>, page: number, canvas: HTMLCanvasElement}): void | Promise<void>
-  afterAddCanvasToPage({document, page, canvas}: {document: InstanceType<typeof Document>, page: number, canvas: HTMLCanvasElement}): void | Promise<void>
+  beforeAddCanvasToPage({
+    document,
+    page,
+    canvas,
+  }: {
+    document: InstanceType<typeof Document>;
+    page: number;
+    canvas: HTMLCanvasElement;
+  }): void | Promise<void>;
+  afterAddCanvasToPage({
+    document,
+    page,
+    canvas,
+  }: {
+    document: InstanceType<typeof Document>;
+    page: number;
+    canvas: HTMLCanvasElement;
+  }): void | Promise<void>;
 }
 
 export interface PDFOptions {
@@ -86,7 +121,7 @@ export interface PDFOptions {
   };
   align?: AlignmentOption;
   size?: SizeOption;
-  hooks?: HookOptions
+  hooks?: HookOptions;
 }
 
 export interface Options
@@ -135,7 +170,7 @@ export interface PDFProps extends Omit<Options, "filename" | "method"> {
    */
   preview?: PreviewOption;
   /** Content to be generated to the PDF document. */
-  children: React.ReactNode;
+  children: React.ReactElement<TargetProps>[] | React.ReactNode;
   /** Loading component to display when the PDF document is being generated. For
    * example, `loading={<div>Loading...</div>}`. */
   loading?: React.ReactNode;
