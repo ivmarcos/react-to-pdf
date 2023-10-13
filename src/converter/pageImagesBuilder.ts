@@ -1,8 +1,8 @@
 import { Image } from "./image";
 import { Page } from "./page";
-import { log } from "./testUtils";
-import { TargetImage } from "./types";
-import * as utils from './utils';
+import { log } from "../tests/testUtils";
+import { TargetImage } from "../types";
+import * as utils from '../utils';
 
 export class PageImagesBuilder {
     private pageHeight: number;

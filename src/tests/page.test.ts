@@ -3,7 +3,7 @@
  */
 
 import { expect, test } from "@jest/globals";
-import { Page } from "./page";
+import { Page } from "../converter/page";
 import { createImage } from "./testUtils";
 
 describe("Page", () => {

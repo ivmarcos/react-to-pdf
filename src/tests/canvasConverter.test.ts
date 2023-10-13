@@ -3,9 +3,9 @@
  */
 
 import { expect, test } from "@jest/globals";
-import { CanvasConverter } from "./canvasConverter";
-import { Size } from "./constants";
-import { parseOptions } from "./documentConverter";
+import { CanvasConverter } from "../converter/canvasConverter";
+import { Size } from "../constants";
+import { parseOptions } from "../converter/documentConverter";
 
 describe("CanvasConverter", () => {
   describe("calculaResizeScale", () => {

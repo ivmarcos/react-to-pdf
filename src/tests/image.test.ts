@@ -3,7 +3,7 @@
  */
 
 import { test, expect } from "@jest/globals";
-import { Image } from "./image";
+import { Image } from "../converter/image";
 
 describe("Image", () => {
   test("should return the correct dimensions", () => {

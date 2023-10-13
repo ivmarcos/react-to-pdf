@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { PREVIEW_ROOT_CLASS_NAME } from "./constants";
+import { PREVIEW_ROOT_CLASS_NAME } from "../constants";
 
 interface PreviewPortalProps {
   children: React.ReactNode;

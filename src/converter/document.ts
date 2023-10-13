@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import { DocumentConverterOptions } from "./types";
+import { DocumentConverterOptions } from "../types";
 
 const canvasToImage = async (
   canvas: HTMLCanvasElement

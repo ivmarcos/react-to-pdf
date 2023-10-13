@@ -7,14 +7,14 @@ import {
   mmToPX,
   save,
   print,
-  FooterHeaderProps,
+  FooterHeaderRenderProps,
 } from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { Alignment, Size } from "../src/constants";
 
-const HeaderComponent = ({ page, pages }: FooterHeaderProps) => {
+const HeaderComponent = ({ page, pages }: FooterHeaderRenderProps) => {
   return (
     <div>
       Header {page} {pages}
@@ -49,7 +49,7 @@ export const ExamplePDFPreview = () => {
         size="fill-page"
         align="center-x"
         footer={{
-          component: ({ page, pages }) => (
+          render: ({ page, pages }) => (
             <div
               style={{
                 width: mmToPX(190),
@@ -73,7 +73,7 @@ export const ExamplePDFPreview = () => {
         //   margin: 5,
         // }}
         header={{
-          component: HeaderComponent,
+          render: HeaderComponent,
           align: "left",
         }}
         embedProps={{ width: "100%", height: "400" }}

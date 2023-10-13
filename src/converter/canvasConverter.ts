@@ -1,7 +1,7 @@
 import html2canvas from "html2canvas";
-import { DocumentConverterOptions } from "./types";
-import { Size } from "./constants";
-import * as utils from "./utils";
+import { DocumentConverterOptions } from "../types";
+import { Size } from "../constants";
+import * as utils from "../utils";
 import { Image } from "./image";
 
 export class CanvasConverter {
@@ -35,7 +35,7 @@ export class CanvasConverter {
       ...this.options.overrides.canvas,
     });
   }
-  private calculateResizeScale(element: HTMLElement) {
+  calculateResizeScale(element: HTMLElement) {
     switch (this.options.size) {
       case Size.SHRINK_TO_FIT:
         return utils.calculateFitRatio({

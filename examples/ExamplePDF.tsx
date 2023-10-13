@@ -14,7 +14,7 @@ export const ExamplePDF = () => {
       <PDF
         ref={pdfRef}
         page={{ margin: Margin.MEDIUM }}
-        footer={{ component: ({ page }) => <div>{page}</div> }}
+        footer={{ render: ({ page }) => <div>{page}</div> }}
       >
         <Card imageId={50} title="PDF example" />
       </PDF>

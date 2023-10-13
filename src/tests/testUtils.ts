@@ -1,7 +1,18 @@
-import { Image } from "./image";
+import { Image } from "../converter/image";
+
+const parseArgs = (args?: any) => {
+  if ([null, undefined].includes(args)){
+    return args;
+  }
+  try {
+    return JSON.stringify(args, null, 2)
+  }catch(err){
+    return args;
+  }
+}
 
 export const log = (text: string, args?: any) => {
-    console.log(`[DEBUG] ${text}`, JSON.stringify(args, null, 2))
+    console.log(`[DEBUG] ${text}`, parseArgs(args))
 }
 
 export const createCanvas = (width:number, height: number) => {

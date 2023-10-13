@@ -1,20 +1,20 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import { PDFContext } from './PDF'
-import { TargetOptions } from './types'
+import { TargetOptions } from '../types'
 
-export interface TargetProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface BodyProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode,
     targetIndex?:number,
     registerTarget?: (element: HTMLDivElement, index, options?: TargetOptions) => void,
     startOnNewPage?: boolean
 }
 
-const Target = ({children, startOnNewPage, registerTarget, targetIndex,  ...props}: TargetProps) => {
+const Body = ({children, startOnNewPage, registerTarget, targetIndex,  ...props}: BodyProps) => {
   return (
     <div {...props} ref={element => registerTarget?.(element, targetIndex, {startOnNewPage})}>{children}</div>
   )
 }
 
-Target.displayName = 'Target'
+Body.displayName = 'Body'
 
-export default Target
+export default Body

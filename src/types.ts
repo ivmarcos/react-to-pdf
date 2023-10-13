@@ -2,9 +2,9 @@ import { Options as Html2CanvasOptions } from "html2canvas";
 import { jsPDFOptions } from "jspdf";
 import React, { MutableRefObject } from "react";
 import { Margin, Resolution } from "./constants";
-import { Document } from "./document";
-import { Image } from "./image";
-import { TargetProps } from "./Target";
+import { Document } from "./converter/document";
+import { Image } from "./converter/image";
+import { BodyProps } from "./components/Body";
 
 export type DetailedMargin = {
   top: Margin | number;
@@ -152,16 +152,17 @@ export type TargetElementFinder<T extends HTMLElement> =
   | MutableRefObject<T | PDFHandle>
   | (() => T | null);
 
-export interface FooterHeaderProps {
+export interface FooterHeaderRenderProps {
   page: number;
   pages: number;
 }
 
-export interface FooterHeaderOptions {
-  component: React.FC<FooterHeaderProps>;
+export interface FooterHeaderProps {
+  render: React.FC<FooterHeaderRenderProps> | ((props: FooterHeaderRenderProps) => JSX.Element);
   margin?: Margin | number;
   align?: HorizontalAlignmentOption;
 }
+
 export interface PDFProps extends Omit<Options, "filename" | "method"> {
   /** Set the preview mode for the document.
    * - `false` (default) - component is not visible
@@ -170,18 +171,18 @@ export interface PDFProps extends Omit<Options, "filename" | "method"> {
    */
   preview?: PreviewOption;
   /** Content to be generated to the PDF document. */
-  children: React.ReactElement<TargetProps>[] | React.ReactNode;
+  children: React.ReactElement<BodyProps>[] | React.ReactNode;
   /** Loading component to display when the PDF document is being generated. For
    * example, `loading={<div>Loading...</div>}`. */
   loading?: React.ReactNode;
-  footer?: FooterHeaderOptions | React.FC<FooterHeaderProps>;
-  header?: FooterHeaderOptions | React.FC<FooterHeaderProps>;
+  footer?: FooterHeaderProps | React.FC<FooterHeaderRenderProps>;
+  header?: FooterHeaderProps | React.FC<FooterHeaderRenderProps>;
   embedProps?: React.HTMLProps<HTMLEmbedElement>;
 }
 
 export interface DocumentConverterOptions extends Options {
-  footer: Required<Omit<FooterHeaderOptions, "component">>;
-  header: Required<Omit<FooterHeaderOptions, "component">>;
+  footer: Required<Omit<FooterHeaderProps, "component">>;
+  header: Required<Omit<FooterHeaderProps, "component">>;
 }
 
 export interface PDFHandle {

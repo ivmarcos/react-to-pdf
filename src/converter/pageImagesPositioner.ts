@@ -1,10 +1,10 @@
-import { Alignment } from "./constants";
+import { Alignment } from "../constants";
 import { Document } from "./document";
 import { Image } from "./image";
 import { Page } from "./page";
-import { log } from "./testUtils";
-import { DocumentConverterOptions, ImageCoordinates } from "./types";
-import * as utils from './utils'
+import { log } from "../tests/testUtils";
+import { DocumentConverterOptions, ImageCoordinates } from "../types";
+import * as utils from '../utils'
 
 export class PageImagesPositioner {
   options: DocumentConverterOptions;
@@ -148,10 +148,9 @@ export class PageImagesPositioner {
     imageHeigth: number
   ): ImageCoordinates {
     const document = this.document;
-    console.log(
-      "DEBUG FOOTER image width",
-      imageWidth,
-      document.getPageWidth()
+    log(
+      "calculateCoordinatesFooter",
+      {align: this.options.footer.align, imageWidth, docPageWidth: document.getPageWidth()}
     );
     const y =
       document.getPageHeight() - this.options.footer.margin - imageHeigth;

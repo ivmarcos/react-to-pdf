@@ -1,3 +1,5 @@
+const noop = () => null
+
 // To make sure that the tests are working, it's important that you are using
 // this implementation of ResizeObserver and DOMMatrixReadOnly
 class ResizeObserver {
@@ -12,10 +14,14 @@ class ResizeObserver {
   }
 
   //@ts-ignore empty function
-  unobserve() {}
+  unobserve() {
+    noop()
+  }
 
   //@ts-ignore empty function
-  disconnect() {}
+  disconnect() {
+    noop()
+  }
 }
 
 class DOMMatrixReadOnly {

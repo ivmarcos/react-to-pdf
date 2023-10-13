@@ -3,9 +3,9 @@
  */
 
 import { expect, test } from "@jest/globals";
-import { Image } from "./image";
-import { TargetImage } from "./types";
-import { PageImagesBuilder } from "./pageImagesBuilder";
+import { Image } from "../converter/image";
+import { TargetImage } from "../types";
+import { PageImagesBuilder } from "../converter/pageImagesBuilder";
 
 const createCanvas = (width:number, height: number) => {
   const canvas = document.createElement("canvas");

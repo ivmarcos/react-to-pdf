@@ -1,17 +1,18 @@
-import { DocumentConverterOptions, FooterHeaderOptions, TargetElement } from "./types";
+import { DocumentConverterOptions, FooterHeaderProps, TargetElement } from "../types";
 
 import { CanvasConverter } from "./canvasConverter";
-import { Alignment, DEFAULT_OPTIONS } from "./constants";
+import { Alignment, DEFAULT_OPTIONS } from "../constants";
 import { Document } from "./document";
-import * as utils from "./utils";
+import * as utils from "../utils";
 import { PageImagesBuilder } from "./pageImagesBuilder";
 import { PageImagesPositioner } from "./pageImagesPositioner";
+import { log } from "../tests/testUtils";
 
 
 export interface DocumentConverterPartialOptions
   extends Omit<Partial<DocumentConverterOptions>, "footer" | "header"> {
-  footer?: Partial<FooterHeaderOptions>;
-  header?: Partial<FooterHeaderOptions>;
+  footer?: Partial<FooterHeaderProps>;
+  header?: Partial<FooterHeaderProps>;
 }
 
 export const parseOptions = (
@@ -44,38 +45,6 @@ export class DocumentConverter {
   constructor(options?: DocumentConverterPartialOptions) {
     this.options = parseOptions(options);
   }
-  private calculateHorizontalFitScale(elementWidth: number, maxWidth: number) {
-    if (elementWidth > maxWidth) {
-      return elementWidth / maxWidth;
-    }
-    return 1;
-  }
-  private getResolution() {
-    return this.options.resolution;
-  }
-
-  private calculateNumberOfPages(element: HTMLElement) {
-    const document = new Document(this.options);
-    const documentMaxHeight = utils.mmToPX(document.getPageMaxHeight());
-    const documentMaxWidth = utils.mmToPX(document.getPageMaxWidth());
-    const elementHeight = element.offsetHeight;
-    const elementWidth = element.offsetWidth;
-    const resizeFitRatio = utils.calculateFitRatio({
-      size: elementWidth,
-      maxSize: documentMaxWidth,
-    });
-    console.log(
-      "CALCULATE NUMBER OF PAGES",
-      elementHeight,
-      element.style.height,
-      documentMaxHeight,
-      resizeFitRatio
-    );
-
-    const elementHeightResizedToFit = elementHeight * resizeFitRatio;
-    return Math.ceil(elementHeightResizedToFit / documentMaxHeight);
-  }
-
   async createDocumentAdvanced(targets: TargetElement[]): Promise<InstanceType<typeof Document>> {
     const document = new Document(this.options);
     const documentMaxHeight = utils.mmToPX(document.getPageMaxHeight());
@@ -111,7 +80,6 @@ export class DocumentConverter {
         if (pageNumber > 1) {
           document.addPage();
         }
-        page.getImages();
         const imagesWithCoordinates = positioner.calculateCoordinatesPageImages(
           page
         );
@@ -202,6 +170,8 @@ export class DocumentConverter {
       maxWidth: documentMaxWidth,
       options: this.options,
     });
+    console.log('adding footer element', footerElements[0])
+    log("adding footer element", footerElements[0].offsetWidth)
     const [footerImages, headerImages] = await Promise.all(
       [footerElements, headerElements].map((elements) =>
         Promise.all(
@@ -224,7 +194,7 @@ export class DocumentConverter {
           width,
           height
         );
-        console.log("debug ADDING FOOTER IMAGE", footerXY, width, height);
+        log("adding footer image", {footerXY, width, height, imageWidth: footerImage.getOriginalWidth(), imageScaledWidth: footerImage.getWidth(), imageScale: footerImage.getScale()});
         document.addCanvasToPage({
           canvas: footerImage.getCanvas(),
           page,

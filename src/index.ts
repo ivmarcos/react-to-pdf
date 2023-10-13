@@ -1,12 +1,12 @@
 import { MutableRefObject, useCallback, useRef } from "react";
 
 import jsPDF from "jspdf";
-import { Document } from "./document";
+import { Document } from "./converter/document";
 import { Options, PDFHandle, TargetElementFinder, UsePDFResult } from "./types";
-import { DocumentConverter } from "./documentConverter";
+import { DocumentConverter } from "./converter/documentConverter";
 export { Margin, Resolution, Alignment as Position, Size } from "./constants";
-export * from "./PDF";
-export * from "./Target";
+export * from "./components/PDF";
+export * from "./components/Body";
 export * from "./types";
 export { pxToMM, mmToPX } from "./utils";
 

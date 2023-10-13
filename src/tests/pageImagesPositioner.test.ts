@@ -3,16 +3,16 @@
  */
 
 import { expect, test } from "@jest/globals";
-import { Image } from "./image";
-import { TargetImage } from "./types";
-import { PageImagesBuilder } from "./pageImagesBuilder";
+import { Image } from "../converter/image";
+import { TargetImage } from "../types";
+import { PageImagesBuilder } from "../converter/pageImagesBuilder";
 import { createCanvas, createImage } from "./testUtils";
-import { PageImagesPositioner } from "./pageImagesPositioner";
-import { Document } from "./document";
-import { parseOptions } from "./documentConverter";
-import { Alignment } from "./constants";
-import { Page } from "./page";
-import * as utils from './utils';
+import { PageImagesPositioner } from "../converter/pageImagesPositioner";
+import { Document } from "../converter/document";
+import { parseOptions } from "../converter/documentConverter";
+import { Alignment } from "../constants";
+import { Page } from "../converter/page";
+import * as utils from '../utils';
 
 describe("PageImagesBuilder", () => {
   test("should work", () => {

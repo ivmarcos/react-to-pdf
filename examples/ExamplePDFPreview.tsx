@@ -7,15 +7,15 @@ import {
   mmToPX,
   save,
   print,
-  FooterHeaderProps,
+  FooterHeaderRenderProps,
 } from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { Alignment, Size } from "../src/constants";
-import Target from "../src/Target";
+import Body from "../src/components/Body";
 
-const HeaderComponent = ({ page, pages }: FooterHeaderProps) => {
+const HeaderComponent = ({ page, pages }: FooterHeaderRenderProps) => {
   return (
     <div>
       Header {page} {pages}
@@ -32,7 +32,7 @@ export const ExamplePDFPreview = () => {
       <Button onClick={() => print(containerRef)}>Download PDF - 2</Button>
       <div ref={containerRef}>test</div>
       <PDF
-        preview="children"
+        preview
         ref={pdfRef}
         resolution={Resolution.MEDIUM}
         page={{
@@ -50,7 +50,7 @@ export const ExamplePDFPreview = () => {
         size="original"
         align="center-x"
         footer={{
-          component: ({ page, pages }) => (
+          render: ({ page, pages }) => (
             <div
               style={{
                 width: mmToPX(190),
@@ -74,21 +74,21 @@ export const ExamplePDFPreview = () => {
         //   margin: 5,
         // }}
         header={{
-          component: HeaderComponent,
+          render: HeaderComponent,
           align: "left",
         }}
         embedProps={{ width: "100%", height: "400" }}
         loading={<div>Loading...</div>}
       >
-        {Array(100)
+        {Array(3)
           .fill(null)
           .map((_, index) => (
             // <div style={{backgroundColor: 'green', width: 10000, height: 100}} key={index}>
             //   test
             // </div>
-            <Target key={index}>
+            <Body key={index}>
               <Card imageId={17} title={`PDF preview example - #${index +1}`} />
-            </Target>
+            </Body>
           ))}
       </PDF>
     </Container>
