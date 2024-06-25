@@ -1,5 +1,5 @@
 import { MutableRefObject } from "react";
-import { jsPDFOptions } from "jspdf";
+import jsPDF, { jsPDFOptions } from "jspdf";
 import { Options as Html2CanvasOptions } from "html2canvas";
 import { Margin, Resolution } from "./constants";
 
@@ -92,7 +92,7 @@ export type UsePDFResult = {
   /**
    * Generates the pdf
    */
-  toPDF: (options?: Options) => void;
+  toPDF: (options?: Options) => Promise<InstanceType<typeof jsPDF>>;
 };
 
 export type TargetElementFinder =
