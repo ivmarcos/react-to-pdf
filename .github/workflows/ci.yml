@@ -19,9 +19,9 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
@@ -37,7 +37,7 @@ jobs:
           yarn cypress run
 
       - name: Upload Cypress Screenshots
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         # Only capture images on failure
         if: failure()
         with:
@@ -45,7 +45,7 @@ jobs:
           path: cypress/screenshots
 
       - name: Upload Cypress Downloads
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         # Only capture logs on failure
         if: failure()
         with:
