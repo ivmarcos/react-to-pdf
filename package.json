@@ -30,7 +30,7 @@
     "lint": "eslint . && prettier -c .",
     "release": "release-it",
     "prerelease": "npm run clean && npm run build",
-    "format": "prettier --write src examples README.md CHANGELOG.md *.json *.ts cypress .github"
+    "format": "prettier --write src examples README.md CHANGELOG.md .release-it.json *.json *.ts cypress .github"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
@@ -46,7 +46,7 @@
     "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
-    "canvas": "^2.11.0",
+    "canvas": "^3.1.0",
     "compare-pdf": "^1.1.8",
     "cypress": "^13.1.0",
     "eslint": "^8.39.0",
@@ -59,7 +59,7 @@
     "react": "^16.8",
     "react-dom": "^16.8",
     "react-test-renderer": "^16.14.0",
-    "release-it": "^16.1.5",
+    "release-it": "^18.1.2",
     "rimraf": "^5.0.0",
     "ts-jest": "^29.1.1",
     "typedoc": "^0.24.4",
