@@ -1,5 +1,5 @@
 {
-    "npm": {
-      "skipChecks": true
-    }
+  "npm": {
+    "skipChecks": true
   }
+}

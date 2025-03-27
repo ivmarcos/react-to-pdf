@@ -30,7 +30,7 @@
     "lint": "eslint . && prettier -c .",
     "release": "release-it",
     "prerelease": "npm run clean && npm run build",
-    "format": "prettier --write src examples README.md CHANGELOG.md *.json *.ts cypress .github"
+    "format": "prettier --write src examples README.md CHANGELOG.md .release-it.json *.json *.ts cypress .github"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
