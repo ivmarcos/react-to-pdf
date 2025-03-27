@@ -16,3 +16,5 @@ examples/
 cypress/
 cypress.config.js
 .release-it.json
+vite.config.ts
+vitest.config.ts
