@@ -46,7 +46,7 @@
     "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
-    "canvas": "3",
+    "canvas": "^3.1.0",
     "compare-pdf": "^1.1.8",
     "cypress": "^13.1.0",
     "eslint": "^8.39.0",
