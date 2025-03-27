@@ -23,7 +23,7 @@
   "homepage": "https://github.com/ivmarcos/react-to-pdf#readme",
   "scripts": {
     "start": "vite examples",
-    "build": "parcel build src/index.ts",
+    "build": "tsc -p tsconfig.module.build.json",
     "clean": "rimraf dist",
     "docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts src/types.ts src/constants.ts",
     "test": "npm run lint && jest",
