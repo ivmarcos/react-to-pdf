@@ -66,5 +66,8 @@
   "dependencies": {
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1"
+  },
+  "publishConfig": {
+     "registry": "https://registry.npmjs.org/"
   }
 }
