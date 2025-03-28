@@ -1,4 +1,13 @@
-# 2.0.0-beta.9 (March, 28, 2025)
+# 2.0.0 (March, 28, 2025)
+
+This release fix some security vulnerabilities related to jspdf. https://github.com/parallax/jsPDF/releases/tag/v3.0.1. This major release follows jspdf major release v3 which dropped support for Internet Explorer and fixed a security vulnerability in the html function by updating the optional dependency dompurify to v3.2.4. 
+
+There are no other breaking changes.
+
+* update links (2605643)
+* update changelog (d9e6d0d)
+
+# 2.0.0-beta.0 (March, 28, 2025)
 
 * Prepare release 2 beta (#153) (bad7181)
 * Switch to vite (#152) (f6f7ea5)
