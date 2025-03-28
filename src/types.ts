@@ -17,6 +17,7 @@ type PageConversionOptions = {
   format: jsPDFOptions["format"];
   /** Orientation of the page (portrait or landscape), defaults to `portrait`. */
   orientation: jsPDFOptions["orientation"];
+  background?:string | HTMLImageElement | HTMLCanvasElement | Uint8Array
 };
 
 type CanvasConversionOptions = Pick<
@@ -82,6 +83,7 @@ export type Options = Omit<
   page?: Partial<PageConversionOptions>;
   canvas?: Partial<CanvasConversionOptions>;
   overrides?: Partial<ConversionOptions["overrides"]>;
+
 };
 
 export type UsePDFResult = {
