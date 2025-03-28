@@ -24,3 +24,4 @@ scripts/
 .eslintignore
 .eslintrc.js
 .prettierignore
+rollup.config.js
