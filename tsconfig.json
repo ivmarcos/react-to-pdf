@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "lib": ["es2015", "DOM"],
     "jsx": "react",
     "esModuleInterop": true,
-    "types": ["cypress", "node", "jest"],
+    "types": ["cypress", "node"],
     "paths": {
       "react-to-pdf": ["./dist"]
     }

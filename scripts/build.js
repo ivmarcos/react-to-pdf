@@ -1,25 +1,31 @@
 import esbuild from "esbuild";
-import { execSync } from "child_process";
 
+const buildDir = 'dist';
 const entryFile = "src/index.ts";
-const outFile = "dist/index.js";
-const dtsFile = "dist/index.d.ts";
 
-// Run TypeScript compiler to generate declaration file
-execSync(
-  `tsc ${entryFile} --declaration --emitDeclarationOnly --outFile ${dtsFile}`
-);
+const configs = [
+  {
+    format: 'esm',
+    outFile: 'index.mjs'
+  },
+  {
+    format: 'cjs',
+    outFile: 'index.js'
+  }
+]
 
-// Run esbuild to bundle the JavaScript output
-esbuild
+configs.forEach(config => {
+  esbuild
   .build({
     entryPoints: [entryFile],
-    outfile: outFile,
+    outfile: `${buildDir}/${config.outFile}`,
     bundle: true,
     external: ["react", "react-dom", "jspdf", "html2canvas"],
     target: "esnext",
-    format: "esm",
+    format: config.format,
     platform: "neutral",
     sourcemap: true,
   })
   .catch(() => process.exit(1));
+
+})
