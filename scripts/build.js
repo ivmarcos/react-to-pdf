@@ -2,7 +2,7 @@ import esbuild from "esbuild";
 import { execSync } from "child_process";
 
 const entryFile = "src/index.ts";
-const outFile = "dist/index.mjs";
+const outFile = "dist/index.js";
 const dtsFile = "dist/types.d.ts";
 
 // Run TypeScript compiler to generate declaration file
