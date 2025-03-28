@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "react-to-pdf": process.env.CI ? '../dist' : "../src",
+      "react-to-pdf": process.env.CI ? "../dist" : "../src",
     },
   },
 });
