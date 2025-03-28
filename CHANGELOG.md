@@ -1,3 +1,15 @@
+# 2.0.0-beta.9 (March, 28, 2025)
+
+* Prepare release 2 beta (#153) (bad7181)
+* Switch to vite (#152) (f6f7ea5)
+* Bump release-it and canva (#151) (0c85ca3)
+* Bump jspdf from 2.5.1 to 3.0.1 (#150) (4f9f7f9)
+* Bump msgpackr from 1.8.5 to 1.10.1 (#107) (094c0ee)
+* Bump ip from 1.1.8 to 1.1.9 (#115) (a01f348)
+* Bump @babel/traverse from 7.21.4 to 7.23.2 (#90) (195760f)
+* Use alias for examples (#81) (6552d8b)
+* update changelog and add release script (562e695)
+
 # 1.0.1 (September, 7, 2023)
 
 * fix broken build (076e1ad)
