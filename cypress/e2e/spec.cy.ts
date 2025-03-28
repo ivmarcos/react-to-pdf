@@ -35,7 +35,7 @@ export const examples: ExampleTest[] = [
 
 describe("template spec", () => {
   before(() => {
-    cy.visit("http://localhost:1234");
+    cy.visit("http://localhost:5173");
   });
 
   it("pdfs must mach baseline", () => {

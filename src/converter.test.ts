@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 
-import { test, expect } from "@jest/globals";
 import { Margin, Resolution } from "./constants";
 import Converter from "./converter";
 import { Options } from "./types";
