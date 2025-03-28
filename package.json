@@ -1,6 +1,6 @@
 {
   "name": "react-to-pdf",
-  "version": "1.0.1",
+  "version": "2.0.0-beta.0",
   "description": "Create PDF documents from React Components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -68,6 +68,6 @@
     "jspdf": "^3.0.1"
   },
   "publishConfig": {
-     "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/"
   }
 }
