@@ -33,7 +33,7 @@ jobs:
         run: |
           yarn lint
           yarn test
-          yarn start &
+          CI=true yarn start &
           yarn cypress run
 
       - name: Upload Cypress Screenshots

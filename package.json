@@ -24,7 +24,7 @@
   "homepage": "https://github.com/ivmarcos/react-to-pdf#readme",
   "scripts": {
     "start": "vite",
-    "build": "node build",
+    "build": "node scripts/build",
     "clean": "rimraf dist",
     "docs": "typedoc --plugin typedoc-plugin-markdown --out docs src/index.ts src/types.ts src/constants.ts",
     "test": "npm run lint && vitest run",
