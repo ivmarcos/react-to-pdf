@@ -29,7 +29,7 @@
     "lint": "eslint . && prettier -c .",
     "release": "release-it",
     "prerelease": "npm run clean && npm run build",
-    "format": "prettier --write src examples scripts README.md CHANGELOG.md .release-it.json *.json *.ts cypress .github"
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.1",
