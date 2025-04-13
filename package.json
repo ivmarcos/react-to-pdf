@@ -64,7 +64,7 @@
     "react-dom": ">=16.8"
   },
   "dependencies": {
-    "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^1.5.8",
     "jspdf": "^3.0.1"
   },
   "publishConfig": {
