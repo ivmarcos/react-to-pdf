@@ -1,3 +1,16 @@
+# 2.0.1 (June, 3, 2025)
+
+Fixes security vulnerabilities from tar-fs and some other minor changes related to Vite bumps.
+
+* add nvmrc file (8abe51d)
+* add nvmrc file (2260c0c)
+* Bump tar-fs from 2.1.2 to 2.1.3 (#159) (c1cc4e7)
+* Bump vite from 6.2.6 to 6.2.7 (#158) (eee4dc1)
+* Bump vite from 6.2.5 to 6.2.6 (#157) (e6a1555)
+* Bump vite from 6.2.4 to 6.2.5 (#155) (6fefc56)
+* Bump vite from 6.2.3 to 6.2.4 (#154) (0c09957)
+* update changelog (f56dd81)
+
 # 2.0.0 (March, 28, 2025)
 
 This release fix some security vulnerabilities related to jspdf. https://github.com/parallax/jsPDF/releases/tag/v3.0.1. This major release follows jspdf major release v3 which dropped support for Internet Explorer and fixed a security vulnerability in the html function by updating the optional dependency dompurify to v3.2.4. 
