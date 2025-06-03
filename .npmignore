@@ -25,3 +25,4 @@ scripts/
 .eslintrc.js
 .prettierignore
 rollup.config.js
+.nvmrc
