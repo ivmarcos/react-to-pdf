@@ -50,7 +50,7 @@
     "react": "^16.8",
     "react-dom": "^16.8",
     "react-test-renderer": "^16.14.0",
-    "release-it": "^18.1.2",
+    "release-it": "^19.0.3",
     "rimraf": "^5.0.0",
     "rollup-plugin-dts": "^6.2.1",
     "typedoc": "^0.24.4",
