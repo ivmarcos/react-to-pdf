@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import * as utils from "../utils";
-import { Image } from "../converter/image";
+import { Image } from "../models/image";
 
 describe("utils", () => {
   describe("cropY", () => {

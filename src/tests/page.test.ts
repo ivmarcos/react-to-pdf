@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Page } from "../converter/page";
+import { Page } from "../models/page";
 import { createImage } from "./testUtils";
 
 describe("Page", () => {

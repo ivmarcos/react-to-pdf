@@ -17,17 +17,18 @@ import {
   TargetOptions,
 } from "..";
 import { PreviewPortal } from "./PreviewPortal";
-import { Document } from "../converter/document";
+import { Document } from "../models/document";
 import {
   DocumentConverter,
   DocumentConverterPartialOptions,
-} from "../converter/documentConverter";
+} from "../services/documentConverter";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
+import { OFFSCREEN_POSITION } from "../constants";
 
 const previewStyle: CSSProperties = {
   position: "fixed",
-  left: "-10000rem",
+  left: OFFSCREEN_POSITION,
 };
 
 export const containerStyle: CSSProperties = {

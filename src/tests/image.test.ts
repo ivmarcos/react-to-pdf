@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { Image } from "../converter/image";
+import { Image } from "../models/image";
 
 describe("Image", () => {
   test("should return the correct dimensions", () => {

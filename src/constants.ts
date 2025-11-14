@@ -7,6 +7,7 @@ import {
 
 export const MM_TO_PX = 3.77952755906;
 export const PREVIEW_ROOT_CLASS_NAME = "react-to-pdf--preview";
+export const OFFSCREEN_POSITION = "-10000rem";
 
 export enum Resolution {
   LOW = 1,

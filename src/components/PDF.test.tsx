@@ -1,5 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { PDFContext, containerStyle } from "./PDF";
+import { OFFSCREEN_POSITION } from "../constants";
 
 describe("PDF Component", () => {
   test("should have PDFContext defined", () => {
@@ -13,6 +14,6 @@ describe("PDF Component", () => {
   });
 
   test("containerStyle should have hidden positioning", () => {
-    expect(containerStyle.left).toBe("-10000rem");
+    expect(containerStyle.left).toBe(OFFSCREEN_POSITION);
   });
 });

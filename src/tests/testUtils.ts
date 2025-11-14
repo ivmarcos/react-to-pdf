@@ -1,4 +1,4 @@
-import { Image } from "../converter/image";
+import { Image } from "../models/image";
 
 const parseArgs = (args?: any) => {
   if ([null, undefined].includes(args)) {

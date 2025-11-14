@@ -1,5 +1,5 @@
-import { Image } from "./image";
-import { Page } from "./page";
+import { Image } from "../models/image";
+import { Page } from "../models/page";
 import { log } from "../tests/testUtils";
 import { TargetImage } from "../types";
 import * as utils from "../utils";

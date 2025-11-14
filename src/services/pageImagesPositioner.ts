@@ -1,7 +1,7 @@
 import { Alignment } from "../constants";
-import { Document } from "./document";
-import { Image } from "./image";
-import { Page } from "./page";
+import { Document } from "../models/document";
+import { Image } from "../models/image";
+import { Page } from "../models/page";
 import { log } from "../tests/testUtils";
 import { DocumentConverterOptions, ImageCoordinates } from "../types";
 import * as utils from "../utils";

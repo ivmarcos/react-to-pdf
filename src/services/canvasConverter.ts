@@ -2,12 +2,13 @@ import html2canvas from "html2canvas";
 import { DocumentConverterOptions } from "../types";
 import { Size } from "../constants";
 import * as utils from "../utils";
-import { Image } from "./image";
+import { Image } from "../models/image";
 
 export class CanvasConverter {
   maxWidth: number;
   maxHeight: number;
   options: DocumentConverterOptions;
+  private canvasCache: HTMLCanvasElement[] = [];
 
   constructor({
     maxHeight,
@@ -27,13 +28,15 @@ export class CanvasConverter {
     element: HTMLElement,
     scale: number
   ): Promise<HTMLCanvasElement> {
-    return html2canvas(element, {
+    const canvas = await html2canvas(element, {
       scale,
       windowWidth: element.scrollWidth,
       windowHeight: element.scrollHeight,
       ...this.options.canvas,
       ...this.options.overrides.canvas,
     });
+    this.canvasCache.push(canvas);
+    return canvas;
   }
   calculateResizeScale(element: HTMLElement) {
     switch (this.options.size) {
@@ -87,7 +90,26 @@ export class CanvasConverter {
           offsetY,
           canvas,
         });
+        this.canvasCache.push(croppedCanvas);
         return new Image(croppedCanvas, displayScale);
       });
+  }
+
+  /**
+   * Cleans up all canvases created by this converter to prevent memory leaks.
+   * Call this method when you're done with the PDF generation.
+   */
+  dispose(): void {
+    this.canvasCache.forEach((canvas) => {
+      // Clear the canvas content
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      // Set dimensions to 0 to release memory
+      canvas.width = 0;
+      canvas.height = 0;
+    });
+    this.canvasCache = [];
   }
 }

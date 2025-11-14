@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { Image } from "../converter/image";
+import { Image } from "../models/image";
 import { TargetImage } from "../types";
-import { PageImagesBuilder } from "../converter/pageImagesBuilder";
+import { PageImagesBuilder } from "../services/pageImagesBuilder";
 
 const createCanvas = (width: number, height: number) => {
   const canvas = document.createElement("canvas");

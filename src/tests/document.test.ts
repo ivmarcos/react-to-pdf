@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
-import { parseOptions } from "../converter/documentConverter";
-import { Document } from "../converter/document";
+import { parseOptions } from "../services/documentConverter";
+import { Document } from "../models/document";
 
 describe("Document", () => {
   test("should create a new document", () => {

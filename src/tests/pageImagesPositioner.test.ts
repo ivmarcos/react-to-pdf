@@ -1,13 +1,13 @@
 import { describe, expect, test } from "vitest";
-import { Image } from "../converter/image";
+import { Image } from "../models/image";
 import { TargetImage } from "../types";
-import { PageImagesBuilder } from "../converter/pageImagesBuilder";
+import { PageImagesBuilder } from "../services/pageImagesBuilder";
 import { createCanvas, createImage } from "./testUtils";
-import { PageImagesPositioner } from "../converter/pageImagesPositioner";
-import { Document } from "../converter/document";
-import { parseOptions } from "../converter/documentConverter";
+import { PageImagesPositioner } from "../services/pageImagesPositioner";
+import { Document } from "../models/document";
+import { parseOptions } from "../services/documentConverter";
 import { Alignment } from "../constants";
-import { Page } from "../converter/page";
+import { Page } from "../models/page";
 import * as utils from "../utils";
 
 describe("PageImagesBuilder", () => {

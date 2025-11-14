@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { CanvasConverter } from "../converter/canvasConverter";
+import { CanvasConverter } from "../services/canvasConverter";
 import { Size } from "../constants";
-import { parseOptions } from "../converter/documentConverter";
+import { parseOptions } from "../services/documentConverter";
 
 describe("CanvasConverter", () => {
   describe("calculaResizeScale", () => {
