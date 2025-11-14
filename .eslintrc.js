@@ -19,5 +19,11 @@ module.exports = {
     "react/no-unescaped-entities": 0,
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/ban-ts-comment": 0,
+    "react/no-deprecated": 0, // Using React 16 intentionally
+  },
+  settings: {
+    react: {
+      version: "16.14",
+    },
   },
 };
