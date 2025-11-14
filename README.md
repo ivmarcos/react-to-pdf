@@ -26,7 +26,7 @@ npm install --save react-to-pdf
 
 ## Examples
 
-- [Code Sandbox demo](https://codesandbox.io/s/ancient-violet-sznj9q?file=/src/App.tsx)
+- [Stackblitz demo](https://stackblitz.com/edit/vitejs-vite-sd71svw8?file=src%2FApp.tsxx)
 - [Using `usePDF` hook](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleUsePDF.tsx) 
 - [Using default function](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleFunction.tsx) 
 - [PDF component](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExamplePDF.tsx) 
@@ -53,7 +53,7 @@ const Component = () => {
    )
 }
 ```
-[Code Sandbox demo](https://codesandbox.io/s/ancient-violet-sznj9q?file=/src/App.tsx)
+[Stackblitz demo](https://stackblitz.com/edit/vitejs-vite-sd71svw8?file=src%2FApp.tsx)
 
 
 **Using default function**
@@ -74,7 +74,7 @@ const Component = () => {
    )
 }
 ```
-[Code Sandbox demo](https://codesandbox.io/s/condescending-danilo-5yj655?file=/src/App.tsx:0-644)
+[Stackblitz demo](https://stackblitz.com/edit/vitejs-vite-zmjvmgft?file=src%2FApp.tsx)
 
 **Using PDF component**
 
@@ -170,4 +170,4 @@ const Component = () => {
    );
 }
 ```
-[Code Sandbox demo](https://codesandbox.io/s/billowing-fog-lq4xj6?file=/src/App.tsx)
+[Stackblitz demo](https://stackblitz.com/edit/vitejs-vite-anpe7vdv?file=src%2FApp.tsx)

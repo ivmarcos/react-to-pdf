@@ -14,4 +14,15 @@ yarn-error.log
 dist/
 examples/
 cypress/
-cypress.config.js
+cypress.config.ts
+.release-it.json
+index.html
+vite.config.ts
+vitest.config.ts
+scripts/
+.github/
+.eslintignore
+.eslintrc.js
+.prettierignore
+rollup.config.js
+.nvmrc

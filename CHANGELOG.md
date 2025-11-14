@@ -1,3 +1,37 @@
+# 2.0.1 (June, 3, 2025)
+
+Fixes security vulnerabilities from tar-fs and some other minor changes related to Vite bumps.
+
+* add nvmrc file (8abe51d)
+* add nvmrc file (2260c0c)
+* Bump tar-fs from 2.1.2 to 2.1.3 (#159) (c1cc4e7)
+* Bump vite from 6.2.6 to 6.2.7 (#158) (eee4dc1)
+* Bump vite from 6.2.5 to 6.2.6 (#157) (e6a1555)
+* Bump vite from 6.2.4 to 6.2.5 (#155) (6fefc56)
+* Bump vite from 6.2.3 to 6.2.4 (#154) (0c09957)
+* update changelog (f56dd81)
+
+# 2.0.0 (March, 28, 2025)
+
+This release fix some security vulnerabilities related to jspdf. https://github.com/parallax/jsPDF/releases/tag/v3.0.1. This major release follows jspdf major release v3 which dropped support for Internet Explorer and fixed a security vulnerability in the html function by updating the optional dependency dompurify to v3.2.4. 
+
+There are no other breaking changes.
+
+* update links (2605643)
+* update changelog (d9e6d0d)
+
+# 2.0.0-beta.0 (March, 28, 2025)
+
+* Prepare release 2 beta (#153) (bad7181)
+* Switch to vite (#152) (f6f7ea5)
+* Bump release-it and canva (#151) (0c85ca3)
+* Bump jspdf from 2.5.1 to 3.0.1 (#150) (4f9f7f9)
+* Bump msgpackr from 1.8.5 to 1.10.1 (#107) (094c0ee)
+* Bump ip from 1.1.8 to 1.1.9 (#115) (a01f348)
+* Bump @babel/traverse from 7.21.4 to 7.23.2 (#90) (195760f)
+* Use alias for examples (#81) (6552d8b)
+* update changelog and add release script (562e695)
+
 # 1.0.1 (September, 7, 2023)
 
 * fix broken build (076e1ad)
