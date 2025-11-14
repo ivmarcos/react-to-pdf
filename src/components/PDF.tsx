@@ -8,7 +8,14 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { PDFHandle, PDFProps, BodyProps, FooterHeaderProps, TargetElement, TargetOptions } from "..";
+import {
+  PDFHandle,
+  PDFProps,
+  BodyProps,
+  FooterHeaderProps,
+  TargetElement,
+  TargetOptions,
+} from "..";
 import { PreviewPortal } from "./PreviewPortal";
 import { Document } from "../converter/document";
 import {
@@ -29,20 +36,28 @@ export const containerStyle: CSSProperties = {
   width: "fit-content",
 };
 
-type RegisterFooterHeader = ({element, index, options}:{element: HTMLDivElement, index: number, options?: FooterHeaderProps}) => void
+type RegisterFooterHeader = ({
+  element,
+  index,
+  options,
+}: {
+  element: HTMLDivElement;
+  index: number;
+  options?: FooterHeaderProps;
+}) => void;
 
 export interface PDFContextValues {
-  registerTarget(target: HTMLElement, options?: TargetOptions):void,
-  registerFooter: RegisterFooterHeader,
-  registerHeader: RegisterFooterHeader,
-  pages: number
+  registerTarget(target: HTMLElement, options?: TargetOptions): void;
+  registerFooter: RegisterFooterHeader;
+  registerHeader: RegisterFooterHeader;
+  pages: number;
 }
 
 export const PDFContext = createContext<PDFContextValues>(null);
 
 interface FooterHeaderRef {
-  element: HTMLDivElement,
-  options: FooterHeaderProps
+  element: HTMLDivElement;
+  options: FooterHeaderProps;
 }
 
 export const PDF = forwardRef<PDFHandle, PDFProps>(
@@ -70,36 +85,48 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     const headerRefs = useRef<Record<number, FooterHeaderRef>>({});
     const isPreviewEmbed = preview === true || preview === "embed";
 
-    const registerTarget = (target: HTMLElement, index, options?: TargetOptions) => {
+    const registerTarget = (
+      target: HTMLElement,
+      index,
+      options?: TargetOptions
+    ) => {
       targetElementsRef.current[index] = {
         element: target,
-        options
-      }
+        options,
+      };
       // targetElementsRef.current.push({
       //   element: target,
       //   options
       // });
-    }
+    };
 
-    const registerFooter: PDFContextValues["registerFooter"] = ({element, index, options}) => {
-      if (index === 0){
+    const registerFooter: PDFContextValues["registerFooter"] = ({
+      element,
+      index,
+      options,
+    }) => {
+      if (index === 0) {
         footerRefs.current = {};
       }
       footerRefs.current[index] = {
         element,
-        options
+        options,
       };
-    }
+    };
 
-    const registerHeader: PDFContextValues["registerHeader"] = ({element, index, options}) => {
-      if (index === 0){
+    const registerHeader: PDFContextValues["registerHeader"] = ({
+      element,
+      index,
+      options,
+    }) => {
+      if (index === 0) {
         headerRefs.current = {};
       }
       headerRefs.current[index] = {
         element,
-        options
-      }
-    }
+        options,
+      };
+    };
 
     const addFootersAndHeaders = async () => {
       if (!document) return;
@@ -107,14 +134,17 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
         updateEmbed();
         return;
       }
-      log("update footer", {footerRefs: footerRefs.current, headerRefs: headerRefs.current});
+      log("update footer", {
+        footerRefs: footerRefs.current,
+        headerRefs: headerRefs.current,
+      });
       const footerElements = Object.values(footerRefs.current).map(
         (footerRef) =>
           footerRef.element.hasChildNodes() ? footerRef.element : null
       );
       const headerElements = Object.values(headerRefs.current).map(
         (headerRef) =>
-        headerRef.element.hasChildNodes() ? headerRef.element : null
+          headerRef.element.hasChildNodes() ? headerRef.element : null
       );
       const footerOptions = footerRefs.current[0].options;
       const headerOptions = headerRefs.current[0].options;
@@ -133,11 +163,13 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     };
 
     const createDocument = async () => {
-      log('creating document', {isPreviewEmbed, preview})
+      log("creating document", { isPreviewEmbed, preview });
       const converter = new DocumentConverter(options);
       // const element = targetElementsRef.current.length ? targetElementsRef.current[0] : containerRef.current;
-      const targets = targetElementsRef.current.length ? targetElementsRef.current : [{element: containerRef.current}]
-      console.log('debug targets', targets)
+      const targets = targetElementsRef.current.length
+        ? targetElementsRef.current
+        : [{ element: containerRef.current }];
+      console.log("debug targets", targets);
       const document = await converter.createDocumentAdvanced(targets);
       setDocument(document);
       return document;
@@ -153,23 +185,14 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     const footerComponents = useMemo(() => {
       if (!footer || !document) return null;
       const footerRender = "render" in footer ? footer.render : footer;
-          return (
-            <Footer
-              render={footerRender}
-            />
-          );
+      return <Footer render={footerRender} />;
     }, [document]);
 
     const headerComponents = useMemo(() => {
       if (!header || !document) return null;
       const headerRender = "render" in header ? header.render : header;
-          return (
-            <Header
-              render={headerRender}
-            />
-          );
+      return <Header render={headerRender} />;
     }, [document]);
-
 
     const previewComponent = useMemo<React.ReactNode | null>(() => {
       if (!isPreviewEmbed) {
@@ -190,11 +213,14 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     const targetChildren = useMemo(() => {
       return React.Children.map(children, (child, index) => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child as React.ReactElement<BodyProps>, {registerTarget, targetIndex: index});
+          return React.cloneElement(child as React.ReactElement<BodyProps>, {
+            registerTarget,
+            targetIndex: index,
+          });
         }
         return child;
       });
-    }, [children])
+    }, [children]);
 
     const bodyComponent = useMemo<React.ReactNode>(() => {
       const previewChildren = preview === "children";
@@ -212,7 +238,6 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       return <PreviewPortal>{wrapper}</PreviewPortal>;
     }, [preview, targetChildren]);
 
-    
     useEffect(() => {
       createDocument();
     }, []);
@@ -226,11 +251,13 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       () => {
         return {
           update: async () => {
-            await createDocument()
+            await createDocument();
           },
           save: async (filename?: string) => {
-            const currentDocument = document ? document : (await createDocument())
-            currentDocument?.save(filename)
+            const currentDocument = document
+              ? document
+              : await createDocument();
+            currentDocument?.save(filename);
           },
           open: () => document?.open(),
           getDocument: () => document,
@@ -241,7 +268,14 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     );
 
     return (
-      <PDFContext.Provider value={{registerTarget, registerFooter, registerHeader, pages: document?.getNumberOfPages()}}>
+      <PDFContext.Provider
+        value={{
+          registerTarget,
+          registerFooter,
+          registerHeader,
+          pages: document?.getNumberOfPages(),
+        }}
+      >
         {previewComponent}
         {footerComponents}
         {headerComponents}

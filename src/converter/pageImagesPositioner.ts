@@ -4,12 +4,15 @@ import { Image } from "./image";
 import { Page } from "./page";
 import { log } from "../tests/testUtils";
 import { DocumentConverterOptions, ImageCoordinates } from "../types";
-import * as utils from '../utils'
+import * as utils from "../utils";
 
 export class PageImagesPositioner {
   options: DocumentConverterOptions;
   document: InstanceType<typeof Document>;
-  constructor(document: InstanceType<typeof Document>, options: DocumentConverterOptions){
+  constructor(
+    document: InstanceType<typeof Document>,
+    options: DocumentConverterOptions
+  ) {
     this.document = document;
     this.options = options;
   }
@@ -58,11 +61,12 @@ export class PageImagesPositioner {
     return page.getImages().map((image, imageIndex) => {
       const { width, height } = utils.getImageDimensionsMM(image);
       const imageHeightOffset = utils.pxToMM(page.getImageY(image));
-      const regularCoordinates = this.calculateImageCoordinates(
-        width,
-        height
-      );
-      log('positioner', {imageIndex, imageHeightOffset, documentMarginTop: document.getMarginTop()})
+      const regularCoordinates = this.calculateImageCoordinates(width, height);
+      log("positioner", {
+        imageIndex,
+        imageHeightOffset,
+        documentMarginTop: document.getMarginTop(),
+      });
       const calculateOverrideCoordinates = (): Partial<ImageCoordinates> => {
         switch (this.options.align) {
           case Alignment.CENTER_XY: {
@@ -106,7 +110,7 @@ export class PageImagesPositioner {
       };
     });
   }
-   calculateCoordinatesBody(
+  calculateCoordinatesBody(
     imageWidth: number,
     imageHeight: number
   ): ImageCoordinates {
@@ -148,10 +152,11 @@ export class PageImagesPositioner {
     imageHeigth: number
   ): ImageCoordinates {
     const document = this.document;
-    log(
-      "calculateCoordinatesFooter",
-      {align: this.options.footer.align, imageWidth, docPageWidth: document.getPageWidth()}
-    );
+    log("calculateCoordinatesFooter", {
+      align: this.options.footer.align,
+      imageWidth,
+      docPageWidth: document.getPageWidth(),
+    });
     const y =
       document.getPageHeight() - this.options.footer.margin - imageHeigth;
     switch (this.options.footer.align) {
@@ -172,9 +177,7 @@ export class PageImagesPositioner {
         };
     }
   }
-  calculateCoordinatesHeader(
-    imageWidth: number
-  ): ImageCoordinates {
+  calculateCoordinatesHeader(imageWidth: number): ImageCoordinates {
     const document = this.document;
     const y = this.options.header.margin;
     switch (this.options.header.align) {
@@ -196,4 +199,3 @@ export class PageImagesPositioner {
     }
   }
 }
-

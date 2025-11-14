@@ -1,4 +1,8 @@
-import { DocumentConverterOptions, FooterHeaderProps, TargetElement } from "../types";
+import {
+  DocumentConverterOptions,
+  FooterHeaderProps,
+  TargetElement,
+} from "../types";
 
 import { CanvasConverter } from "./canvasConverter";
 import { Alignment, DEFAULT_OPTIONS } from "../constants";
@@ -7,7 +11,6 @@ import * as utils from "../utils";
 import { PageImagesBuilder } from "./pageImagesBuilder";
 import { PageImagesPositioner } from "./pageImagesPositioner";
 import { log } from "../tests/testUtils";
-
 
 export interface DocumentConverterPartialOptions
   extends Omit<Partial<DocumentConverterOptions>, "footer" | "header"> {
@@ -37,15 +40,14 @@ export const parseOptions = (
   };
 };
 
-
-
-
 export class DocumentConverter {
   options: DocumentConverterOptions;
   constructor(options?: DocumentConverterPartialOptions) {
     this.options = parseOptions(options);
   }
-  async createDocumentAdvanced(targets: TargetElement[]): Promise<InstanceType<typeof Document>> {
+  async createDocumentAdvanced(
+    targets: TargetElement[]
+  ): Promise<InstanceType<typeof Document>> {
     const document = new Document(this.options);
     const documentMaxHeight = utils.mmToPX(document.getPageMaxHeight());
     const documentMaxWidth = utils.mmToPX(document.getPageMaxWidth());
@@ -66,49 +68,61 @@ export class DocumentConverter {
         };
       })
     );
-    console.log('targetsWithImages', targetsWithImages)
+    console.log("targetsWithImages", targetsWithImages);
     // document.addCanvasToPage({canvas: targetsWithImages[0].image.getCanvas(), page: 1, width: 200, height: 100, x: 0, y: 0})
     // const canvasMaxHeight = documentMaxHeight * this.options.resolution; //this.calculateMaxHeight(canvas, scale * fillScale);
     // const allCanvasHeight = targetsWithImages.map(target => target.image.getHeight()).reduce((h1, h2) => h1 + h2, 0);
-    const pageBuilder = new PageImagesBuilder(targetsWithImages, Math.floor(documentMaxHeight * this.options.resolution));
+    const pageBuilder = new PageImagesBuilder(
+      targetsWithImages,
+      Math.floor(documentMaxHeight * this.options.resolution)
+    );
     const positioner = new PageImagesPositioner(document, this.options);
     const pages = pageBuilder.createPages();
-    console.log('debug pages', pages)
+    console.log("debug pages", pages);
     await Promise.all(
       pages.map(async (page) => {
         const pageNumber = page.getNumber();
         if (pageNumber > 1) {
           document.addPage();
         }
-        const imagesWithCoordinates = positioner.calculateCoordinatesPageImages(
-          page
-        );
+        const imagesWithCoordinates =
+          positioner.calculateCoordinatesPageImages(page);
         await Promise.all(
-          imagesWithCoordinates.map(async (imageWithCoordinates, imageIndex) => {
-            const { width, height, x, y } = imageWithCoordinates;
-            console.log('coordinates', JSON.stringify({page: pageNumber, imageIndex, width, height, x, y }, null, 2))
-            await this.options.hooks?.beforeAddCanvasToPage({
-              document,
-              page: pageNumber,
-              canvas: imageWithCoordinates.image.getCanvas(),
-            });
-            await document.addCanvasToPage({
-              canvas: imageWithCoordinates.image.getCanvas(),
-              page: pageNumber,
-              width,
-              height,
-              x,
-              y
-            });
-            await this.options.hooks?.afterAddCanvasToPage({
-              document,
-              page: pageNumber,
-              canvas: imageWithCoordinates.image.getCanvas(),
-            });
-          })
+          imagesWithCoordinates.map(
+            async (imageWithCoordinates, imageIndex) => {
+              const { width, height, x, y } = imageWithCoordinates;
+              console.log(
+                "coordinates",
+                JSON.stringify(
+                  { page: pageNumber, imageIndex, width, height, x, y },
+                  null,
+                  2
+                )
+              );
+              await this.options.hooks?.beforeAddCanvasToPage({
+                document,
+                page: pageNumber,
+                canvas: imageWithCoordinates.image.getCanvas(),
+              });
+              await document.addCanvasToPage({
+                canvas: imageWithCoordinates.image.getCanvas(),
+                page: pageNumber,
+                width,
+                height,
+                x,
+                y,
+              });
+              await this.options.hooks?.afterAddCanvasToPage({
+                document,
+                page: pageNumber,
+                canvas: imageWithCoordinates.image.getCanvas(),
+              });
+            }
+          )
         );
-      }));
-      return document;
+      })
+    );
+    return document;
   }
   async createDocument(
     element: HTMLElement
@@ -170,8 +184,8 @@ export class DocumentConverter {
       maxWidth: documentMaxWidth,
       options: this.options,
     });
-    console.log('adding footer element', footerElements[0])
-    log("adding footer element", footerElements[0].offsetWidth)
+    console.log("adding footer element", footerElements[0]);
+    log("adding footer element", footerElements[0].offsetWidth);
     const [footerImages, headerImages] = await Promise.all(
       [footerElements, headerElements].map((elements) =>
         Promise.all(
@@ -190,11 +204,15 @@ export class DocumentConverter {
       const headerImage = headerImages[pageIndex];
       if (footerImage) {
         const { width, height } = utils.getImageDimensionsMM(footerImage);
-        const footerXY = positioner.calculateCoordinatesFooter(
+        const footerXY = positioner.calculateCoordinatesFooter(width, height);
+        log("adding footer image", {
+          footerXY,
           width,
-          height
-        );
-        log("adding footer image", {footerXY, width, height, imageWidth: footerImage.getOriginalWidth(), imageScaledWidth: footerImage.getWidth(), imageScale: footerImage.getScale()});
+          height,
+          imageWidth: footerImage.getOriginalWidth(),
+          imageScaledWidth: footerImage.getWidth(),
+          imageScale: footerImage.getScale(),
+        });
         document.addCanvasToPage({
           canvas: footerImage.getCanvas(),
           page,

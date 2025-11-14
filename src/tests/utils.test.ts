@@ -1,8 +1,4 @@
-/**
- * @jest-environment jsdom
- */
-
-import { test, expect } from "@jest/globals";
+import { describe, test, expect } from "vitest";
 import * as utils from "../utils";
 import { Image } from "../converter/image";
 

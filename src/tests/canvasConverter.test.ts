@@ -1,8 +1,4 @@
-/**
- * @jest-environment jsdom
- */
-
-import { expect, test } from "@jest/globals";
+import { describe, expect, test } from "vitest";
 import { CanvasConverter } from "../converter/canvasConverter";
 import { Size } from "../constants";
 import { parseOptions } from "../converter/documentConverter";

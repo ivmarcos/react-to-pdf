@@ -28,7 +28,9 @@ export const ExamplePDFPreview = () => {
   const containerRef = useRef<HTMLDivElement>();
   return (
     <Container>
-      <Button onClick={() => pdfRef.current.save('test.pdf')}>Download PDF</Button>
+      <Button onClick={() => pdfRef.current.save("test.pdf")}>
+        Download PDF
+      </Button>
       <Button onClick={() => print(containerRef)}>Download PDF - 2</Button>
       <div ref={containerRef}>test</div>
       <PDF
@@ -87,7 +89,10 @@ export const ExamplePDFPreview = () => {
             //   test
             // </div>
             <Body key={index}>
-              <Card imageId={17} title={`PDF preview example - #${index +1}`} />
+              <Card
+                imageId={17}
+                title={`PDF preview example - #${index + 1}`}
+              />
             </Body>
           ))}
       </PDF>

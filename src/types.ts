@@ -158,7 +158,9 @@ export interface FooterHeaderRenderProps {
 }
 
 export interface FooterHeaderProps {
-  render: React.FC<FooterHeaderRenderProps> | ((props: FooterHeaderRenderProps) => JSX.Element);
+  render:
+    | React.FC<FooterHeaderRenderProps>
+    | ((props: FooterHeaderRenderProps) => JSX.Element);
   margin?: Margin | number;
   align?: HorizontalAlignmentOption;
 }
