@@ -111,35 +111,7 @@ export class DocumentConverter {
   async createDocument(
     element: HTMLElement
   ): Promise<InstanceType<typeof Document>> {
-    const document = new Document(this.options);
-    const documentMaxHeight = utils.mmToPX(document.getPageMaxHeight());
-    const documentMaxWidth = utils.mmToPX(document.getPageMaxWidth());
-    const canvasConverter = new CanvasConverter({
-      maxHeight: documentMaxHeight,
-      maxWidth: documentMaxWidth,
-      options: this.options,
-    });
-    const images = await canvasConverter.htmlToCanvasImages(element, true);
-    const positioner = new PageImagesPositioner(document, this.options);
-    await Promise.all(
-      images.map(async (image, pageIndex) => {
-        if (pageIndex) {
-          document.addPage();
-        }
-        const { width, height } = utils.getImageDimensionsMM(image);
-        const { x, y } = positioner.calculateCoordinatesBody(width, height);
-        const page = pageIndex + 1;
-        await document.addCanvasToPage({
-          canvas: image.getCanvas(),
-          page,
-          width,
-          height,
-          x,
-          y,
-        });
-      })
-    );
-    return document;
+    return this.createDocumentAdvanced([{ element }]);
   }
   async addFooterAndHeaderToDocument({
     document,
