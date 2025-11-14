@@ -22,7 +22,6 @@ import {
   DocumentConverter,
   DocumentConverterPartialOptions,
 } from "../converter/documentConverter";
-import { log } from "../tests/testUtils";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 
@@ -94,10 +93,6 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
         element: target,
         options,
       };
-      // targetElementsRef.current.push({
-      //   element: target,
-      //   options
-      // });
     };
 
     const registerFooter: PDFContextValues["registerFooter"] = ({
@@ -134,10 +129,6 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
         updateEmbed();
         return;
       }
-      log("update footer", {
-        footerRefs: footerRefs.current,
-        headerRefs: headerRefs.current,
-      });
       const footerElements = Object.values(footerRefs.current).map(
         (footerRef) =>
           footerRef.element.hasChildNodes() ? footerRef.element : null
@@ -163,13 +154,10 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
     };
 
     const createDocument = async () => {
-      log("creating document", { isPreviewEmbed, preview });
       const converter = new DocumentConverter(options);
-      // const element = targetElementsRef.current.length ? targetElementsRef.current[0] : containerRef.current;
       const targets = targetElementsRef.current.length
         ? targetElementsRef.current
         : [{ element: containerRef.current }];
-      console.log("debug targets", targets);
       const document = await converter.createDocumentAdvanced(targets);
       setDocument(document);
       return document;

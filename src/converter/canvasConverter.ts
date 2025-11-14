@@ -68,38 +68,14 @@ export class CanvasConverter {
   ): Promise<InstanceType<typeof Image>[]> {
     const displayScale = this.options.resolution;
     const resizeScale = allowResize ? this.calculateResizeScale(element) : 1;
-    console.log("DEBUG BEFORE CONVERTING TO CANVAS", element.offsetHeight);
-    console.log("DEBUG SCALES!", { displayScale, resizeScale });
     const canvas = await this.htmlToCanvas(element, displayScale * resizeScale);
-    const canvasMaxHeight = this.maxHeight * displayScale; //this.calculateMaxHeight(canvas, scale * fillScale);
-    console.log(
-      "DEBUG AFTER CONVERTING TO CANVAS",
-      canvasMaxHeight,
-      element.offsetHeight
-    );
+    const canvasMaxHeight = this.maxHeight * displayScale;
     const numberImages = Math.ceil(canvas.height / canvasMaxHeight);
-    console.log(
-      "DEBUG converting to images",
-      JSON.stringify(
-        {
-          elementWidth: element.offsetWidth,
-          elementHeight: element.offsetHeight,
-          scale: displayScale,
-          canvasWidth: canvas.width,
-          canvasHeight: canvas.height,
-          documentMaxWidth: this.maxWidth,
-          canvasMaxHeight,
-        },
-        null,
-        2
-      )
-    );
     return Array(numberImages)
       .fill(null)
       .map((_, pageIndex) => {
         const width = canvas.width;
         const offsetY = canvasMaxHeight * pageIndex;
-        console.log("DEBUG CROP CANVAS", offsetY, pageIndex + 1);
         const height = utils.calculateHeightOffset({
           maxHeight: canvasMaxHeight,
           height: canvas.height,

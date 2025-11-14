@@ -79,22 +79,6 @@ export class Document {
       this.options.canvas.mimeType,
       this.options.canvas.qualityRatio
     );
-    // const imageElement = await canvasToImage(canvas);
-    // const blob = await canvasToBlob(canvas)
-    // return new Promise((resolve) => {
-    //   canvas.toBlob(async blob => {
-    //     const arr = new Uint8Array(await blob.arrayBuffer());
-    //     this.instance.setPage(page);
-    //     this.instance.addImage({
-    //       imageData: arr,
-    //       width,
-    //       height,
-    //       x,
-    //       y,
-    //     });
-    //     resolve(true);
-    //   });
-    // })
     this.instance.setPage(page);
     this.instance.addImage({
       imageData: imageData,

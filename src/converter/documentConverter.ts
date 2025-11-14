@@ -5,12 +5,11 @@ import {
 } from "../types";
 
 import { CanvasConverter } from "./canvasConverter";
-import { Alignment, DEFAULT_OPTIONS } from "../constants";
+import { DEFAULT_OPTIONS } from "../constants";
 import { Document } from "./document";
 import * as utils from "../utils";
 import { PageImagesBuilder } from "./pageImagesBuilder";
 import { PageImagesPositioner } from "./pageImagesPositioner";
-import { log } from "../tests/testUtils";
 
 export interface DocumentConverterPartialOptions
   extends Omit<Partial<DocumentConverterOptions>, "footer" | "header"> {
@@ -68,17 +67,12 @@ export class DocumentConverter {
         };
       })
     );
-    console.log("targetsWithImages", targetsWithImages);
-    // document.addCanvasToPage({canvas: targetsWithImages[0].image.getCanvas(), page: 1, width: 200, height: 100, x: 0, y: 0})
-    // const canvasMaxHeight = documentMaxHeight * this.options.resolution; //this.calculateMaxHeight(canvas, scale * fillScale);
-    // const allCanvasHeight = targetsWithImages.map(target => target.image.getHeight()).reduce((h1, h2) => h1 + h2, 0);
     const pageBuilder = new PageImagesBuilder(
       targetsWithImages,
       Math.floor(documentMaxHeight * this.options.resolution)
     );
     const positioner = new PageImagesPositioner(document, this.options);
     const pages = pageBuilder.createPages();
-    console.log("debug pages", pages);
     await Promise.all(
       pages.map(async (page) => {
         const pageNumber = page.getNumber();
@@ -88,37 +82,27 @@ export class DocumentConverter {
         const imagesWithCoordinates =
           positioner.calculateCoordinatesPageImages(page);
         await Promise.all(
-          imagesWithCoordinates.map(
-            async (imageWithCoordinates, imageIndex) => {
-              const { width, height, x, y } = imageWithCoordinates;
-              console.log(
-                "coordinates",
-                JSON.stringify(
-                  { page: pageNumber, imageIndex, width, height, x, y },
-                  null,
-                  2
-                )
-              );
-              await this.options.hooks?.beforeAddCanvasToPage({
-                document,
-                page: pageNumber,
-                canvas: imageWithCoordinates.image.getCanvas(),
-              });
-              await document.addCanvasToPage({
-                canvas: imageWithCoordinates.image.getCanvas(),
-                page: pageNumber,
-                width,
-                height,
-                x,
-                y,
-              });
-              await this.options.hooks?.afterAddCanvasToPage({
-                document,
-                page: pageNumber,
-                canvas: imageWithCoordinates.image.getCanvas(),
-              });
-            }
-          )
+          imagesWithCoordinates.map(async (imageWithCoordinates) => {
+            const { width, height, x, y } = imageWithCoordinates;
+            await this.options.hooks?.beforeAddCanvasToPage({
+              document,
+              page: pageNumber,
+              canvas: imageWithCoordinates.image.getCanvas(),
+            });
+            await document.addCanvasToPage({
+              canvas: imageWithCoordinates.image.getCanvas(),
+              page: pageNumber,
+              width,
+              height,
+              x,
+              y,
+            });
+            await this.options.hooks?.afterAddCanvasToPage({
+              document,
+              page: pageNumber,
+              canvas: imageWithCoordinates.image.getCanvas(),
+            });
+          })
         );
       })
     );
@@ -136,9 +120,6 @@ export class DocumentConverter {
       options: this.options,
     });
     const images = await canvasConverter.htmlToCanvasImages(element, true);
-    // const image = await canvasConverter.htmlToCanvasImage(element);
-    // const images = [image];
-    console.log("debug images", images);
     const positioner = new PageImagesPositioner(document, this.options);
     await Promise.all(
       images.map(async (image, pageIndex) => {
@@ -147,14 +128,6 @@ export class DocumentConverter {
         }
         const { width, height } = utils.getImageDimensionsMM(image);
         const { x, y } = positioner.calculateCoordinatesBody(width, height);
-        console.log(
-          "DEBUG ADD CANVAS TO PAGE",
-          JSON.stringify(
-            { width, height, x, y, documentMaxHeight, documentMaxWidth },
-            null,
-            2
-          )
-        );
         const page = pageIndex + 1;
         await document.addCanvasToPage({
           canvas: image.getCanvas(),
@@ -184,8 +157,6 @@ export class DocumentConverter {
       maxWidth: documentMaxWidth,
       options: this.options,
     });
-    console.log("adding footer element", footerElements[0]);
-    log("adding footer element", footerElements[0].offsetWidth);
     const [footerImages, headerImages] = await Promise.all(
       [footerElements, headerElements].map((elements) =>
         Promise.all(
@@ -205,14 +176,6 @@ export class DocumentConverter {
       if (footerImage) {
         const { width, height } = utils.getImageDimensionsMM(footerImage);
         const footerXY = positioner.calculateCoordinatesFooter(width, height);
-        log("adding footer image", {
-          footerXY,
-          width,
-          height,
-          imageWidth: footerImage.getOriginalWidth(),
-          imageScaledWidth: footerImage.getWidth(),
-          imageScale: footerImage.getScale(),
-        });
         document.addCanvasToPage({
           canvas: footerImage.getCanvas(),
           page,
@@ -224,7 +187,6 @@ export class DocumentConverter {
       if (headerImage) {
         const { width, height } = utils.getImageDimensionsMM(headerImage);
         const headerXY = positioner.calculateCoordinatesHeader(width);
-        console.log("debug ADDING HEADER IMAGE", headerXY);
         document.addCanvasToPage({
           canvas: headerImage.getCanvas(),
           page,

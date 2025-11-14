@@ -33,7 +33,7 @@ describe("PageImagesBuilder", () => {
     expect(pages[2].getImages().length).toBe(1);
     expect(pages[2].getImages()[0].getHeight()).toBe(1000);
   });
-  test.only("should work2", () => {
+  test("should work2", () => {
     const targetImages: TargetImage[] = [];
     const targetImage1: TargetImage = {
       image: new Image(createCanvas(100, 1000), 1),

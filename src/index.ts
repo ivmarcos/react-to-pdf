@@ -89,7 +89,6 @@ export const save = async <T extends HTMLElement>(
   options?: Options
 ): Promise<void> => {
   const document = await create(targetRefOrGetter, options);
-  console.log("document", document);
   return document?.save();
 };
 
