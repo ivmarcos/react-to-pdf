@@ -34,9 +34,6 @@ export class PageImagesBuilder {
     if (imageHeight - imageY <= availableHeight) {
       return imageHeight - imageY;
     }
-    //   if (imageHeight <= availableHeight) {
-    //     return imageHeight;
-    //   }
     return availableHeight;
   }
   private createPageImage({
@@ -67,7 +64,7 @@ export class PageImagesBuilder {
   createPages(): Page[] {
     let page: Page = null;
     this.pages = [];
-    this.targetImages.forEach((targetImage, imageIndex) => {
+    this.targetImages.forEach((targetImage) => {
       const requiresNewPage = targetImage.options?.startOnNewPage;
       if (requiresNewPage || !page) {
         page = this.createPage();

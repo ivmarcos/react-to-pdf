@@ -146,11 +146,6 @@ export class PageImagesPositioner {
     imageHeigth: number
   ): ImageCoordinates {
     const document = this.document;
-    log("calculateCoordinatesFooter", {
-      align: this.options.footer.align,
-      imageWidth,
-      docPageWidth: document.getPageWidth(),
-    });
     const y =
       document.getPageHeight() - this.options.footer.margin - imageHeigth;
     switch (this.options.footer.align) {

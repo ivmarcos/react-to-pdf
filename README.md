@@ -1,5 +1,10 @@
 # React to PDF
 
+[![CI](https://github.com/ivmarcos/react-to-pdf/actions/workflows/ci.yml/badge.svg)](https://github.com/ivmarcos/react-to-pdf/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/ivmarcos/react-to-pdf/branch/main/graph/badge.svg)](https://codecov.io/gh/ivmarcos/react-to-pdf)
+[![npm version](https://badge.fury.io/js/react-to-pdf.svg)](https://badge.fury.io/js/react-to-pdf)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Easily create PDF documents from React components.
 
 ## Install
