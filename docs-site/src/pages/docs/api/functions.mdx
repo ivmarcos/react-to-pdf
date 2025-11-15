@@ -1,0 +1,356 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Functions API - React to PDF'
+description: 'API reference for standalone utility functions in React to PDF.'
+---
+
+# Functions API
+
+React to PDF provides standalone utility functions for advanced use cases and non-React environments.
+
+## Overview
+
+While the `usePDF` hook and components are recommended for most React applications, these functions provide lower-level access to PDF generation functionality.
+
+## create
+
+Creates a PDF from an HTML element without downloading it.
+
+### Signature
+
+```typescript
+function create(
+  element: HTMLElement,
+  options?: Options
+): Promise<jsPDF>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `element` | `HTMLElement` | The DOM element to convert to PDF |
+| `options` | `Options` | Optional configuration object |
+
+### Returns
+
+`Promise<jsPDF>` - A promise that resolves to a jsPDF instance
+
+### Example
+
+```typescript
+import { create } from 'react-to-pdf';
+
+async function generatePDF() {
+  const element = document.getElementById('content');
+
+  if (element) {
+    const pdf = await create(element, {
+      page: {
+        format: 'a4',
+        orientation: 'portrait'
+      }
+    });
+
+    // pdf is a jsPDF instance
+    // You can now use it for custom operations
+    pdf.save('custom.pdf');
+  }
+}
+```
+
+### Use Cases
+
+- Custom PDF processing before saving
+- Sending PDF data to a server
+- Combining multiple PDFs
+- Adding custom metadata
+
+## save
+
+Creates and downloads a PDF from an HTML element.
+
+### Signature
+
+```typescript
+function save(
+  element: HTMLElement,
+  options?: Options
+): Promise<void>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `element` | `HTMLElement` | The DOM element to convert to PDF |
+| `options` | `Options` | Optional configuration object |
+
+### Returns
+
+`Promise<void>` - A promise that resolves when the PDF is saved
+
+### Example
+
+```typescript
+import { save } from 'react-to-pdf';
+
+async function downloadPDF() {
+  const element = document.getElementById('invoice');
+
+  if (element) {
+    await save(element, {
+      filename: 'invoice-2024.pdf',
+      page: {
+        format: 'a4',
+        margin: 10
+      }
+    });
+
+    console.log('PDF downloaded successfully!');
+  }
+}
+```
+
+### Use Cases
+
+- Simple one-click PDF downloads
+- Automated PDF generation on events
+- Integration with existing JavaScript code
+
+## open
+
+Creates a PDF and opens it in a new browser tab.
+
+### Signature
+
+```typescript
+function open(
+  element: HTMLElement,
+  options?: Options
+): Promise<void>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `element` | `HTMLElement` | The DOM element to convert to PDF |
+| `options` | `Options` | Optional configuration object |
+
+### Returns
+
+`Promise<void>` - A promise that resolves when the PDF is opened
+
+### Example
+
+```typescript
+import { open } from 'react-to-pdf';
+
+async function previewPDF() {
+  const element = document.getElementById('preview');
+
+  if (element) {
+    await open(element, {
+      filename: 'preview.pdf',
+      page: {
+        format: 'letter',
+        orientation: 'landscape'
+      }
+    });
+  }
+}
+```
+
+### Use Cases
+
+- Preview PDFs before downloading
+- Print PDFs directly from browser
+- Quick PDF viewing without saving
+
+## print
+
+Creates a PDF and triggers the browser's print dialog.
+
+### Signature
+
+```typescript
+function print(
+  element: HTMLElement,
+  options?: Options
+): Promise<void>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `element` | `HTMLElement` | The DOM element to convert to PDF |
+| `options` | `Options` | Optional configuration object |
+
+### Returns
+
+`Promise<void>` - A promise that resolves when the print dialog is triggered
+
+### Example
+
+```typescript
+import { print } from 'react-to-pdf';
+
+async function printPDF() {
+  const element = document.getElementById('document');
+
+  if (element) {
+    await print(element, {
+      page: {
+        format: 'a4',
+        orientation: 'portrait'
+      }
+    });
+  }
+}
+```
+
+### Use Cases
+
+- Printing documents directly
+- Creating physical copies
+- Integration with print workflows
+
+## Using Functions in React
+
+You can use these functions directly in React components:
+
+```tsx
+import { useRef } from 'react';
+import { save, open, print } from 'react-to-pdf';
+
+function DocumentActions() {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleSave = async () => {
+    if (contentRef.current) {
+      await save(contentRef.current, { filename: 'document.pdf' });
+    }
+  };
+
+  const handlePreview = async () => {
+    if (contentRef.current) {
+      await open(contentRef.current, { filename: 'document.pdf' });
+    }
+  };
+
+  const handlePrint = async () => {
+    if (contentRef.current) {
+      await print(contentRef.current);
+    }
+  };
+
+  return (
+    <div>
+      <div className="actions">
+        <button onClick={handleSave}>Download</button>
+        <button onClick={handlePreview}>Preview</button>
+        <button onClick={handlePrint}>Print</button>
+      </div>
+
+      <div ref={contentRef}>
+        <h1>Document Content</h1>
+        <p>This is the content that will be converted to PDF.</p>
+      </div>
+    </div>
+  );
+}
+```
+
+## Advanced Example: Custom PDF Processing
+
+```typescript
+import { create } from 'react-to-pdf';
+
+async function processAndSavePDF() {
+  const element = document.getElementById('content');
+
+  if (!element) return;
+
+  // Create the PDF
+  const pdf = await create(element, {
+    page: { format: 'a4' }
+  });
+
+  // Add custom metadata
+  pdf.setProperties({
+    title: 'My Custom Document',
+    subject: 'Generated with React to PDF',
+    author: 'Your Name',
+    keywords: 'pdf, react, generation',
+    creator: 'React to PDF'
+  });
+
+  // Add page numbers
+  const pageCount = pdf.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    pdf.setPage(i);
+    pdf.setFontSize(10);
+    pdf.text(
+      `Page ${i} of ${pageCount}`,
+      pdf.internal.pageSize.getWidth() / 2,
+      pdf.internal.pageSize.getHeight() - 10,
+      { align: 'center' }
+    );
+  }
+
+  // Save with custom name
+  pdf.save(`document-${new Date().getTime()}.pdf`);
+}
+```
+
+## Server-Side Usage
+
+These functions work in Node.js environments when combined with JSDOM:
+
+```typescript
+import { JSDOM } from 'jsdom';
+import { save } from 'react-to-pdf';
+
+async function generateServerSidePDF(htmlContent: string) {
+  const dom = new JSDOM(htmlContent);
+  const document = dom.window.document;
+  const element = document.body;
+
+  await save(element, {
+    filename: 'server-generated.pdf'
+  });
+}
+```
+
+## Error Handling
+
+All functions return promises and should be wrapped in try-catch blocks:
+
+```typescript
+import { save } from 'react-to-pdf';
+
+async function safePDFGeneration() {
+  const element = document.getElementById('content');
+
+  if (!element) {
+    console.error('Element not found');
+    return;
+  }
+
+  try {
+    await save(element, { filename: 'document.pdf' });
+    console.log('PDF generated successfully');
+  } catch (error) {
+    console.error('Failed to generate PDF:', error);
+    alert('An error occurred while generating the PDF');
+  }
+}
+```
+
+## See Also
+
+- [Hooks API](/react-to-pdf/docs/api/hooks) - Higher-level React hook API
+- [Components API](/react-to-pdf/docs/api/components) - React component API
+- [Examples](/react-to-pdf/docs/examples/invoice) - Real-world usage examples

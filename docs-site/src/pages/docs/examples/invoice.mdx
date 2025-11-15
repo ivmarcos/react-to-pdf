@@ -1,0 +1,480 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Invoice Generator Example - React to PDF'
+description: 'Learn how to create professional invoices with React to PDF. Complete example with styling and best practices.'
+---
+
+# Invoice Generator
+
+Generate professional, printable invoices with React to PDF. This example shows how to create a complete invoice with company branding, line items, and calculations.
+
+## Complete Example
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+import './Invoice.css'; // Or use your preferred styling method
+
+interface InvoiceItem {
+  description: string;
+  quantity: number;
+  rate: number;
+  amount: number;
+}
+
+interface InvoiceData {
+  invoiceNumber: string;
+  date: string;
+  dueDate: string;
+  from: {
+    name: string;
+    address: string;
+    city: string;
+    email: string;
+  };
+  to: {
+    name: string;
+    address: string;
+    city: string;
+    email: string;
+  };
+  items: InvoiceItem[];
+  subtotal: number;
+  tax: number;
+  total: number;
+}
+
+function InvoiceGenerator() {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'invoice.pdf',
+    page: {
+      format: 'a4',
+      margin: 10
+    }
+  });
+
+  const invoiceData: InvoiceData = {
+    invoiceNumber: 'INV-2024-001',
+    date: '2024-01-15',
+    dueDate: '2024-02-15',
+    from: {
+      name: 'Your Company Inc.',
+      address: '123 Business St',
+      city: 'San Francisco, CA 94102',
+      email: 'billing@yourcompany.com'
+    },
+    to: {
+      name: 'Acme Corporation',
+      address: '456 Client Ave',
+      city: 'New York, NY 10001',
+      email: 'accounts@acmecorp.com'
+    },
+    items: [
+      {
+        description: 'Web Development Services',
+        quantity: 40,
+        rate: 150,
+        amount: 6000
+      },
+      {
+        description: 'UI/UX Design',
+        quantity: 20,
+        rate: 120,
+        amount: 2400
+      },
+      {
+        description: 'Consulting',
+        quantity: 10,
+        rate: 200,
+        amount: 2000
+      }
+    ],
+    subtotal: 10400,
+    tax: 1040,
+    total: 11440
+  };
+
+  return (
+    <div className="invoice-container">
+      <div className="invoice-actions">
+        <button onClick={() => toPDF()} className="btn-download">
+          Download Invoice
+        </button>
+      </div>
+
+      <div ref={targetRef} className="invoice">
+        {/* Header */}
+        <div className="invoice-header">
+          <div className="company-info">
+            <h1>{invoiceData.from.name}</h1>
+            <p>{invoiceData.from.address}</p>
+            <p>{invoiceData.from.city}</p>
+            <p>{invoiceData.from.email}</p>
+          </div>
+          <div className="invoice-meta">
+            <h2>INVOICE</h2>
+            <p><strong>Invoice #:</strong> {invoiceData.invoiceNumber}</p>
+            <p><strong>Date:</strong> {invoiceData.date}</p>
+            <p><strong>Due Date:</strong> {invoiceData.dueDate}</p>
+          </div>
+        </div>
+
+        {/* Bill To */}
+        <div className="invoice-to">
+          <h3>Bill To:</h3>
+          <p><strong>{invoiceData.to.name}</strong></p>
+          <p>{invoiceData.to.address}</p>
+          <p>{invoiceData.to.city}</p>
+          <p>{invoiceData.to.email}</p>
+        </div>
+
+        {/* Items Table */}
+        <table className="invoice-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Rate</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {invoiceData.items.map((item, index) => (
+              <tr key={index}>
+                <td>{item.description}</td>
+                <td>{item.quantity}</td>
+                <td>${item.rate.toFixed(2)}</td>
+                <td>${item.amount.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Totals */}
+        <div className="invoice-totals">
+          <div className="total-row">
+            <span>Subtotal:</span>
+            <span>${invoiceData.subtotal.toFixed(2)}</span>
+          </div>
+          <div className="total-row">
+            <span>Tax (10%):</span>
+            <span>${invoiceData.tax.toFixed(2)}</span>
+          </div>
+          <div className="total-row total">
+            <span><strong>Total:</strong></span>
+            <span><strong>${invoiceData.total.toFixed(2)}</strong></span>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="invoice-footer">
+          <p>Payment is due within 30 days of the invoice date.</p>
+          <p>Thank you for your business!</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default InvoiceGenerator;
+```
+
+## Styling (CSS)
+
+```css
+.invoice-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.invoice-actions {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.btn-download {
+  padding: 12px 24px;
+  background-color: #0ea5e9;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-download:hover {
+  background-color: #0284c7;
+}
+
+.invoice {
+  background: white;
+  padding: 40px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 3px solid #0ea5e9;
+}
+
+.company-info h1 {
+  margin: 0 0 10px 0;
+  color: #0f172a;
+  font-size: 24px;
+}
+
+.company-info p {
+  margin: 5px 0;
+  color: #64748b;
+}
+
+.invoice-meta {
+  text-align: right;
+}
+
+.invoice-meta h2 {
+  margin: 0 0 15px 0;
+  color: #0ea5e9;
+  font-size: 28px;
+}
+
+.invoice-meta p {
+  margin: 5px 0;
+  color: #64748b;
+}
+
+.invoice-to {
+  margin-bottom: 30px;
+}
+
+.invoice-to h3 {
+  margin: 0 0 10px 0;
+  color: #0f172a;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.invoice-to p {
+  margin: 5px 0;
+  color: #64748b;
+}
+
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+.invoice-table th {
+  background-color: #f1f5f9;
+  padding: 12px;
+  text-align: left;
+  color: #0f172a;
+  font-weight: 600;
+  border-bottom: 2px solid #cbd5e1;
+}
+
+.invoice-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.invoice-table tr:last-child td {
+  border-bottom: none;
+}
+
+.invoice-totals {
+  margin-left: auto;
+  width: 300px;
+  margin-bottom: 40px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  color: #64748b;
+}
+
+.total-row.total {
+  background-color: #f1f5f9;
+  font-size: 18px;
+  color: #0f172a;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+.invoice-footer {
+  text-align: center;
+  padding-top: 30px;
+  border-top: 1px solid #e2e8f0;
+  color: #64748b;
+}
+
+.invoice-footer p {
+  margin: 5px 0;
+}
+```
+
+## Tailwind CSS Version
+
+If you prefer Tailwind CSS, here's the same invoice:
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+function InvoiceGeneratorTailwind() {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'invoice.pdf',
+    page: { format: 'a4', margin: 10 }
+  });
+
+  // ... same invoiceData ...
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <div className="mb-6 text-right">
+        <button
+          onClick={() => toPDF()}
+          className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+        >
+          Download Invoice
+        </button>
+      </div>
+
+      <div ref={targetRef} className="bg-white p-10 border border-gray-200 rounded-lg">
+        {/* Header */}
+        <div className="flex justify-between mb-10 pb-6 border-b-4 border-blue-500">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              {invoiceData.from.name}
+            </h1>
+            <p className="text-gray-600">{invoiceData.from.address}</p>
+            <p className="text-gray-600">{invoiceData.from.city}</p>
+            <p className="text-gray-600">{invoiceData.from.email}</p>
+          </div>
+          <div className="text-right">
+            <h2 className="text-3xl font-bold text-blue-500 mb-4">INVOICE</h2>
+            <p className="text-gray-600">
+              <strong>Invoice #:</strong> {invoiceData.invoiceNumber}
+            </p>
+            <p className="text-gray-600">
+              <strong>Date:</strong> {invoiceData.date}
+            </p>
+            <p className="text-gray-600">
+              <strong>Due Date:</strong> {invoiceData.dueDate}
+            </p>
+          </div>
+        </div>
+
+        {/* Bill To */}
+        <div className="mb-8">
+          <h3 className="text-sm font-semibold text-gray-900 uppercase mb-2">
+            Bill To:
+          </h3>
+          <p className="font-semibold text-gray-900">{invoiceData.to.name}</p>
+          <p className="text-gray-600">{invoiceData.to.address}</p>
+          <p className="text-gray-600">{invoiceData.to.city}</p>
+          <p className="text-gray-600">{invoiceData.to.email}</p>
+        </div>
+
+        {/* Table */}
+        <table className="w-full mb-8">
+          <thead>
+            <tr className="bg-gray-100 border-b-2 border-gray-300">
+              <th className="text-left p-3 font-semibold">Description</th>
+              <th className="text-left p-3 font-semibold">Quantity</th>
+              <th className="text-left p-3 font-semibold">Rate</th>
+              <th className="text-left p-3 font-semibold">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {invoiceData.items.map((item, index) => (
+              <tr key={index} className="border-b border-gray-200">
+                <td className="p-3 text-gray-700">{item.description}</td>
+                <td className="p-3 text-gray-700">{item.quantity}</td>
+                <td className="p-3 text-gray-700">${item.rate.toFixed(2)}</td>
+                <td className="p-3 text-gray-700">${item.amount.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Totals */}
+        <div className="ml-auto w-80 mb-10">
+          <div className="flex justify-between p-3 text-gray-600">
+            <span>Subtotal:</span>
+            <span>${invoiceData.subtotal.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between p-3 text-gray-600">
+            <span>Tax (10%):</span>
+            <span>${invoiceData.tax.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between p-3 bg-gray-100 rounded mt-2 font-semibold text-lg">
+            <span>Total:</span>
+            <span>${invoiceData.total.toFixed(2)}</span>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center pt-8 border-t border-gray-200 text-gray-600">
+          <p className="mb-1">Payment is due within 30 days of the invoice date.</p>
+          <p>Thank you for your business!</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+## Best Practices
+
+1. **Use consistent branding** - Include your logo, colors, and fonts
+2. **Clear structure** - Organize information logically (from, to, items, total)
+3. **Professional typography** - Use readable fonts and appropriate sizing
+4. **Table formatting** - Make line items easy to scan
+5. **Include all details** - Invoice number, dates, payment terms
+6. **Test print quality** - Use higher scale for better quality: `canvas: { scale: 3 }`
+
+## Dynamic Data
+
+In a real application, you'd fetch invoice data from an API:
+
+```tsx
+import { useState, useEffect } from 'react';
+import { usePDF } from 'react-to-pdf';
+
+function DynamicInvoice({ invoiceId }: { invoiceId: string }) {
+  const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
+  const { targetRef, toPDF } = usePDF({
+    filename: `invoice-${invoiceId}.pdf`
+  });
+
+  useEffect(() => {
+    fetch(`/api/invoices/${invoiceId}`)
+      .then(res => res.json())
+      .then(data => setInvoiceData(data));
+  }, [invoiceId]);
+
+  if (!invoiceData) {
+    return <div>Loading invoice...</div>;
+  }
+
+  return (
+    // ... invoice markup ...
+  );
+}
+```
+
+## See Also
+
+- [Report Example](/react-to-pdf/docs/examples/report) - Create data-rich reports
+- [Certificate Example](/react-to-pdf/docs/examples/certificate) - Design certificates
+- [Styling Guide](/react-to-pdf/docs/advanced/styling) - Advanced styling techniques

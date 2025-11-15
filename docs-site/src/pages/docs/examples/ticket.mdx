@@ -1,0 +1,151 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Event Ticket Example - React to PDF'
+description: 'Generate event tickets with QR codes and custom designs using React to PDF.'
+---
+
+# Event Ticket Generator
+
+Create custom event tickets with QR codes, barcodes, and professional designs.
+
+## Complete Example
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+import QRCode from 'qrcode.react'; // npm install qrcode.react
+
+interface TicketProps {
+  eventName: string;
+  eventDate: string;
+  venue: string;
+  ticketNumber: string;
+  attendeeName: string;
+  seatInfo: string;
+}
+
+function EventTicket({
+  eventName,
+  eventDate,
+  venue,
+  ticketNumber,
+  attendeeName,
+  seatInfo
+}: TicketProps) {
+  const { targetRef, toPDF } = usePDF({
+    filename: `ticket-${ticketNumber}.pdf`,
+    page: { format: [600, 250], margin: 0 }, // Custom size: 600x250px
+    canvas: { scale: 3 }
+  });
+
+  return (
+    <div className="ticket-container">
+      <button onClick={() => toPDF()} className="download-btn">
+        Download Ticket
+      </button>
+
+      <div ref={targetRef} className="ticket">
+        <div className="ticket-main">
+          <div className="ticket-header">
+            <h2>{eventName}</h2>
+            <p className="event-date">{eventDate}</p>
+          </div>
+
+          <div className="ticket-details">
+            <div className="detail-row">
+              <span className="label">Venue:</span>
+              <span className="value">{venue}</span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Attendee:</span>
+              <span className="value">{attendeeName}</span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Seat:</span>
+              <span className="value">{seatInfo}</span>
+            </div>
+            <div className="detail-row">
+              <span className="label">Ticket #:</span>
+              <span className="value">{ticketNumber}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="ticket-stub">
+          <QRCode
+            value={`TICKET:${ticketNumber}`}
+            size={80}
+            level="H"
+          />
+          <p className="ticket-number">{ticketNumber}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default EventTicket;
+```
+
+## Styling
+
+```css
+.ticket {
+  display: flex;
+  width: 600px;
+  height: 250px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.ticket-main {
+  flex: 1;
+  padding: 30px;
+  border-right: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+.ticket-header h2 {
+  font-size: 28px;
+  margin: 0 0 10px 0;
+}
+
+.event-date {
+  font-size: 16px;
+  opacity: 0.9;
+  margin: 0 0 25px 0;
+}
+
+.detail-row {
+  display: flex;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.label {
+  font-weight: bold;
+  min-width: 100px;
+  opacity: 0.8;
+}
+
+.ticket-stub {
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ticket-number {
+  margin-top: 15px;
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.8;
+}
+```
+
+## See Also
+
+- [Invoice Example](/react-to-pdf/docs/examples/invoice)
+- [Certificate Example](/react-to-pdf/docs/examples/certificate)

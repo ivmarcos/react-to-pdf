@@ -1,0 +1,359 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Components API - React to PDF'
+description: 'Complete API reference for React components in React to PDF including PDF, Header, Footer, and Body.'
+---
+
+# Components API
+
+React to PDF provides several components for building structured PDF documents.
+
+## PDF Component
+
+The main component for declarative PDF generation. An alternative to the `usePDF` hook.
+
+### Basic Usage
+
+```tsx
+import { PDF } from 'react-to-pdf';
+
+function MyDocument() {
+  return (
+    <PDF filename="document.pdf">
+      {({ targetRef, toPDF }) => (
+        <div>
+          <button onClick={toPDF}>Download</button>
+          <div ref={targetRef}>
+            <h1>Hello PDF!</h1>
+          </div>
+        </div>
+      )}
+    </PDF>
+  );
+}
+```
+
+### Props
+
+The PDF component accepts the same options as the `usePDF` hook:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `filename` | `string` | `'document.pdf'` | Name of the PDF file |
+| `page` | `PageOptions` | `{}` | Page configuration |
+| `canvas` | `CanvasOptions` | `{}` | Canvas rendering options |
+| `method` | `'save' \| 'open' \| 'build'` | `'save'` | PDF output method |
+| `children` | `function` | Required | Render prop function |
+
+### Children Render Prop
+
+The `children` prop is a function that receives an object with:
+
+```tsx
+{
+  targetRef: React.RefObject,  // Ref to attach to content
+  toPDF: () => Promise<void>   // Function to generate PDF
+}
+```
+
+### Complete Example
+
+```tsx
+import { PDF } from 'react-to-pdf';
+
+function InvoiceDocument() {
+  return (
+    <PDF
+      filename="invoice-2024.pdf"
+      page={{
+        format: 'a4',
+        orientation: 'portrait',
+        margin: 10
+      }}
+      canvas={{
+        scale: 3,
+        useCORS: true
+      }}
+    >
+      {({ targetRef, toPDF }) => (
+        <div className="invoice-container">
+          <div className="controls">
+            <button onClick={toPDF} className="btn-download">
+              Download Invoice
+            </button>
+          </div>
+
+          <div ref={targetRef} className="invoice-content">
+            <h1>Invoice</h1>
+            {/* Invoice content */}
+          </div>
+        </div>
+      )}
+    </PDF>
+  );
+}
+```
+
+## Header Component
+
+Create custom headers that appear at the top of each page in multi-page PDFs.
+
+### Basic Usage
+
+```tsx
+import { PDF, Header } from 'react-to-pdf';
+
+function DocumentWithHeader() {
+  return (
+    <PDF filename="document.pdf">
+      {({ targetRef, toPDF }) => (
+        <div>
+          <button onClick={toPDF}>Download</button>
+          <div ref={targetRef}>
+            <Header>
+              <div className="header">
+                <img src="/logo.png" alt="Logo" />
+                <h3>Company Name</h3>
+              </div>
+            </Header>
+
+            <div className="content">
+              {/* Main content */}
+            </div>
+          </div>
+        </div>
+      )}
+    </PDF>
+  );
+}
+```
+
+### Features
+
+- Appears on every page of multi-page PDFs
+- Can include images, text, and styling
+- Automatically positioned at the top
+- Respects page margins
+
+### Styling Headers
+
+```tsx
+<Header>
+  <div style={{
+    padding: '20px',
+    borderBottom: '2px solid #0ea5e9',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  }}>
+    <img src="/logo.png" alt="Logo" height="40" />
+    <div>
+      <h2 style={{ margin: 0 }}>Company Name</h2>
+      <p style={{ margin: 0, fontSize: '12px', color: '#666' }}>
+        www.company.com
+      </p>
+    </div>
+  </div>
+</Header>
+```
+
+## Footer Component
+
+Create custom footers that appear at the bottom of each page in multi-page PDFs.
+
+### Basic Usage
+
+```tsx
+import { PDF, Footer } from 'react-to-pdf';
+
+function DocumentWithFooter() {
+  return (
+    <PDF filename="document.pdf">
+      {({ targetRef, toPDF }) => (
+        <div>
+          <button onClick={toPDF}>Download</button>
+          <div ref={targetRef}>
+            <div className="content">
+              {/* Main content */}
+            </div>
+
+            <Footer>
+              <div className="footer">
+                <p>© 2024 Company Name</p>
+                <p>Page 1 of 1</p>
+              </div>
+            </Footer>
+          </div>
+        </div>
+      )}
+    </PDF>
+  );
+}
+```
+
+### Features
+
+- Appears on every page of multi-page PDFs
+- Can include page numbers, copyright, contact info
+- Automatically positioned at the bottom
+- Respects page margins
+
+### Styling Footers
+
+```tsx
+<Footer>
+  <div style={{
+    padding: '15px 20px',
+    borderTop: '1px solid #e5e7eb',
+    display: 'flex',
+    justifyContent: 'space-between',
+    fontSize: '12px',
+    color: '#6b7280'
+  }}>
+    <span>© 2024 Your Company. All rights reserved.</span>
+    <span>contact@company.com | +1 (555) 123-4567</span>
+  </div>
+</Footer>
+```
+
+## Body Component
+
+The main content area of your PDF document.
+
+### Basic Usage
+
+```tsx
+import { PDF, Header, Body, Footer } from 'react-to-pdf';
+
+function StructuredDocument() {
+  return (
+    <PDF filename="document.pdf">
+      {({ targetRef, toPDF }) => (
+        <div>
+          <button onClick={toPDF}>Download</button>
+          <div ref={targetRef}>
+            <Header>
+              <div>Header Content</div>
+            </Header>
+
+            <Body>
+              <h1>Document Title</h1>
+              <p>Main content goes here...</p>
+            </Body>
+
+            <Footer>
+              <div>Footer Content</div>
+            </Footer>
+          </div>
+        </div>
+      )}
+    </PDF>
+  );
+}
+```
+
+### Features
+
+- Contains the main document content
+- Automatically handles page breaks
+- Works with Header and Footer components
+- Maintains proper spacing
+
+## Complete Structured Example
+
+Here's a complete example using all components together:
+
+```tsx
+import { PDF, Header, Body, Footer } from 'react-to-pdf';
+
+function ProfessionalDocument() {
+  return (
+    <PDF
+      filename="professional-document.pdf"
+      page={{
+        format: 'a4',
+        margin: { top: 15, right: 15, bottom: 15, left: 15 }
+      }}
+    >
+      {({ targetRef, toPDF }) => (
+        <div>
+          <div style={{ marginBottom: '20px' }}>
+            <button onClick={toPDF} style={{
+              padding: '10px 20px',
+              backgroundColor: '#0ea5e9',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}>
+              Download PDF
+            </button>
+          </div>
+
+          <div ref={targetRef}>
+            <Header>
+              <div style={{
+                padding: '20px',
+                backgroundColor: '#f8fafc',
+                borderBottom: '3px solid #0ea5e9'
+              }}>
+                <h1 style={{ margin: 0, color: '#0f172a' }}>
+                  Professional Report
+                </h1>
+                <p style={{ margin: '5px 0 0', color: '#64748b' }}>
+                  Generated on {new Date().toLocaleDateString()}
+                </p>
+              </div>
+            </Header>
+
+            <Body>
+              <div style={{ padding: '40px 20px' }}>
+                <h2>Executive Summary</h2>
+                <p>This is the main content of the document...</p>
+
+                <h2>Analysis</h2>
+                <p>Detailed analysis goes here...</p>
+
+                {/* More content */}
+              </div>
+            </Body>
+
+            <Footer>
+              <div style={{
+                padding: '15px 20px',
+                backgroundColor: '#f8fafc',
+                borderTop: '1px solid #e2e8f0',
+                fontSize: '12px',
+                color: '#64748b',
+                display: 'flex',
+                justifyContent: 'space-between'
+              }}>
+                <span>© 2024 Your Company</span>
+                <span>Confidential</span>
+              </div>
+            </Footer>
+          </div>
+        </div>
+      )}
+    </PDF>
+  );
+}
+```
+
+## When to Use Components vs Hooks
+
+**Use Components when:**
+- You prefer a declarative API
+- You want to organize your PDF structure with Header/Body/Footer
+- You're building reusable PDF templates
+
+**Use Hooks when:**
+- You prefer a functional API
+- You need more control over the PDF generation process
+- You're building simple PDFs without complex structure
+
+## See Also
+
+- [Hooks API](/react-to-pdf/docs/api/hooks) - Learn about the usePDF hook
+- [Functions API](/react-to-pdf/docs/api/functions) - Standalone utility functions
+- [Examples](/react-to-pdf/docs/examples/invoice) - Real-world component examples

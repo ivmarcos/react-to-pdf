@@ -1,0 +1,71 @@
+---
+interface Heading {
+  depth: number;
+  text: string;
+  slug: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// Filter to only show h2 and h3 headings
+const toc = headings.filter((h) => h.depth <= 3);
+---
+
+{toc.length > 0 && (
+  <aside class="hidden xl:block w-64 flex-shrink-0">
+    <nav class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-6">
+      <h3 class="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wider">
+        On this page
+      </h3>
+      <ul class="space-y-2 text-sm">
+        {toc.map((heading) => (
+          <li
+            class:list={[
+              'border-l-2 transition-colors',
+              heading.depth === 2 ? 'pl-3' : 'pl-6',
+            ]}
+          >
+            <a
+              href={`#${heading.slug}`}
+              class="block py-1 text-gray-600 hover:text-gray-900 transition-colors toc-link"
+              data-heading={heading.slug}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </aside>
+)}
+
+<script>
+  // Highlight active section on scroll
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const id = entry.target.getAttribute('id');
+        const tocLink = document.querySelector(`a[data-heading="${id}"]`);
+
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.toc-link').forEach((link) => {
+            link.classList.remove('text-primary-600', 'font-medium');
+            link.classList.add('text-gray-600');
+          });
+          tocLink?.classList.remove('text-gray-600');
+          tocLink?.classList.add('text-primary-600', 'font-medium');
+        }
+      });
+    },
+    { rootMargin: '-100px 0px -66%' }
+  );
+
+  // Observe all headings
+  document.querySelectorAll('h2[id], h3[id]').forEach((heading) => {
+    observer.observe(heading);
+  });
+</script>

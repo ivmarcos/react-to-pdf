@@ -1,0 +1,323 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Form to PDF Example - React to PDF'
+description: 'Convert form data to PDF documents with React to PDF.'
+---
+
+# Form to PDF
+
+Capture form input and generate a PDF document. Perfect for applications, surveys, and data collection.
+
+## Complete Example
+
+```tsx
+import { useState } from 'react';
+import { usePDF } from 'react-to-pdf';
+
+interface FormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  position: string;
+  coverLetter: string;
+}
+
+function JobApplicationForm() {
+  const [formData, setFormData] = useState<FormData>({
+    fullName: '',
+    email: '',
+    phone: '',
+    address: '',
+    position: '',
+    coverLetter: ''
+  });
+
+  const [submitted, setSubmitted] = useState(false);
+
+  const { targetRef, toPDF } = usePDF({
+    filename: 'job-application.pdf',
+    page: { format: 'a4', margin: 20 }
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+    // Optionally auto-generate PDF after submission
+    setTimeout(() => toPDF(), 100);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  if (!submitted) {
+    return (
+      <div style={{ maxWidth: '600px', margin: '40px auto', padding: '20px' }}>
+        <h1>Job Application</h1>
+        <form onSubmit={handleSubmit} style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px'
+        }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600 }}>
+              Full Name *
+            </label>
+            <input
+              type="text"
+              name="fullName"
+              required
+              value={formData.fullName}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px'
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600 }}>
+              Email *
+            </label>
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px'
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600 }}>
+              Phone *
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              required
+              value={formData.phone}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px'
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600 }}>
+              Position Applied For *
+            </label>
+            <input
+              type="text"
+              name="position"
+              required
+              value={formData.position}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px'
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 600 }}>
+              Cover Letter *
+            </label>
+            <textarea
+              name="coverLetter"
+              required
+              rows={6}
+              value={formData.coverLetter}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px',
+                fontFamily: 'inherit'
+              }}
+            />
+          </div>
+
+          <button type="submit" style={{
+            padding: '12px 24px',
+            backgroundColor: '#0ea5e9',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            fontSize: '16px',
+            cursor: 'pointer'
+          }}>
+            Submit Application
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ maxWidth: '800px', margin: '40px auto', padding: '20px' }}>
+      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <h2 style={{ color: '#22c55e' }}>Application Submitted!</h2>
+        <button
+          onClick={() => toPDF()}
+          style={{
+            padding: '12px 24px',
+            backgroundColor: '#0ea5e9',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            fontSize: '16px',
+            cursor: 'pointer',
+            marginTop: '10px'
+          }}
+        >
+          Download PDF
+        </button>
+      </div>
+
+      <div ref={targetRef} style={{
+        backgroundColor: 'white',
+        padding: '40px',
+        border: '1px solid #e2e8f0',
+        borderRadius: '8px'
+      }}>
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '40px',
+          paddingBottom: '20px',
+          borderBottom: '3px solid #0ea5e9'
+        }}>
+          <h1 style={{ margin: 0, color: '#0f172a' }}>Job Application</h1>
+          <p style={{ margin: '10px 0 0', color: '#64748b' }}>
+            Submitted on {new Date().toLocaleDateString()}
+          </p>
+        </div>
+
+        <div style={{ marginBottom: '30px' }}>
+          <h3 style={{
+            fontSize: '18px',
+            color: '#0ea5e9',
+            marginBottom: '15px',
+            paddingBottom: '10px',
+            borderBottom: '2px solid #e0f2fe'
+          }}>Personal Information</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div>
+              <p style={{ margin: '0 0 5px 0', fontSize: '12px', color: '#64748b' }}>
+                Full Name
+              </p>
+              <p style={{ margin: 0, fontSize: '16px', color: '#0f172a' }}>
+                {formData.fullName}
+              </p>
+            </div>
+            <div>
+              <p style={{ margin: '0 0 5px 0', fontSize: '12px', color: '#64748b' }}>
+                Email
+              </p>
+              <p style={{ margin: 0, fontSize: '16px', color: '#0f172a' }}>
+                {formData.email}
+              </p>
+            </div>
+            <div>
+              <p style={{ margin: '0 0 5px 0', fontSize: '12px', color: '#64748b' }}>
+                Phone
+              </p>
+              <p style={{ margin: 0, fontSize: '16px', color: '#0f172a' }}>
+                {formData.phone}
+              </p>
+            </div>
+            <div>
+              <p style={{ margin: '0 0 5px 0', fontSize: '12px', color: '#64748b' }}>
+                Position
+              </p>
+              <p style={{ margin: 0, fontSize: '16px', color: '#0f172a' }}>
+                {formData.position}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style={{
+            fontSize: '18px',
+            color: '#0ea5e9',
+            marginBottom: '15px',
+            paddingBottom: '10px',
+            borderBottom: '2px solid #e0f2fe'
+          }}>Cover Letter</h3>
+          <p style={{
+            lineHeight: '1.8',
+            color: '#475569',
+            whiteSpace: 'pre-wrap'
+          }}>
+            {formData.coverLetter}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+## Multi-Step Form Example
+
+```tsx
+function MultiStepForm() {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({});
+
+  const { targetRef, toPDF } = usePDF({
+    filename: 'application.pdf'
+  });
+
+  // Handle step navigation
+  const nextStep = () => setStep(prev => prev + 1);
+  const prevStep = () => setStep(prev => prev - 1);
+
+  // Only show PDF preview after all steps completed
+  if (step === 4) {
+    return (
+      <div>
+        <button onClick={() => toPDF()}>Download PDF</button>
+        <div ref={targetRef}>
+          {/* Final PDF content based on all formData */}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {step === 1 && <PersonalInfoStep onNext={nextStep} />}
+      {step === 2 && <EducationStep onNext={nextStep} onBack={prevStep} />}
+      {step === 3 && <ExperienceStep onNext={nextStep} onBack={prevStep} />}
+    </div>
+  );
+}
+```
+
+## See Also
+
+- [Invoice Example](/react-to-pdf/docs/examples/invoice)
+- [API Reference](/react-to-pdf/docs/api/hooks)

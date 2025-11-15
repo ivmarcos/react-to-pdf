@@ -1,0 +1,187 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Quick Start - React to PDF'
+description: 'Generate your first PDF document in minutes with this quick start guide.'
+---
+
+# Quick Start
+
+Generate your first PDF in just a few minutes! This guide will walk you through creating a simple PDF from a React component.
+
+## Basic Example
+
+The simplest way to use React to PDF is with the `usePDF` hook:
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+function MyDocument() {
+  const { targetRef, toPDF } = usePDF({ filename: 'page.pdf' });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>
+        Download PDF
+      </button>
+
+      <div ref={targetRef}>
+        <h1>Hello PDF!</h1>
+        <p>This content will be converted to PDF.</p>
+      </div>
+    </div>
+  );
+}
+```
+
+That's it! When the user clicks the button, a PDF will be generated and downloaded automatically.
+
+## How It Works
+
+1. **Use the hook** - `usePDF()` returns a `targetRef` and `toPDF` function
+2. **Attach the ref** - Add `ref={targetRef}` to the element you want to convert
+3. **Trigger conversion** - Call `toPDF()` when you want to generate the PDF
+
+## Customizing the PDF
+
+You can customize the PDF output by passing options to `usePDF`:
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+function MyDocument() {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'my-document.pdf',
+    page: {
+      format: 'a4',
+      orientation: 'portrait',
+      margin: 10
+    }
+  });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>
+        Download PDF
+      </button>
+
+      <div ref={targetRef}>
+        <h1>Custom PDF</h1>
+        <p>This PDF has custom page settings!</p>
+      </div>
+    </div>
+  );
+}
+```
+
+## Common Options
+
+Here are some common options you can use:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `filename` | `string` | `'document.pdf'` | Name of the generated PDF file |
+| `page.format` | `string` | `'a4'` | Page size (a4, letter, legal, etc.) |
+| `page.orientation` | `string` | `'portrait'` | Page orientation (portrait or landscape) |
+| `page.margin` | `number` | `0` | Margin in millimeters |
+
+For a complete list of options, see the [API Reference](/react-to-pdf/docs/api/hooks).
+
+## Using the Component
+
+Alternatively, you can use the `PDF` component for a declarative approach:
+
+```tsx
+import { PDF } from 'react-to-pdf';
+
+function MyDocument() {
+  return (
+    <PDF filename="document.pdf">
+      {({ targetRef, toPDF }) => (
+        <div>
+          <button onClick={toPDF}>
+            Download PDF
+          </button>
+
+          <div ref={targetRef}>
+            <h1>Hello PDF!</h1>
+            <p>Using the component approach.</p>
+          </div>
+        </div>
+      )}
+    </PDF>
+  );
+}
+```
+
+## Styling Your PDF
+
+React to PDF captures your HTML and CSS exactly as it appears in the browser. You can use any CSS approach:
+
+```tsx
+function StyledDocument() {
+  const { targetRef, toPDF } = usePDF({ filename: 'styled.pdf' });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>
+        Download PDF
+      </button>
+
+      <div ref={targetRef} style={{ padding: '40px', fontFamily: 'Arial' }}>
+        <h1 style={{ color: '#333', borderBottom: '2px solid #0ea5e9' }}>
+          Styled Document
+        </h1>
+        <p style={{ lineHeight: '1.6', color: '#666' }}>
+          All your CSS styles will be preserved in the PDF!
+        </p>
+      </div>
+    </div>
+  );
+}
+```
+
+You can also use CSS modules, Tailwind CSS, styled-components, or any other CSS solution.
+
+## Multi-Page Documents
+
+React to PDF automatically handles page breaks for content that exceeds one page:
+
+```tsx
+function LongDocument() {
+  const { targetRef, toPDF } = usePDF({ filename: 'long-document.pdf' });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>
+        Download PDF
+      </button>
+
+      <div ref={targetRef}>
+        <h1>Multi-Page Document</h1>
+
+        {Array.from({ length: 50 }).map((_, i) => (
+          <p key={i}>
+            This is paragraph {i + 1}. When the content is too long for one page,
+            it will automatically continue on the next page.
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## Next Steps
+
+Now that you've created your first PDF, explore more advanced features:
+
+- [API Reference](/react-to-pdf/docs/api/hooks) - Learn about all available options
+- [Examples](/react-to-pdf/docs/examples/invoice) - See real-world examples
+- [Custom Fonts](/react-to-pdf/docs/advanced/custom-fonts) - Use custom fonts in your PDFs
+- [Performance](/react-to-pdf/docs/advanced/performance) - Optimize large documents
+
+## Need Help?
+
+- Check the [FAQ](/react-to-pdf/faq) for common questions
+- Visit the [Troubleshooting guide](/react-to-pdf/docs/advanced/troubleshooting) for solutions
+- [Open an issue](https://github.com/ivmarcos/react-to-pdf/issues) on GitHub

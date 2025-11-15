@@ -1,0 +1,224 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Report with Tables Example - React to PDF'
+description: 'Create data-rich reports with tables, charts, and multi-page support.'
+---
+
+# Report with Tables
+
+Generate professional reports with data tables, summaries, and automatic multi-page handling.
+
+## Complete Example
+
+```tsx
+import { usePDF, Header, Body, Footer } from 'react-to-pdf';
+
+interface ReportData {
+  title: string;
+  period: string;
+  summary: {
+    totalRevenue: number;
+    totalExpenses: number;
+    netProfit: number;
+  };
+  transactions: Array<{
+    date: string;
+    description: string;
+    category: string;
+    amount: number;
+  }>;
+}
+
+function FinancialReport({ data }: { data: ReportData }) {
+  const { targetRef, toPDF } = usePDF({
+    filename: `report-${data.period}.pdf`,
+    page: {
+      format: 'a4',
+      margin: { top: 15, right: 15, bottom: 15, left: 15 }
+    }
+  });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>Download Report</button>
+
+      <div ref={targetRef}>
+        <Header>
+          <div style={{
+            padding: '20px',
+            backgroundColor: '#f8fafc',
+            borderBottom: '3px solid #0ea5e9'
+          }}>
+            <h1 style={{ margin: 0 }}>{data.title}</h1>
+            <p style={{ margin: '5px 0 0', color: '#64748b' }}>
+              Period: {data.period}
+            </p>
+          </div>
+        </Header>
+
+        <Body>
+          <div style={{ padding: '30px 20px' }}>
+            {/* Summary Cards */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '20px',
+              marginBottom: '40px'
+            }}>
+              <div style={{
+                padding: '20px',
+                backgroundColor: '#f0f9ff',
+                borderRadius: '8px',
+                border: '1px solid #e0f2fe'
+              }}>
+                <p style={{ margin: 0, fontSize: '14px', color: '#64748b' }}>
+                  Total Revenue
+                </p>
+                <h3 style={{ margin: '10px 0 0', fontSize: '24px', color: '#0ea5e9' }}>
+                  ${data.summary.totalRevenue.toLocaleString()}
+                </h3>
+              </div>
+              <div style={{
+                padding: '20px',
+                backgroundColor: '#fef2f2',
+                borderRadius: '8px',
+                border: '1px solid #fee2e2'
+              }}>
+                <p style={{ margin: 0, fontSize: '14px', color: '#64748b' }}>
+                  Total Expenses
+                </p>
+                <h3 style={{ margin: '10px 0 0', fontSize: '24px', color: '#ef4444' }}>
+                  ${data.summary.totalExpenses.toLocaleString()}
+                </h3>
+              </div>
+              <div style={{
+                padding: '20px',
+                backgroundColor: '#f0fdf4',
+                borderRadius: '8px',
+                border: '1px solid #dcfce7'
+              }}>
+                <p style={{ margin: 0, fontSize: '14px', color: '#64748b' }}>
+                  Net Profit
+                </p>
+                <h3 style={{ margin: '10px 0 0', fontSize: '24px', color: '#22c55e' }}>
+                  ${data.summary.netProfit.toLocaleString()}
+                </h3>
+              </div>
+            </div>
+
+            {/* Transactions Table */}
+            <h2 style={{ marginBottom: '20px' }}>Transaction Details</h2>
+            <table style={{
+              width: '100%',
+              borderCollapse: 'collapse',
+              fontSize: '14px'
+            }}>
+              <thead>
+                <tr style={{ backgroundColor: '#f1f5f9' }}>
+                  <th style={{
+                    padding: '12px',
+                    textAlign: 'left',
+                    borderBottom: '2px solid #cbd5e1'
+                  }}>Date</th>
+                  <th style={{
+                    padding: '12px',
+                    textAlign: 'left',
+                    borderBottom: '2px solid #cbd5e1'
+                  }}>Description</th>
+                  <th style={{
+                    padding: '12px',
+                    textAlign: 'left',
+                    borderBottom: '2px solid #cbd5e1'
+                  }}>Category</th>
+                  <th style={{
+                    padding: '12px',
+                    textAlign: 'right',
+                    borderBottom: '2px solid #cbd5e1'
+                  }}>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.transactions.map((tx, i) => (
+                  <tr key={i}>
+                    <td style={{
+                      padding: '12px',
+                      borderBottom: '1px solid #e2e8f0'
+                    }}>{tx.date}</td>
+                    <td style={{
+                      padding: '12px',
+                      borderBottom: '1px solid #e2e8f0'
+                    }}>{tx.description}</td>
+                    <td style={{
+                      padding: '12px',
+                      borderBottom: '1px solid #e2e8f0'
+                    }}>{tx.category}</td>
+                    <td style={{
+                      padding: '12px',
+                      borderBottom: '1px solid #e2e8f0',
+                      textAlign: 'right',
+                      color: tx.amount >= 0 ? '#22c55e' : '#ef4444'
+                    }}>
+                      ${Math.abs(tx.amount).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Body>
+
+        <Footer>
+          <div style={{
+            padding: '15px 20px',
+            backgroundColor: '#f8fafc',
+            borderTop: '1px solid #e2e8f0',
+            fontSize: '12px',
+            color: '#64748b',
+            textAlign: 'center'
+          }}>
+            Generated on {new Date().toLocaleDateString()} | Confidential
+          </div>
+        </Footer>
+      </div>
+    </div>
+  );
+}
+```
+
+## Usage Example
+
+```tsx
+const reportData: ReportData = {
+  title: 'Q4 2024 Financial Report',
+  period: 'October - December 2024',
+  summary: {
+    totalRevenue: 145000,
+    totalExpenses: 98000,
+    netProfit: 47000
+  },
+  transactions: [
+    {
+      date: '2024-10-15',
+      description: 'Client Payment - Project Alpha',
+      category: 'Revenue',
+      amount: 25000
+    },
+    {
+      date: '2024-10-20',
+      description: 'Office Rent',
+      category: 'Expense',
+      amount: -5000
+    },
+    // ... more transactions
+  ]
+};
+
+function App() {
+  return <FinancialReport data={reportData} />;
+}
+```
+
+## See Also
+
+- [Invoice Example](/react-to-pdf/docs/examples/invoice)
+- [Performance Tips](/react-to-pdf/docs/advanced/performance)

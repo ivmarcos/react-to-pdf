@@ -1,0 +1,355 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Playground - React to PDF"
+  description="Try React to PDF in your browser with live preview and code editing."
+>
+  <div class="playground-container">
+    <div class="playground-header">
+      <h1>React to PDF Playground</h1>
+      <p>Edit the code below and click "Generate PDF" to see the result</p>
+    </div>
+
+    <div class="playground-content">
+      <!-- Code Editor -->
+      <div class="editor-section">
+        <h3>Code Editor</h3>
+        <textarea
+          id="code-editor"
+          class="code-textarea"
+          spellcheck="false"
+        ></textarea>
+      </div>
+
+      <!-- Instructions -->
+      <div class="instructions-section">
+        <h3>How to Use</h3>
+        <ol>
+          <li>Edit the code in the editor on the left</li>
+          <li>The code shows a basic example of using React to PDF</li>
+          <li>To try this in your own project, copy the code and paste it into your React app</li>
+          <li>Make sure you have installed react-to-pdf: <code>npm install react-to-pdf</code></li>
+        </ol>
+
+        <h3>Quick Examples</h3>
+        <div class="examples-grid">
+          <button class="example-btn" data-example="basic">
+            Basic Example
+          </button>
+          <button class="example-btn" data-example="styled">
+            Styled Document
+          </button>
+          <button class="example-btn" data-example="table">
+            With Table
+          </button>
+          <button class="example-btn" data-example="multi-page">
+            Multi-Page
+          </button>
+        </div>
+
+        <div class="info-box">
+          <h4>💡 Note</h4>
+          <p>This is a code viewer. To actually generate PDFs, copy this code to your React application.</p>
+          <p>For a full working demo, check out our <a href="/react-to-pdf/docs/examples/invoice">examples</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .playground-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .playground-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .playground-header h1 {
+    font-size: 36px;
+    color: #0f172a;
+    margin-bottom: 10px;
+  }
+
+  .playground-header p {
+    color: #64748b;
+    font-size: 18px;
+  }
+
+  .playground-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  @media (max-width: 968px) {
+    .playground-content {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .editor-section,
+  .instructions-section {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+  }
+
+  .editor-section h3,
+  .instructions-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #0f172a;
+  }
+
+  .code-textarea {
+    width: 100%;
+    min-height: 500px;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #1e293b;
+    color: #e2e8f0;
+    resize: vertical;
+  }
+
+  .code-textarea:focus {
+    outline: none;
+    border-color: #0ea5e9;
+  }
+
+  .instructions-section ol {
+    padding-left: 20px;
+    line-height: 1.8;
+    color: #475569;
+  }
+
+  .instructions-section code {
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #0ea5e9;
+  }
+
+  .examples-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .example-btn {
+    padding: 12px 20px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #0f172a;
+    transition: all 0.2s;
+  }
+
+  .example-btn:hover {
+    background: #e0f2fe;
+    border-color: #0ea5e9;
+    color: #0ea5e9;
+  }
+
+  .info-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 30px;
+  }
+
+  .info-box h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #1e40af;
+  }
+
+  .info-box p {
+    margin: 5px 0;
+    color: #1e40af;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .info-box a {
+    color: #0ea5e9;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .info-box a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<script is:inline>
+  const examples = {
+    basic: `import { usePDF } from 'react-to-pdf';
+
+function MyDocument() {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'document.pdf'
+  });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>
+        Download PDF
+      </button>
+
+      <div ref={targetRef}>
+        <h1>Hello PDF!</h1>
+        <p>This is a basic example.</p>
+      </div>
+    </div>
+  );
+}`,
+
+    styled: `import { usePDF } from 'react-to-pdf';
+
+function StyledDocument() {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'styled-document.pdf'
+  });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>
+        Download PDF
+      </button>
+
+      <div ref={targetRef} style={{
+        padding: '40px',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+        <h1 style={{
+          color: '#0ea5e9',
+          borderBottom: '3px solid #0ea5e9'
+        }}>
+          Styled Document
+        </h1>
+        <p style={{ lineHeight: '1.6', color: '#64748b' }}>
+          This document has custom styling.
+        </p>
+      </div>
+    </div>
+  );
+}`,
+
+    table: `import { usePDF } from 'react-to-pdf';
+
+function TableDocument() {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'table-document.pdf'
+  });
+
+  const data = [
+    { name: 'Item 1', price: 100 },
+    { name: 'Item 2', price: 200 },
+    { name: 'Item 3', price: 150 }
+  ];
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>
+        Download PDF
+      </button>
+
+      <div ref={targetRef} style={{ padding: '40px' }}>
+        <h1>Invoice</h1>
+        <table style={{
+          width: '100%',
+          borderCollapse: 'collapse'
+        }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f1f5f9' }}>
+              <th style={{ padding: '12px', textAlign: 'left' }}>
+                Item
+              </th>
+              <th style={{ padding: '12px', textAlign: 'right' }}>
+                Price
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, i) => (
+              <tr key={i}>
+                <td style={{ padding: '12px' }}>{item.name}</td>
+                <td style={{ padding: '12px', textAlign: 'right' }}>
+                  ${item.price}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}`,
+
+    'multi-page': `import { usePDF } from 'react-to-pdf';
+
+function MultiPageDocument() {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'multi-page.pdf',
+    page: {
+      format: 'a4',
+      margin: 10
+    }
+  });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>
+        Download PDF
+      </button>
+
+      <div ref={targetRef} style={{ padding: '40px' }}>
+        <h1>Multi-Page Document</h1>
+
+        {Array.from({ length: 50 }).map((_, i) => (
+          <p key={i}>
+            Paragraph {i + 1}. When content exceeds one page,
+            it will automatically continue on the next page.
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}`
+  };
+
+  const editor = document.getElementById('code-editor');
+  const exampleButtons = document.querySelectorAll('.example-btn');
+
+  // Set initial value
+  if (editor) {
+    editor.value = examples.basic;
+  }
+
+  // Handle example button clicks
+  exampleButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const example = btn.getAttribute('data-example');
+      if (example && editor && examples[example]) {
+        editor.value = examples[example];
+      }
+    });
+  });
+</script>

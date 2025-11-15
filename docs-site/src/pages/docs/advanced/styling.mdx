@@ -1,0 +1,205 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Styling Guide - React to PDF'
+description: 'Best practices for styling PDF documents with React to PDF.'
+---
+
+# Styling Guide
+
+Learn how to style your PDF documents effectively using CSS, Tailwind, and other styling solutions.
+
+## CSS Support
+
+React to PDF captures your HTML exactly as it renders in the browser, so all CSS works:
+
+- Inline styles
+- CSS classes
+- CSS modules
+- Tailwind CSS
+- styled-components
+- Emotion
+- Any CSS-in-JS solution
+
+## Inline Styles
+
+The most reliable approach for PDFs:
+
+```tsx
+<div style={{
+  padding: '20px',
+  backgroundColor: '#f8fafc',
+  border: '1px solid #e2e8f0',
+  borderRadius: '8px'
+}}>
+  <h1 style={{ color: '#0f172a', fontSize: '24px', margin: 0 }}>
+    Title
+  </h1>
+</div>
+```
+
+## CSS Classes
+
+```css
+.pdf-container {
+  padding: 40px;
+  font-family: Arial, sans-serif;
+}
+
+.pdf-header {
+  background-color: #0ea5e9;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+```
+
+```tsx
+import './styles.css';
+
+function StyledPDF() {
+  const { targetRef, toPDF } = usePDF({ filename: 'styled.pdf' });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>Download</button>
+      <div ref={targetRef} className="pdf-container">
+        <div className="pdf-header">
+          <h1>Styled PDF</h1>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+## Tailwind CSS
+
+Works great with React to PDF:
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+function TailwindPDF() {
+  const { targetRef, toPDF } = usePDF({ filename: 'tailwind.pdf' });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>Download</button>
+      <div ref={targetRef} className="p-10 bg-white">
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          Tailwind Styling
+        </h1>
+        <p className="text-gray-600 leading-relaxed">
+          All Tailwind classes work perfectly in PDFs.
+        </p>
+      </div>
+    </div>
+  );
+}
+```
+
+## Layout Best Practices
+
+### Fixed Dimensions
+
+Use fixed widths for consistent PDF output:
+
+```tsx
+<div style={{ width: '210mm' }}> {/* A4 width */}
+  {/* Content */}
+</div>
+```
+
+### Flexbox and Grid
+
+Both work great for layouts:
+
+```tsx
+<div style={{
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '20px'
+}}>
+  <div>Column 1</div>
+  <div>Column 2</div>
+</div>
+```
+
+### Page Breaks
+
+Control page breaks for multi-page PDFs:
+
+```css
+.page-break {
+  page-break-after: always;
+}
+
+.avoid-break {
+  page-break-inside: avoid;
+}
+```
+
+## Common Styling Patterns
+
+### Headers
+
+```tsx
+<div style={{
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '20px',
+  borderBottom: '3px solid #0ea5e9'
+}}>
+  <h1>Document Title</h1>
+  <div>Date: {new Date().toLocaleDateString()}</div>
+</div>
+```
+
+### Tables
+
+```tsx
+<table style={{
+  width: '100%',
+  borderCollapse: 'collapse'
+}}>
+  <thead>
+    <tr style={{ backgroundColor: '#f1f5f9' }}>
+      <th style={{
+        padding: '12px',
+        textAlign: 'left',
+        borderBottom: '2px solid #cbd5e1'
+      }}>Header</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{
+        padding: '12px',
+        borderBottom: '1px solid #e2e8f0'
+      }}>Cell</td>
+    </tr>
+  </tbody>
+</table>
+```
+
+## Styling Gotchas
+
+### Avoid These
+
+- **Position fixed/sticky** - May not render correctly
+- **Transform animations** - Won't capture mid-animation
+- **Viewport units (vh, vw)** - Use fixed units instead
+- **Background images** - May not load, use `useCORS: true`
+
+### Use Instead
+
+- Absolute positioning within containers
+- Final rendered state (no animations)
+- px, mm, rem, em units
+- Inline images or ensure CORS is enabled
+
+## See Also
+
+- [Custom Fonts](/react-to-pdf/docs/advanced/custom-fonts)
+- [Performance](/react-to-pdf/docs/advanced/performance)

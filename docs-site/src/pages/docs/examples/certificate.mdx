@@ -1,0 +1,393 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Certificate Example - React to PDF'
+description: 'Create beautiful certificates for courses, events, and achievements with React to PDF.'
+---
+
+# Certificate Generator
+
+Create professional certificates for courses, events, training programs, or achievements. This example demonstrates how to design an elegant certificate with custom styling.
+
+## Complete Example
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+interface CertificateProps {
+  recipientName: string;
+  courseName: string;
+  completionDate: string;
+  instructorName: string;
+}
+
+function CertificateGenerator({
+  recipientName,
+  courseName,
+  completionDate,
+  instructorName
+}: CertificateProps) {
+  const { targetRef, toPDF } = usePDF({
+    filename: `certificate-${recipientName.replace(/ /g, '-')}.pdf`,
+    page: {
+      format: 'a4',
+      orientation: 'landscape',
+      margin: 0
+    },
+    canvas: {
+      scale: 3 // Higher quality for certificates
+    }
+  });
+
+  return (
+    <div className="certificate-container">
+      <button
+        onClick={() => toPDF()}
+        className="download-btn"
+      >
+        Download Certificate
+      </button>
+
+      <div ref={targetRef} className="certificate">
+        {/* Border */}
+        <div className="certificate-border">
+          {/* Header */}
+          <div className="certificate-header">
+            <h1>Certificate of Completion</h1>
+          </div>
+
+          {/* Body */}
+          <div className="certificate-body">
+            <p className="presented-to">This certificate is proudly presented to</p>
+
+            <h2 className="recipient-name">{recipientName}</h2>
+
+            <p className="completion-text">
+              for successfully completing the course
+            </p>
+
+            <h3 className="course-name">{courseName}</h3>
+
+            <p className="date-text">
+              on <strong>{completionDate}</strong>
+            </p>
+          </div>
+
+          {/* Footer */}
+          <div className="certificate-footer">
+            <div className="signature-section">
+              <div className="signature-line"></div>
+              <p className="signature-name">{instructorName}</p>
+              <p className="signature-title">Course Instructor</p>
+            </div>
+          </div>
+
+          {/* Decorative elements */}
+          <div className="seal">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="35" fill="#0ea5e9" opacity="0.1" />
+              <circle cx="40" cy="40" r="30" fill="none" stroke="#0ea5e9" strokeWidth="2" />
+              <text x="40" y="45" textAnchor="middle" fill="#0ea5e9" fontSize="14" fontWeight="bold">
+                ✓
+              </text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default CertificateGenerator;
+```
+
+## Styling
+
+```css
+.certificate-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.download-btn {
+  margin-bottom: 30px;
+  padding: 12px 30px;
+  background: #0ea5e9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.download-btn:hover {
+  background: #0284c7;
+}
+
+.certificate {
+  width: 297mm;  /* A4 landscape width */
+  height: 210mm; /* A4 landscape height */
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  position: relative;
+}
+
+.certificate-border {
+  position: absolute;
+  top: 15mm;
+  left: 15mm;
+  right: 15mm;
+  bottom: 15mm;
+  border: 3px solid #0ea5e9;
+  padding: 30px;
+  background: white;
+  box-shadow: inset 0 0 0 2px #e0f2fe;
+}
+
+.certificate-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.certificate-header h1 {
+  font-size: 42px;
+  color: #0ea5e9;
+  margin: 0;
+  font-family: 'Georgia', serif;
+  font-weight: normal;
+  letter-spacing: 2px;
+}
+
+.certificate-body {
+  text-align: center;
+  padding: 40px 60px;
+}
+
+.presented-to {
+  font-size: 18px;
+  color: #64748b;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.recipient-name {
+  font-size: 48px;
+  color: #0f172a;
+  margin: 20px 0;
+  font-family: 'Georgia', serif;
+  font-weight: bold;
+  border-bottom: 2px solid #e2e8f0;
+  display: inline-block;
+  padding: 10px 40px;
+}
+
+.completion-text {
+  font-size: 18px;
+  color: #64748b;
+  margin: 30px 0 20px;
+}
+
+.course-name {
+  font-size: 28px;
+  color: #0ea5e9;
+  margin: 20px 0;
+  font-family: 'Georgia', serif;
+}
+
+.date-text {
+  font-size: 16px;
+  color: #64748b;
+  margin-top: 30px;
+}
+
+.certificate-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.signature-section {
+  text-align: center;
+  min-width: 250px;
+}
+
+.signature-line {
+  width: 100%;
+  height: 2px;
+  background: #cbd5e1;
+  margin-bottom: 10px;
+}
+
+.signature-name {
+  font-size: 18px;
+  color: #0f172a;
+  margin: 5px 0;
+  font-weight: 600;
+}
+
+.signature-title {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.seal {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+}
+```
+
+## Tailwind CSS Version
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+function CertificateTailwind({ recipientName, courseName, completionDate, instructorName }) {
+  const { targetRef, toPDF } = usePDF({
+    filename: `certificate-${recipientName.replace(/ /g, '-')}.pdf`,
+    page: { format: 'a4', orientation: 'landscape', margin: 0 },
+    canvas: { scale: 3 }
+  });
+
+  return (
+    <div className="flex flex-col items-center p-6">
+      <button
+        onClick={() => toPDF()}
+        className="mb-8 px-8 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+      >
+        Download Certificate
+      </button>
+
+      <div
+        ref={targetRef}
+        className="relative bg-gradient-to-br from-white to-gray-50"
+        style={{ width: '297mm', height: '210mm' }}
+      >
+        <div className="absolute inset-[15mm] border-4 border-blue-500 bg-white p-8 shadow-[inset_0_0_0_2px_#e0f2fe]">
+          {/* Header */}
+          <div className="text-center mb-10">
+            <h1 className="text-5xl text-blue-500 tracking-widest font-serif">
+              Certificate of Completion
+            </h1>
+          </div>
+
+          {/* Body */}
+          <div className="text-center px-16 py-10">
+            <p className="text-lg text-gray-500 italic mb-6">
+              This certificate is proudly presented to
+            </p>
+
+            <h2 className="text-6xl font-bold text-gray-900 my-6 inline-block border-b-2 border-gray-200 px-10 py-3 font-serif">
+              {recipientName}
+            </h2>
+
+            <p className="text-lg text-gray-500 mt-8 mb-6">
+              for successfully completing the course
+            </p>
+
+            <h3 className="text-3xl text-blue-500 my-6 font-serif">
+              {courseName}
+            </h3>
+
+            <p className="text-base text-gray-500 mt-8">
+              on <strong>{completionDate}</strong>
+            </p>
+          </div>
+
+          {/* Footer */}
+          <div className="flex justify-center mt-16">
+            <div className="text-center min-w-[250px]">
+              <div className="w-full h-0.5 bg-gray-300 mb-3"></div>
+              <p className="text-lg font-semibold text-gray-900 my-1">
+                {instructorName}
+              </p>
+              <p className="text-sm text-gray-500">Course Instructor</p>
+            </div>
+          </div>
+
+          {/* Seal */}
+          <div className="absolute bottom-8 right-8">
+            <div className="w-20 h-20 rounded-full border-2 border-blue-500 flex items-center justify-center text-3xl text-blue-500">
+              ✓
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+## With Logo and Background
+
+```tsx
+function CertificateWithLogo({ recipientName, courseName, completionDate, instructorName }) {
+  const { targetRef, toPDF } = usePDF({
+    filename: `certificate-${recipientName.replace(/ /g, '-')}.pdf`,
+    page: { format: 'a4', orientation: 'landscape', margin: 0 },
+    canvas: { scale: 3, useCORS: true } // Enable CORS for logo
+  });
+
+  return (
+    <div ref={targetRef} style={{ width: '297mm', height: '210mm' }}>
+      {/* Background pattern */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: 'url(/certificate-pattern.svg)',
+        opacity: 0.05,
+        pointerEvents: 'none'
+      }} />
+
+      <div className="certificate-border">
+        {/* Logo */}
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          <img
+            src="/company-logo.png"
+            alt="Company Logo"
+            style={{ height: '60px', margin: '0 auto' }}
+          />
+        </div>
+
+        {/* Rest of certificate content */}
+        {/* ... */}
+      </div>
+    </div>
+  );
+}
+```
+
+## Usage Example
+
+```tsx
+function App() {
+  return (
+    <CertificateGenerator
+      recipientName="John Smith"
+      courseName="Advanced React Development"
+      completionDate="December 15, 2024"
+      instructorName="Jane Doe"
+    />
+  );
+}
+```
+
+## Tips for Beautiful Certificates
+
+1. **Use landscape orientation** - Certificates traditionally use landscape format
+2. **High quality** - Set `scale: 3` or higher for print-quality output
+3. **Serif fonts** - Georgia, Times New Roman work well for formal certificates
+4. **Elegant spacing** - Give content room to breathe with generous padding
+5. **Borders and seals** - Add visual authority with borders and verification seals
+6. **Print-ready colors** - Use colors that print well (avoid very light colors)
+
+## See Also
+
+- [Ticket Example](/react-to-pdf/docs/examples/ticket) - Event ticket generation
+- [Custom Fonts](/react-to-pdf/docs/advanced/custom-fonts) - Use custom fonts
+- [Styling Guide](/react-to-pdf/docs/advanced/styling) - Advanced styling techniques

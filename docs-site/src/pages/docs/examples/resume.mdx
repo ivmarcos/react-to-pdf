@@ -1,0 +1,178 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Resume/CV Example - React to PDF'
+description: 'Create professional resumes and CVs with React to PDF.'
+---
+
+# Resume/CV Generator
+
+Generate professional resumes with custom layouts and styling.
+
+## Complete Example
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+interface ResumeData {
+  name: string;
+  title: string;
+  contact: {
+    email: string;
+    phone: string;
+    location: string;
+    linkedin: string;
+  };
+  summary: string;
+  experience: Array<{
+    title: string;
+    company: string;
+    period: string;
+    responsibilities: string[];
+  }>;
+  education: Array<{
+    degree: string;
+    school: string;
+    year: string;
+  }>;
+  skills: string[];
+}
+
+function Resume({ data }: { data: ResumeData }) {
+  const { targetRef, toPDF } = usePDF({
+    filename: `${data.name.replace(/ /g, '-')}-resume.pdf`,
+    page: { format: 'a4', margin: 15 }
+  });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>Download Resume</button>
+
+      <div ref={targetRef} style={{
+        fontFamily: 'Arial, sans-serif',
+        maxWidth: '800px',
+        margin: '0 auto',
+        padding: '40px'
+      }}>
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          <h1 style={{ margin: '0 0 5px 0', fontSize: '36px' }}>{data.name}</h1>
+          <p style={{ margin: 0, fontSize: '18px', color: '#64748b' }}>{data.title}</p>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '20px',
+            marginTop: '15px',
+            fontSize: '14px',
+            color: '#64748b'
+          }}>
+            <span>{data.contact.email}</span>
+            <span>{data.contact.phone}</span>
+            <span>{data.contact.location}</span>
+          </div>
+        </div>
+
+        {/* Summary */}
+        <section style={{ marginBottom: '30px' }}>
+          <h2 style={{
+            fontSize: '20px',
+            borderBottom: '2px solid #0ea5e9',
+            paddingBottom: '5px',
+            marginBottom: '15px'
+          }}>Professional Summary</h2>
+          <p style={{ lineHeight: '1.6', color: '#475569' }}>{data.summary}</p>
+        </section>
+
+        {/* Experience */}
+        <section style={{ marginBottom: '30px' }}>
+          <h2 style={{
+            fontSize: '20px',
+            borderBottom: '2px solid #0ea5e9',
+            paddingBottom: '5px',
+            marginBottom: '15px'
+          }}>Experience</h2>
+          {data.experience.map((job, i) => (
+            <div key={i} style={{ marginBottom: '20px' }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginBottom: '5px'
+              }}>
+                <h3 style={{ margin: 0, fontSize: '16px' }}>{job.title}</h3>
+                <span style={{ color: '#64748b', fontSize: '14px' }}>{job.period}</span>
+              </div>
+              <p style={{
+                margin: '0 0 10px 0',
+                color: '#64748b',
+                fontSize: '14px'
+              }}>{job.company}</p>
+              <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                {job.responsibilities.map((resp, j) => (
+                  <li key={j} style={{ marginBottom: '5px', color: '#475569' }}>
+                    {resp}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+
+        {/* Education */}
+        <section style={{ marginBottom: '30px' }}>
+          <h2 style={{
+            fontSize: '20px',
+            borderBottom: '2px solid #0ea5e9',
+            paddingBottom: '5px',
+            marginBottom: '15px'
+          }}>Education</h2>
+          {data.education.map((edu, i) => (
+            <div key={i} style={{ marginBottom: '10px' }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between'
+              }}>
+                <h3 style={{ margin: 0, fontSize: '16px' }}>{edu.degree}</h3>
+                <span style={{ color: '#64748b', fontSize: '14px' }}>{edu.year}</span>
+              </div>
+              <p style={{ margin: '5px 0 0 0', color: '#64748b', fontSize: '14px' }}>
+                {edu.school}
+              </p>
+            </div>
+          ))}
+        </section>
+
+        {/* Skills */}
+        <section>
+          <h2 style={{
+            fontSize: '20px',
+            borderBottom: '2px solid #0ea5e9',
+            paddingBottom: '5px',
+            marginBottom: '15px'
+          }}>Skills</h2>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '10px'
+          }}>
+            {data.skills.map((skill, i) => (
+              <span key={i} style={{
+                padding: '5px 15px',
+                backgroundColor: '#e0f2fe',
+                color: '#0ea5e9',
+                borderRadius: '20px',
+                fontSize: '14px'
+              }}>
+                {skill}
+              </span>
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+```
+
+## See Also
+
+- [Styling Guide](/react-to-pdf/docs/advanced/styling)
+- [Custom Fonts](/react-to-pdf/docs/advanced/custom-fonts)
