@@ -1,6 +1,5 @@
 import { Image } from "../models/image";
 import { Page } from "../models/page";
-import { log } from "../tests/testUtils";
 import { TargetImage } from "../types";
 import * as utils from "../utils";
 
@@ -53,18 +52,9 @@ export class PageImagesBuilder {
     const imageWidth = image.getWidth();
     const availableHeight = page.getAvailableHeight();
     if (imageHeight <= availableHeight && imageY === 0) {
-      log("debug no need to crop! image height is lower than the page");
       return image;
     }
     const cropHeight = this.calculateCropHeight({ page, image, imageY });
-    log("debug just before crop", {
-      cropHeight,
-      imageY,
-      page: page.getNumber(),
-      imageFullHeight: imageHeight,
-      availableHeight,
-      contentHeight: page.getContentHeight(),
-    });
     const pageCanvas = utils.cropY({
       width: imageWidth,
       height: cropHeight,
@@ -78,7 +68,6 @@ export class PageImagesBuilder {
     let page: Page = null;
     this.pages = [];
     this.targetImages.forEach((targetImage, imageIndex) => {
-      log("debug target image", imageIndex);
       const requiresNewPage = targetImage.options?.startOnNewPage;
       if (requiresNewPage || !page) {
         page = this.createPage();
@@ -91,21 +80,8 @@ export class PageImagesBuilder {
         if (page.isFull()) {
           page = this.createPage();
         }
-        log("debug before possible crop", {
-          imageIndex,
-          imageY,
-          pages: page.getNumber(),
-          imageHeight,
-        });
         const pageImage = this.createPageImage({ page, image, imageY });
         imageY = imageY + pageImage.getHeight();
-        log("debug after possible crop", {
-          imageIndex,
-          imageY,
-          pages: page.getNumber(),
-          imageHeight,
-          imageCroppedHeight: pageImage.getHeight(),
-        });
         page.addImage(pageImage);
         i++;
         if (i > 100) {

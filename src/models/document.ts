@@ -4,6 +4,13 @@ import { DocumentConverterOptions } from "../types";
 export class Document {
   options: DocumentConverterOptions;
   instance: InstanceType<typeof jsPDF>;
+  private marginCache: {
+    top?: number;
+    left?: number;
+    right?: number;
+    bottom?: number;
+  } = {};
+
   constructor(options: DocumentConverterOptions) {
     this.options = options;
     this.instance = new jsPDF({
@@ -89,32 +96,48 @@ export class Document {
     return this.instance.internal.pageSize.width;
   }
   getMarginTop() {
+    if (this.marginCache.top !== undefined) {
+      return this.marginCache.top;
+    }
     const margin =
       typeof this.options.page.margin === "object"
         ? this.options.page.margin.top
         : this.options.page.margin;
-    return Number(margin);
+    this.marginCache.top = Number(margin);
+    return this.marginCache.top;
   }
   getMarginLeft() {
+    if (this.marginCache.left !== undefined) {
+      return this.marginCache.left;
+    }
     const margin =
       typeof this.options.page.margin === "object"
         ? this.options.page.margin.left
         : this.options.page.margin;
-    return Number(margin);
+    this.marginCache.left = Number(margin);
+    return this.marginCache.left;
   }
   getMarginRight() {
+    if (this.marginCache.right !== undefined) {
+      return this.marginCache.right;
+    }
     const margin =
       typeof this.options.page.margin === "object"
         ? this.options.page.margin.right
         : this.options.page.margin;
-    return Number(margin);
+    this.marginCache.right = Number(margin);
+    return this.marginCache.right;
   }
   getMarginBottom() {
+    if (this.marginCache.bottom !== undefined) {
+      return this.marginCache.bottom;
+    }
     const margin =
       typeof this.options.page.margin === "object"
         ? this.options.page.margin.bottom
         : this.options.page.margin;
-    return Number(margin);
+    this.marginCache.bottom = Number(margin);
+    return this.marginCache.bottom;
   }
   getInstance() {
     return this.instance;

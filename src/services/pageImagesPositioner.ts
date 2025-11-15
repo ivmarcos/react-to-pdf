@@ -2,7 +2,6 @@ import { Alignment } from "../constants";
 import { Document } from "../models/document";
 import { Image } from "../models/image";
 import { Page } from "../models/page";
-import { log } from "../tests/testUtils";
 import { DocumentConverterOptions, ImageCoordinates } from "../types";
 import * as utils from "../utils";
 
@@ -62,11 +61,6 @@ export class PageImagesPositioner {
       const { width, height } = utils.getImageDimensionsMM(image);
       const imageHeightOffset = utils.pxToMM(page.getImageY(image));
       const regularCoordinates = this.calculateImageCoordinates(width, height);
-      log("positioner", {
-        imageIndex,
-        imageHeightOffset,
-        documentMarginTop: document.getMarginTop(),
-      });
       const calculateOverrideCoordinates = (): Partial<ImageCoordinates> => {
         switch (this.options.align) {
           case Alignment.CENTER_XY: {
