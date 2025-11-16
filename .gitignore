@@ -12,3 +12,4 @@ cypress/baseline/diff
 cypress/baseline/png
 cypress/screenshots
 coverage
+.playwright-mcp

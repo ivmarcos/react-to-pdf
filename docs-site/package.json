@@ -13,8 +13,10 @@
     "@astrojs/react": "^3.0.0",
     "@astrojs/sitemap": "^3.0.0",
     "@astrojs/tailwind": "^5.0.0",
+    "@babel/standalone": "^7.28.5",
     "@codemirror/lang-javascript": "^6.2.1",
     "@codemirror/theme-one-dark": "^6.1.2",
+    "@monaco-editor/react": "^4.7.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@uiw/react-codemirror": "^4.21.0",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
+    "@types/babel__standalone": "^7.1.9",
     "prettier": "^3.1.0",
     "prettier-plugin-astro": "^0.12.0"
   }

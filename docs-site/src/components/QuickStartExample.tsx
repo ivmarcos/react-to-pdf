@@ -8,8 +8,11 @@ export default function QuickStartExample() {
     // Only import and initialize on client side
     import('react-to-pdf').then((module) => {
       const pkg = module as any;
-      setUsePDF(() => pkg.usePDF || pkg.default?.usePDF);
+      const usePDFFunc = pkg.usePDF || pkg.default?.usePDF;
+      setUsePDF(() => usePDFFunc);
       setMounted(true);
+    }).catch((error) => {
+      console.error('[QuickStartExample] Failed to load react-to-pdf:', error);
     });
   }, []);
 
