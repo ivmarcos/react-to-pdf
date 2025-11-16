@@ -201,6 +201,17 @@ export default function LivePlayground() {
                 setError(null);
               }}
               theme="vs-dark"
+              beforeMount={(monaco) => {
+                // Disable TypeScript validation to remove error squiggles
+                monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+                  noSemanticValidation: true,
+                  noSyntaxValidation: true
+                });
+                monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+                  noSemanticValidation: true,
+                  noSyntaxValidation: true
+                });
+              }}
               options={{
                 minimap: { enabled: false },
                 fontSize: 14,
