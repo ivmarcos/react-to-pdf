@@ -18,3 +18,5 @@ docs-site/.astro/
 docs-site/dist/
 docs-site/node_modules/
 docs-site/src/env.d.ts
+test-tarball/
+*.tgz
