@@ -61,7 +61,7 @@ echo "[Add a brief summary of the release here]"
 echo ""
 
 # Get commit messages with hash
-git log "${PREVIOUS_TAG}..${TARGET_TAG}" --pretty=format:"    * %s (%h)" --no-merges
+git log "${PREVIOUS_TAG}..${TARGET_TAG}" --pretty=format:"- %s (%h)" --no-merges
 
 echo ""
 echo ""

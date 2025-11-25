@@ -1,3 +1,14 @@
+# 2.0.3 (November 25, 2025)
+
+Updates npm ignore file and some scripts for dev.
+
+- Release 2.0.3 (d623651)
+- update CHANGELOG (a9e339d)
+- update script to release notes (a91e4cb)
+- add script for release notes (ec578c6)
+- ignore test tarball folder and update npm ignore (0a23d1a)
+- update .npmignore (d3551bb)
+
 # 2.0.2 (November 25, 2025)
 
 This release includes a security fix for JsPDF, see https://github.com/parallax/jsPDF/releases/tag/v3.0.2 among some minor dep updates for dev.
