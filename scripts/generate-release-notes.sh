@@ -53,7 +53,7 @@ TAG_DATE=$(git log -1 --format=%ai "$TARGET_TAG" | awk '{print $1}')
 FORMATTED_DATE=$(date -d "$TAG_DATE" "+%B %-d, %Y" 2>/dev/null || date -j -f "%Y-%m-%d" "$TAG_DATE" "+%B %-d, %Y" 2>/dev/null)
 
 # Output in the specified format
-echo "$TARGET_TAG ($FORMATTED_DATE)"
+echo "# $TARGET_TAG ($FORMATTED_DATE)"
 echo ""
 
 # Placeholder for summary - user should fill this in
@@ -61,7 +61,7 @@ echo "[Add a brief summary of the release here]"
 echo ""
 
 # Get commit messages with hash
-git log "${PREVIOUS_TAG}..${TARGET_TAG}" --pretty=format:"    %s (%h)" --no-merges
+git log "${PREVIOUS_TAG}..${TARGET_TAG}" --pretty=format:"    * %s (%h)" --no-merges
 
 echo ""
 echo ""
