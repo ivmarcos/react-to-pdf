@@ -26,3 +26,12 @@ scripts/
 .prettierignore
 rollup.config.js
 .nvmrc
+.coverage/
+coverage/
+.playwright/
+.playwright-mcp/
+docs-site/.astro/
+docs-site/dist/
+docs-site/node_modules/
+docs-site/src/env.d.ts
+.claude
