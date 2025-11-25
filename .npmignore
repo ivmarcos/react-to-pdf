@@ -37,3 +37,4 @@ docs-site/src/env.d.ts
 .claude
 test-tarball/
 *.tgz
+scripts/
