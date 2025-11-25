@@ -44,7 +44,7 @@ describe("template spec", () => {
       getButton(example).should("be.visible");
       getButton(example).click();
     });
-    cy.wait(10000);
+    cy.wait(15000);
     examples.forEach((example) => {
       cy.task("compareFile", example.filename).then(
         (result: ComparisonResult) => {

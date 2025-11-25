@@ -11,3 +11,10 @@ cypress/downloads
 cypress/baseline/diff
 cypress/baseline/png
 cypress/screenshots
+coverage/
+.playwright/
+.playwright-mcp/
+docs-site/.astro/
+docs-site/dist/
+docs-site/node_modules/
+docs-site/src/env.d.ts
