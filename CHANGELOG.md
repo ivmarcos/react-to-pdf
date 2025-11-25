@@ -1,3 +1,15 @@
+# 2.0.2 (November 25, 2025)
+
+This release includes a security fix for JsPDF, see https://github.com/parallax/jsPDF/releases/tag/v3.0.2 among some minor dep updates for dev.
+
+- Release 2.0.2 (683d699)
+- upgrade jspdf (#172) (61be78f)
+- Bump jspdf from 3.0.1 to 3.0.2 (#170) (5e3843b)
+- Bump vite from 6.2.7 to 6.4.1 (#168) (84d4119)
+- Bump tar-fs from 2.1.3 to 2.1.4 (#167) (8aed727)
+- update changelog (961318d)
+- upgrade release-it (e48cb12)
+
 # 2.0.1 (June, 3, 2025)
 
 Fixes security vulnerabilities from tar-fs and some other minor changes related to Vite bumps.
