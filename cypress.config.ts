@@ -1,48 +1,48 @@
 import path from "path";
 import { defineConfig } from "cypress";
-import ComparePdf, { ComparePdfConfig } from "compare-pdf";
+import { comparePdfToSnapshot } from "pdf-visual-diff";
 
-const comparePDFConfig: ComparePdfConfig = {
-  paths: {
-    actualPdfRootFolder: path.join(process.cwd(), "cypress", "downloads"),
-    baselinePdfRootFolder: path.join(process.cwd(), "cypress", "baseline"),
-    actualPngRootFolder: path.join(
-      process.cwd(),
-      "cypress",
-      "downloads",
-      "png"
-    ),
-    baselinePngRootFolder: path.join(
-      process.cwd(),
-      "cypress",
-      "baseline",
-      "png"
-    ),
-    diffPngRootFolder: path.join(process.cwd(), "cypress", "baseline", "diff"),
-  },
-  settings: {
-    imageEngine: "native",
-    density: 150,
-    quality: 80,
-    tolerance: 0,
-    threshold: 0.1,
-    cleanPngPaths: false,
-    matchPageCount: true,
-    disableFontFace: true,
-    verbosity: 0,
-  },
-};
+interface ComparisonResult {
+  status: "passed" | "failed";
+  message?: string;
+}
 
 export default defineConfig({
   e2e: {
     setupNodeEvents(on) {
       on("task", {
-        async compareFile(filename: string) {
-          const comparisonResults = await new ComparePdf(comparePDFConfig)
-            .actualPdfFile(filename)
-            .baselinePdfFile(filename)
-            .compare();
-          return comparisonResults;
+        async compareFile(filename: string): Promise<ComparisonResult> {
+          const actualPath = path.join(process.cwd(), "cypress", "downloads", filename);
+          const snapshotDir = path.join(process.cwd(), "cypress", "baseline");
+
+          try {
+            // comparePdfToSnapshot returns true if PDFs match, false if they don't
+            const matches = await comparePdfToSnapshot(
+              actualPath,
+              snapshotDir,
+              filename,
+              {
+                tolerance: 0.1,
+                pdf2PngOptions: {
+                  dpi: 150,
+                },
+              }
+            );
+
+            if (matches) {
+              return { status: "passed" };
+            } else {
+              return {
+                status: "failed",
+                message: `PDF comparison failed: ${filename} does not match baseline`,
+              };
+            }
+          } catch (error) {
+            return {
+              status: "failed",
+              message: `PDF comparison error: ${error instanceof Error ? error.message : String(error)}`,
+            };
+          }
         },
       });
     },

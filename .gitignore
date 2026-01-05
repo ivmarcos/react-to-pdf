@@ -10,6 +10,7 @@ umd
 cypress/downloads
 cypress/baseline/diff
 cypress/baseline/png
+cypress/baseline/__snapshots__
 cypress/screenshots
 coverage/
 .playwright/
