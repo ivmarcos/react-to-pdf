@@ -6,7 +6,7 @@ See https://github.com/parallax/jsPDF/security/advisories/GHSA-9964-cph5-966m fo
 
 - update jspdf to 4, cypress to 15 and use alternative image comparison for e2e (#175) (24fe10e)
 - Bump js-yaml from 4.1.0 to 4.1.1 (#171) (ba1326c)
-- update release notes script and changelog (c80acd2)
+- update release notes script and changelog (c80acd2) 
 
 
 # 2.0.3 (November 25, 2025)
