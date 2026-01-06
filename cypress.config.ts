@@ -12,7 +12,12 @@ export default defineConfig({
     setupNodeEvents(on) {
       on("task", {
         async compareFile(filename: string): Promise<ComparisonResult> {
-          const actualPath = path.join(process.cwd(), "cypress", "downloads", filename);
+          const actualPath = path.join(
+            process.cwd(),
+            "cypress",
+            "downloads",
+            filename
+          );
           const snapshotDir = path.join(process.cwd(), "cypress", "baseline");
 
           try {
@@ -40,7 +45,9 @@ export default defineConfig({
           } catch (error) {
             return {
               status: "failed",
-              message: `PDF comparison error: ${error instanceof Error ? error.message : String(error)}`,
+              message: `PDF comparison error: ${
+                error instanceof Error ? error.message : String(error)
+              }`,
             };
           }
         },
