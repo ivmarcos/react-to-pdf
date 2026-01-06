@@ -15,6 +15,11 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "@typescript-eslint"],
+  settings: {
+    react: {
+      version: "detect",
+    },
+  },
   rules: {
     "react/no-unescaped-entities": 0,
     "@typescript-eslint/no-explicit-any": 0,
