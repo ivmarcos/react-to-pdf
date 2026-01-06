@@ -20,7 +20,7 @@ configs.forEach((config) => {
       entryPoints: [entryFile],
       outfile: `${buildDir}/${config.outFile}`,
       bundle: true,
-      external: ["react", "react-dom", "jspdf", "html2canvas"],
+      external: ["react", "react-dom", "jspdf", "html2canvas-pro"],
       target: "esnext",
       format: config.format,
       platform: "neutral",
