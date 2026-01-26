@@ -1,6 +1,6 @@
 import { MutableRefObject } from "react";
 import { jsPDFOptions } from "jspdf";
-import { Options as Html2CanvasOptions } from "html2canvas";
+import { Options as Html2CanvasOptions } from "html2canvas-pro";
 import { Margin, Resolution } from "./constants";
 
 export type DetailedMargin = {
