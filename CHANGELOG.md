@@ -1,3 +1,12 @@
+# 3.1.0 (February 3, 2026)
+
+Minor release following JsPDF v.4.1.0 release which includes some security fixes. See https://github.com/parallax/jsPDF/releases/tag/v4.1.0 for more details.
+
+* Bump jspdf from 4.0.0 to 4.1.0 (#179) (740f7f2)
+* Bump lodash from 4.17.21 to 4.17.23 (#178) (f144d54)
+* Eslint and CI fix (#177) (d7d86b2)
+* update changelog (3632ee6)
+
 # 3.0.0 (January 5, 2026)
 
 This is a major release following the JsPDF v4 release that updates the dependencies and fixes some security vulnerabilities among other sec fixes related to the dev dependencies that was being by this package.
