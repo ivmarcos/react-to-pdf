@@ -24,6 +24,7 @@ export const DEFAULT_OPTIONS: Readonly<ConversionOptions> = {
     margin: Margin.NONE,
     format: "A4",
     orientation: "portrait",
+    background:null
   },
   canvas: {
     mimeType: "image/jpeg",
