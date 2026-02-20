@@ -1,3 +1,10 @@
+# 3.2.1 (February 20, 2026)
+
+Reflecting recent updates from jspdf in package.json and upgrade to Cypress (dev dependency).
+
+* update package json - cypress 15.10 and jspdf 4.2 (#185) (19efd79)
+* update changelog (ae515a3)
+
 # 3.2.0 (February 20, 2026)
 
 Minor release following JsPDF v.4.2.0 release which includes some security fixes. See https://github.com/parallax/jsPDF/releases/tag/v4.2.0 for more details.
