@@ -1,3 +1,12 @@
+# 3.2.0 (February 20, 2026)
+
+Minor release following JsPDF v.4.2.0 release which includes some security fixes. See https://github.com/parallax/jsPDF/releases/tag/v4.2.0 for more details.
+
+* Bump jspdf from 4.1.0 to 4.2.0 (#184) (672d5ef)
+* Bump systeminformation from 5.29.1 to 5.31.1 (#183) (479c460)
+* Bump qs from 6.14.1 to 6.14.2 (#182) (dac4043)
+* update changelog (2d9c3df)
+
 # 3.1.0 (February 3, 2026)
 
 Minor release following JsPDF v.4.1.0 release which includes some security fixes. See https://github.com/parallax/jsPDF/releases/tag/v4.1.0 for more details.
