@@ -5,4 +5,5 @@ yarn.lock
 node_modules/
 dist/
 .vscode
+docs-site/.astro/
 *.md
