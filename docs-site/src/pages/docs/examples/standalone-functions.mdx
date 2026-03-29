@@ -1,0 +1,64 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: "Standalone Functions - React to PDF"
+description: "Use save, open, create, and print functions without React hooks."
+---
+
+import StandaloneFunctionsExample from "@components/StandaloneFunctionsExample";
+
+# Standalone Functions
+
+Use `save()`, `open()`, `create()`, and `print()` without the `usePDF` hook. These are useful for imperative code, event handlers, or non-React integrations.
+
+## Live Example
+
+<StandaloneFunctionsExample client:load />
+
+## Code
+
+```tsx
+import { useRef } from "react";
+import { save, open, create, print } from "react-to-pdf";
+
+function DocumentActions() {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleSave = () =>
+    save(() => contentRef.current, { filename: "doc.pdf" });
+
+  const handleOpen = () => open(() => contentRef.current);
+
+  const handleCreate = async () => {
+    const doc = await create(() => contentRef.current);
+    // doc is a Document instance — call doc.save(), doc.open(), etc.
+  };
+
+  const handlePrint = () => print(() => contentRef.current);
+
+  return (
+    <div>
+      <button onClick={handleSave}>Download</button>
+      <button onClick={handleOpen}>Preview</button>
+      <button onClick={handleCreate}>Create</button>
+      <button onClick={handlePrint}>Print</button>
+      <div ref={contentRef}>
+        <h1>Your content here</h1>
+      </div>
+    </div>
+  );
+}
+```
+
+## When to Use
+
+- **`save(target, options)`** — Download the PDF as a file
+- **`open(target, options)`** — Open in a new browser tab for preview
+- **`create(target, options)`** — Get a `Document` instance for custom processing (add metadata, merge, etc.)
+- **`print(target, options)`** — Trigger the browser print dialog
+
+All functions accept a target (ref or getter function) and optional `Options`.
+
+## See Also
+
+- [Functions API Reference](/react-to-pdf/docs/api/functions)
+- [Hooks API](/react-to-pdf/docs/api/hooks)

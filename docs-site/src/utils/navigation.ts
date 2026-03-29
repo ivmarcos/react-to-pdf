@@ -30,6 +30,14 @@ export const navigation = {
         { title: "Reports with Tables", href: "/docs/examples/report" },
         { title: "Resume/CV", href: "/docs/examples/resume" },
         { title: "Form to PDF", href: "/docs/examples/form" },
+        {
+          title: "Standalone Functions",
+          href: "/docs/examples/standalone-functions",
+        },
+        {
+          title: "Advanced Features",
+          href: "/docs/examples/advanced-features",
+        },
       ],
     },
     {

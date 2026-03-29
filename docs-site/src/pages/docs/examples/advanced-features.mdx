@@ -1,0 +1,65 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: "Advanced Features - React to PDF"
+description: "Explore alignment, size, resolution, margin, and method options interactively."
+---
+
+import AdvancedFeaturesExample from "@components/AdvancedFeaturesExample";
+
+# Advanced Features
+
+Experiment with alignment, sizing, resolution, margins, and output methods. Use the controls below to see how each option affects the generated PDF.
+
+## Interactive Demo
+
+<AdvancedFeaturesExample client:load />
+
+## Alignment Options
+
+Controls how content is positioned on the PDF page.
+
+| Value       | Description                   |
+| ----------- | ----------------------------- |
+| `top-left`  | Default — content at top-left |
+| `center-x`  | Horizontally centered         |
+| `center-y`  | Vertically centered           |
+| `center-xy` | Centered both axes            |
+
+```tsx
+import { usePDF } from "react-to-pdf";
+
+const { targetRef, toPDF } = usePDF({
+  align: "center-xy",
+});
+```
+
+## Size Options
+
+Controls how content is scaled relative to the page.
+
+| Value           | Description                              |
+| --------------- | ---------------------------------------- |
+| `original`      | Default — no scaling                     |
+| `fill-page`     | Scale up to fill the page                |
+| `shrink-to-fit` | Scale down if content is wider than page |
+
+## Method Options
+
+Controls what happens after the PDF is generated.
+
+| Value   | Description                                      |
+| ------- | ------------------------------------------------ |
+| `save`  | Default — downloads the PDF file                 |
+| `open`  | Opens PDF in a new browser tab                   |
+| `build` | Returns the jsPDF instance for custom processing |
+
+## Resolution and Margin
+
+- **Resolution** scales the canvas capture (1x–12x). Higher = better quality, larger file.
+- **Margin** adds space around the content in millimeters. Use `Margin.NONE`, `SMALL`, `MEDIUM`, or `LARGE`, or a custom number.
+
+## See Also
+
+- [Hooks API](/react-to-pdf/docs/api/hooks)
+- [Styling Guide](/react-to-pdf/docs/advanced/styling)
+- [Performance Tips](/react-to-pdf/docs/advanced/performance)
