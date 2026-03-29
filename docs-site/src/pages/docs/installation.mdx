@@ -1,7 +1,7 @@
 ---
-layout: '@layouts/DocsLayout.astro'
-title: 'Installation - React to PDF'
-description: 'Learn how to install React to PDF in your React project using npm or yarn.'
+layout: "@layouts/DocsLayout.astro"
+title: "Installation - React to PDF"
+description: "Learn how to install React to PDF in your React project using npm or yarn."
 ---
 
 # Installation
@@ -39,7 +39,7 @@ After installation, verify that the package is installed correctly by checking y
 ```json
 {
   "dependencies": {
-    "react-to-pdf": "^2.1.0"
+    "react-to-pdf": "^3.2.2"
   }
 }
 ```
@@ -60,14 +60,14 @@ React to PDF is written in TypeScript and includes type definitions out of the b
 If you're using TypeScript, you'll get full IntelliSense and type checking automatically:
 
 ```typescript
-import { usePDF, Options } from 'react-to-pdf';
+import { usePDF, Options } from "react-to-pdf";
 
 const options: Options = {
-  filename: 'document.pdf',
+  filename: "document.pdf",
   page: {
-    format: 'a4',
-    orientation: 'portrait'
-  }
+    format: "a4",
+    orientation: "portrait",
+  },
 };
 ```
 
