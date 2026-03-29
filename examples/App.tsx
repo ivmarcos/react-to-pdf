@@ -49,7 +49,7 @@ export const App = () => {
         <Child id={2} />
       </Container>
       <button onClick={() => setCount(count + 1)}>increase</button>
-      {(examples || []).slice(5, 6).map((example) => (
+      {(examples || []).map((example) => (
         <a id={`example-${slugify(example.title)}`} key={example.title}>
           <h3>{example.title}</h3>
           {example.content && <Code>{example.content}</Code>}

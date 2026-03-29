@@ -12,8 +12,7 @@ import {
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
-import { Alignment, Size } from "../src/constants";
-import Body from "../src/components/Body";
+import { Body } from "react-to-pdf";
 
 const HeaderComponent = ({ page, pages }: FooterHeaderRenderProps) => {
   return (
@@ -60,7 +59,7 @@ export const ExamplePDFPreview = () => {
                 justifyContent: "space-between",
               }}
             >
-              <div>React to PDF - {new Date().getTime()}</div>
+              <div>React to PDF</div>
               <div>
                 {page} of {pages}
               </div>

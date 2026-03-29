@@ -31,6 +31,10 @@ export const examples: ExampleTest[] = [
     title: "Advanced options",
     filename: "advanced-example.pdf",
   },
+  {
+    title: "Using PDF component",
+    filename: "pdf-example.pdf",
+  },
 ];
 
 describe("template spec", () => {
