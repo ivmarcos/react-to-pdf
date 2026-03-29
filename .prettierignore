@@ -4,6 +4,8 @@ yarn.lock
 .babelrc
 node_modules/
 dist/
+coverage/
 .vscode
+.claude/
 docs-site/.astro/
 *.md
