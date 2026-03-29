@@ -33,4 +33,5 @@ const Body = ({
 
 Body.displayName = "Body";
 
+export { Body };
 export default Body;
