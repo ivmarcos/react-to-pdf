@@ -1,7 +1,7 @@
 ---
-layout: '@layouts/DocsLayout.astro'
-title: 'React Hooks API - React to PDF'
-description: 'Complete API reference for the usePDF hook and other React hooks in React to PDF.'
+layout: "@layouts/DocsLayout.astro"
+title: "React Hooks API - React to PDF"
+description: "Complete API reference for the usePDF hook and other React hooks in React to PDF."
 ---
 
 # React Hooks API
@@ -15,10 +15,10 @@ The primary hook for generating PDFs from React components.
 ### Basic Usage
 
 ```tsx
-import { usePDF } from 'react-to-pdf';
+import { usePDF } from "react-to-pdf";
 
 function MyComponent() {
-  const { targetRef, toPDF } = usePDF({ filename: 'document.pdf' });
+  const { targetRef, toPDF } = usePDF({ filename: "document.pdf" });
 
   return (
     <div>
@@ -33,10 +33,10 @@ function MyComponent() {
 
 The hook returns an object with the following properties:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `targetRef` | `React.RefObject` | Ref to attach to the element you want to convert |
-| `toPDF` | `() => Promise<void>` | Function to trigger PDF generation |
+| Property    | Type                  | Description                                      |
+| ----------- | --------------------- | ------------------------------------------------ |
+| `targetRef` | `React.RefObject`     | Ref to attach to the element you want to convert |
+| `toPDF`     | `() => Promise<void>` | Function to trigger PDF generation               |
 
 ### Options
 
@@ -50,34 +50,35 @@ interface Options {
   page?: PageOptions;
   canvas?: CanvasOptions;
   overrides?: Overrides;
-  method?: 'save' | 'open' | 'build';
+  method?: "save" | "open" | "build";
 }
 ```
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `filename` | `string` | `'document.pdf'` | Name of the generated PDF file |
-| `method` | `'save' \| 'open' \| 'build'` | `'save'` | How to handle the PDF (`save` downloads it, `open` opens in new tab, `build` returns the PDF object) |
+| Option     | Type                          | Default          | Description                                                                                          |
+| ---------- | ----------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------- |
+| `filename` | `string`                      | `'document.pdf'` | Name of the generated PDF file                                                                       |
+| `method`   | `'save' \| 'open' \| 'build'` | `'save'`         | How to handle the PDF (`save` downloads it, `open` opens in new tab, `build` returns the PDF object) |
 
 #### Page Options
 
 ```tsx
 interface PageOptions {
   format?: Format;
-  orientation?: 'portrait' | 'landscape';
+  orientation?: "portrait" | "landscape";
   margin?: number | Margin;
 }
 ```
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `format` | `Format` | `'a4'` | Page size (a4, letter, legal, a3, a5, tabloid) |
-| `orientation` | `'portrait' \| 'landscape'` | `'portrait'` | Page orientation |
-| `margin` | `number \| Margin` | `0` | Margin in mm (single number or object with top/right/bottom/left) |
+| Option        | Type                        | Default      | Description                                                       |
+| ------------- | --------------------------- | ------------ | ----------------------------------------------------------------- |
+| `format`      | `Format`                    | `'a4'`       | Page size (a4, letter, legal, a3, a5, tabloid)                    |
+| `orientation` | `'portrait' \| 'landscape'` | `'portrait'` | Page orientation                                                  |
+| `margin`      | `number \| Margin`          | `0`          | Margin in mm (single number or object with top/right/bottom/left) |
 
 **Format Values**: `'a4'`, `'letter'`, `'legal'`, `'a3'`, `'a5'`, `'tabloid'`
 
 **Margin Object**:
+
 ```tsx
 interface Margin {
   top?: number;
@@ -97,11 +98,11 @@ interface CanvasOptions {
 }
 ```
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `scale` | `number` | `2` | Scale factor for canvas rendering (higher = better quality) |
-| `useCORS` | `boolean` | `false` | Enable CORS for loading external images |
-| `logging` | `boolean` | `false` | Enable console logging for debugging |
+| Option    | Type      | Default | Description                                                 |
+| --------- | --------- | ------- | ----------------------------------------------------------- |
+| `scale`   | `number`  | `2`     | Scale factor for canvas rendering (higher = better quality) |
+| `useCORS` | `boolean` | `false` | Enable CORS for loading external images                     |
+| `logging` | `boolean` | `false` | Enable console logging for debugging                        |
 
 #### Overrides
 
@@ -117,38 +118,34 @@ Advanced options to override default html2canvas and jsPDF settings.
 ### Complete Example
 
 ```tsx
-import { usePDF } from 'react-to-pdf';
+import { usePDF } from "react-to-pdf";
 
 function AdvancedPDF() {
   const { targetRef, toPDF } = usePDF({
-    filename: 'invoice.pdf',
+    filename: "invoice.pdf",
     page: {
-      format: 'a4',
-      orientation: 'portrait',
+      format: "a4",
+      orientation: "portrait",
       margin: {
         top: 10,
         right: 10,
         bottom: 10,
-        left: 10
-      }
+        left: 10,
+      },
     },
     canvas: {
       scale: 3,
       useCORS: true,
-      logging: false
+      logging: false,
     },
-    method: 'save'
+    method: "save",
   });
 
   return (
     <div>
-      <button onClick={() => toPDF()}>
-        Download Invoice
-      </button>
+      <button onClick={() => toPDF()}>Download Invoice</button>
 
-      <div ref={targetRef}>
-        {/* Your content here */}
-      </div>
+      <div ref={targetRef}>{/* Your content here */}</div>
     </div>
   );
 }
@@ -162,8 +159,8 @@ Downloads the PDF file to the user's device:
 
 ```tsx
 const { toPDF } = usePDF({
-  filename: 'document.pdf',
-  method: 'save'
+  filename: "document.pdf",
+  method: "save",
 });
 ```
 
@@ -173,8 +170,8 @@ Opens the PDF in a new browser tab:
 
 ```tsx
 const { toPDF } = usePDF({
-  filename: 'document.pdf',
-  method: 'open'
+  filename: "document.pdf",
+  method: "open",
 });
 ```
 
@@ -184,8 +181,8 @@ Returns the jsPDF instance for custom handling:
 
 ```tsx
 const { toPDF } = usePDF({
-  filename: 'document.pdf',
-  method: 'build'
+  filename: "document.pdf",
+  method: "build",
 });
 
 // Custom handling
@@ -193,7 +190,7 @@ const handleDownload = async () => {
   const pdf = await toPDF();
   // pdf is a jsPDF instance
   // You can use it for custom operations
-  pdf.save('custom-name.pdf');
+  pdf.save("custom-name.pdf");
 };
 ```
 
@@ -202,16 +199,16 @@ const handleDownload = async () => {
 All hooks are fully typed with TypeScript:
 
 ```tsx
-import { usePDF, Options, PageOptions } from 'react-to-pdf';
+import { usePDF, Options, PageOptions } from "react-to-pdf";
 
 const pageOptions: PageOptions = {
-  format: 'a4',
-  orientation: 'landscape'
+  format: "a4",
+  orientation: "landscape",
 };
 
 const options: Options = {
-  filename: 'typed-document.pdf',
-  page: pageOptions
+  filename: "typed-document.pdf",
+  page: pageOptions,
 };
 
 const { targetRef, toPDF } = usePDF(options);
@@ -223,15 +220,15 @@ The `toPDF` function returns a Promise, so you can handle errors:
 
 ```tsx
 function PDFWithErrorHandling() {
-  const { targetRef, toPDF } = usePDF({ filename: 'document.pdf' });
+  const { targetRef, toPDF } = usePDF({ filename: "document.pdf" });
 
   const handleDownload = async () => {
     try {
       await toPDF();
-      console.log('PDF generated successfully!');
+      console.log("PDF generated successfully!");
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
+      console.error("Error generating PDF:", error);
+      alert("Failed to generate PDF. Please try again.");
     }
   };
 

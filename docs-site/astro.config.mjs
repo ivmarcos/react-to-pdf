@@ -1,13 +1,13 @@
-import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
-import sitemap from '@astrojs/sitemap';
+import { defineConfig } from "astro/config";
+import mdx from "@astrojs/mdx";
+import react from "@astrojs/react";
+import tailwind from "@astrojs/tailwind";
+import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://ivmarcos.github.io',
-  base: '/react-to-pdf',
+  site: "https://ivmarcos.github.io",
+  base: "/react-to-pdf",
   integrations: [
     mdx(),
     react(),
@@ -18,7 +18,7 @@ export default defineConfig({
   ],
   markdown: {
     shikiConfig: {
-      theme: 'github-dark',
+      theme: "github-dark",
       wrap: true,
     },
   },

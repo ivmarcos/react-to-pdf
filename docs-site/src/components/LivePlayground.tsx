@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import Editor from '@monaco-editor/react';
-import * as React from 'react';
+import { useEffect, useState } from "react";
+import Editor from "@monaco-editor/react";
+import * as React from "react";
 
 // Example templates
 const examples = {
   basic: {
-    title: 'Basic Example',
+    title: "Basic Example",
     code: `import { usePDF } from 'react-to-pdf';
 
 function MyDocument() {
@@ -24,10 +24,10 @@ function MyDocument() {
       </div>
     </div>
   );
-}`
+}`,
   },
   styled: {
-    title: 'Styled Example',
+    title: "Styled Example",
     code: `import { usePDF } from 'react-to-pdf';
 
 function StyledDocument() {
@@ -56,10 +56,10 @@ function StyledDocument() {
       </div>
     </div>
   );
-}`
+}`,
   },
   table: {
-    title: 'Table Example',
+    title: "Table Example",
     code: `import { usePDF } from 'react-to-pdf';
 
 function TableDocument() {
@@ -104,30 +104,34 @@ function TableDocument() {
       </div>
     </div>
   );
-}`
-  }
+}`,
+  },
 };
 
 export default function LivePlayground() {
   const [mounted, setMounted] = useState(false);
   const [usePDF, setUsePDF] = useState<any>(null);
-  const [selectedExample, setSelectedExample] = useState<'basic' | 'styled' | 'table'>('basic');
+  const [selectedExample, setSelectedExample] = useState<
+    "basic" | "styled" | "table"
+  >("basic");
   const [code, setCode] = useState(examples.basic.code);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Only import and initialize on client side
-    import('react-to-pdf').then((module) => {
-      const pkg = module as any;
-      const usePDFFunc = pkg.usePDF || pkg.default?.usePDF;
-      setUsePDF(() => usePDFFunc);
-      setMounted(true);
-    }).catch((error) => {
-      console.error('[LivePlayground] Failed to load react-to-pdf:', error);
-    });
+    import("react-to-pdf")
+      .then((module) => {
+        const pkg = module as any;
+        const usePDFFunc = pkg.usePDF || pkg.default?.usePDF;
+        setUsePDF(() => usePDFFunc);
+        setMounted(true);
+      })
+      .catch((error) => {
+        console.error("[LivePlayground] Failed to load react-to-pdf:", error);
+      });
   }, []);
 
-  const handleExampleChange = (example: 'basic' | 'styled' | 'table') => {
+  const handleExampleChange = (example: "basic" | "styled" | "table") => {
     setSelectedExample(example);
     setCode(examples[example].code);
     setError(null);
@@ -135,38 +139,54 @@ export default function LivePlayground() {
 
   if (!mounted || !usePDF) {
     return (
-      <div style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-        padding: '60px 20px',
-        textAlign: 'center',
-        color: '#64748b',
-        fontSize: '16px'
-      }}>
+      <div
+        style={{
+          maxWidth: "1400px",
+          margin: "0 auto",
+          padding: "60px 20px",
+          textAlign: "center",
+          color: "#64748b",
+          fontSize: "16px",
+        }}
+      >
         Loading playground...
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+    <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
       {/* Example Selector */}
-      <div style={{ marginBottom: '30px', display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div
+        style={{
+          marginBottom: "30px",
+          display: "flex",
+          gap: "10px",
+          flexWrap: "wrap",
+          justifyContent: "center",
+        }}
+      >
         {(Object.keys(examples) as Array<keyof typeof examples>).map((key) => (
           <button
             key={key}
             onClick={() => handleExampleChange(key)}
             style={{
-              padding: '12px 24px',
-              backgroundColor: selectedExample === key ? '#0ea5e9' : '#ffffff',
-              color: selectedExample === key ? 'white' : '#0f172a',
-              border: selectedExample === key ? '2px solid #0ea5e9' : '2px solid #e2e8f0',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '15px',
-              fontWeight: '600',
-              transition: 'all 0.2s',
-              boxShadow: selectedExample === key ? '0 4px 6px rgba(14, 165, 233, 0.2)' : 'none'
+              padding: "12px 24px",
+              backgroundColor: selectedExample === key ? "#0ea5e9" : "#ffffff",
+              color: selectedExample === key ? "white" : "#0f172a",
+              border:
+                selectedExample === key
+                  ? "2px solid #0ea5e9"
+                  : "2px solid #e2e8f0",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "15px",
+              fontWeight: "600",
+              transition: "all 0.2s",
+              boxShadow:
+                selectedExample === key
+                  ? "0 4px 6px rgba(14, 165, 233, 0.2)"
+                  : "none",
             }}
           >
             {examples[key].title}
@@ -175,51 +195,67 @@ export default function LivePlayground() {
       </div>
 
       {/* Code Editor and Preview Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '30px',
-        padding: '0 20px'
-      }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "30px",
+          padding: "0 20px",
+        }}
+      >
         {/* Code Editor Section */}
         <div>
-          <h3 style={{ marginTop: 0, marginBottom: '15px', color: '#0f172a', fontSize: '18px', fontWeight: '600' }}>
+          <h3
+            style={{
+              marginTop: 0,
+              marginBottom: "15px",
+              color: "#0f172a",
+              fontSize: "18px",
+              fontWeight: "600",
+            }}
+          >
             ✏️ Live Editor
           </h3>
-          <div style={{
-            border: '1px solid #334155',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            height: '600px'
-          }}>
+          <div
+            style={{
+              border: "1px solid #334155",
+              borderRadius: "8px",
+              overflow: "hidden",
+              height: "600px",
+            }}
+          >
             <Editor
               height="600px"
               defaultLanguage="typescript"
               value={code}
               onChange={(value) => {
-                setCode(value || '');
+                setCode(value || "");
                 setError(null);
               }}
               theme="vs-dark"
               beforeMount={(monaco) => {
                 // Disable TypeScript validation to remove error squiggles
-                monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-                  noSemanticValidation: true,
-                  noSyntaxValidation: true
-                });
-                monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-                  noSemanticValidation: true,
-                  noSyntaxValidation: true
-                });
+                monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
+                  {
+                    noSemanticValidation: true,
+                    noSyntaxValidation: true,
+                  }
+                );
+                monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
+                  {
+                    noSemanticValidation: true,
+                    noSyntaxValidation: true,
+                  }
+                );
               }}
               options={{
                 minimap: { enabled: false },
                 fontSize: 14,
-                lineNumbers: 'on',
+                lineNumbers: "on",
                 scrollBeyondLastLine: false,
                 automaticLayout: true,
                 tabSize: 2,
-                wordWrap: 'on'
+                wordWrap: "on",
               }}
             />
           </div>
@@ -227,40 +263,56 @@ export default function LivePlayground() {
 
         {/* Live Preview Section */}
         <div>
-          <h3 style={{ marginTop: 0, marginBottom: '15px', color: '#0f172a', fontSize: '18px', fontWeight: '600' }}>
+          <h3
+            style={{
+              marginTop: 0,
+              marginBottom: "15px",
+              color: "#0f172a",
+              fontSize: "18px",
+              fontWeight: "600",
+            }}
+          >
             🎯 Live Preview
           </h3>
-          <div style={{
-            padding: '20px',
-            backgroundColor: '#f8fafc',
-            borderRadius: '8px',
-            border: '1px solid #e2e8f0',
-            minHeight: '600px',
-            maxHeight: '600px',
-            overflow: 'auto'
-          }}>
+          <div
+            style={{
+              padding: "20px",
+              backgroundColor: "#f8fafc",
+              borderRadius: "8px",
+              border: "1px solid #e2e8f0",
+              minHeight: "600px",
+              maxHeight: "600px",
+              overflow: "auto",
+            }}
+          >
             {error ? (
-              <div style={{
-                padding: '20px',
-                backgroundColor: '#fee2e2',
-                border: '1px solid #fecaca',
-                borderRadius: '8px',
-                color: '#991b1b'
-              }}>
+              <div
+                style={{
+                  padding: "20px",
+                  backgroundColor: "#fee2e2",
+                  border: "1px solid #fecaca",
+                  borderRadius: "8px",
+                  color: "#991b1b",
+                }}
+              >
                 <strong>Error:</strong>
-                <pre style={{ marginTop: '10px', whiteSpace: 'pre-wrap' }}>{error}</pre>
+                <pre style={{ marginTop: "10px", whiteSpace: "pre-wrap" }}>
+                  {error}
+                </pre>
               </div>
             ) : (
               <LivePreview code={code} usePDF={usePDF} onError={setError} />
             )}
           </div>
-          <p style={{
-            marginTop: '15px',
-            fontSize: '14px',
-            color: '#64748b',
-            fontStyle: 'italic',
-            textAlign: 'center'
-          }}>
+          <p
+            style={{
+              marginTop: "15px",
+              fontSize: "14px",
+              color: "#64748b",
+              fontStyle: "italic",
+              textAlign: "center",
+            }}
+          >
             👆 Edit the code and see the preview update in real-time!
           </p>
         </div>
@@ -270,28 +322,36 @@ export default function LivePlayground() {
 }
 
 // Component that evaluates and renders the user's code
-function LivePreview({ code, usePDF, onError }: { code: string; usePDF: any; onError: (error: string | null) => void }) {
+function LivePreview({
+  code,
+  usePDF,
+  onError,
+}: {
+  code: string;
+  usePDF: any;
+  onError: (error: string | null) => void;
+}) {
   const [Component, setComponent] = useState<any>(null);
 
   useEffect(() => {
     async function compileAndRender() {
       try {
         // Dynamically import Babel
-        const Babel = await import('@babel/standalone');
+        const Babel = await import("@babel/standalone");
 
         // Extract the component code (remove import statement)
-        const componentCode = code.replace(/import.*from.*['"];?\s*/g, '');
+        const componentCode = code.replace(/import.*from.*['"];?\s*/g, "");
 
         // Transform JSX to JavaScript using Babel
         const transformedCode = Babel.transform(componentCode, {
-          presets: ['react'],
-          filename: 'playground.tsx'
+          presets: ["react"],
+          filename: "playground.tsx",
         }).code;
 
         // Create a function that returns the component
         const createComponent = new Function(
-          'React',
-          'usePDF',
+          "React",
+          "usePDF",
           `
           const { useState, useEffect, useRef, useCallback, createElement } = React;
           ${transformedCode}
@@ -305,16 +365,13 @@ function LivePreview({ code, usePDF, onError }: { code: string; usePDF: any; onE
           `
         );
 
-        const ComponentFunc = createComponent(
-          React,
-          usePDF
-        );
+        const ComponentFunc = createComponent(React, usePDF);
 
         setComponent(() => ComponentFunc);
         onError(null);
       } catch (err: any) {
-        console.error('Error evaluating code:', err);
-        onError(err.message || 'Failed to compile or evaluate code');
+        console.error("Error evaluating code:", err);
+        onError(err.message || "Failed to compile or evaluate code");
         setComponent(null);
       }
     }
@@ -329,7 +386,7 @@ function LivePreview({ code, usePDF, onError }: { code: string; usePDF: any; onE
   try {
     return <Component />;
   } catch (err: any) {
-    onError(err.message || 'Error rendering component');
+    onError(err.message || "Error rendering component");
     return null;
   }
 }

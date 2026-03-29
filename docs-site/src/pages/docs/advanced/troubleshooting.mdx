@@ -1,7 +1,7 @@
 ---
-layout: '@layouts/DocsLayout.astro'
-title: 'Troubleshooting - React to PDF'
-description: 'Common issues and solutions when using React to PDF.'
+layout: "@layouts/DocsLayout.astro"
+title: "Troubleshooting - React to PDF"
+description: "Common issues and solutions when using React to PDF."
 ---
 
 # Troubleshooting
@@ -11,11 +11,13 @@ Solutions to common problems when generating PDFs with React to PDF.
 ## PDF is Blank or Empty
 
 ### Problem
+
 Generated PDF is blank or shows no content.
 
 ### Solutions
 
 **1. Check if ref is attached correctly:**
+
 ```tsx
 // ✅ Correct
 <div ref={targetRef}>Content</div>
@@ -25,18 +27,20 @@ Generated PDF is blank or shows no content.
 ```
 
 **2. Wait for content to render:**
+
 ```tsx
 const handleDownload = async () => {
   // Wait a bit for content to fully render
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise((resolve) => setTimeout(resolve, 100));
   await toPDF();
 };
 ```
 
 **3. Check for CSS issues:**
+
 ```tsx
 // Make sure content has dimensions
-<div ref={targetRef} style={{ minHeight: '100px', padding: '20px' }}>
+<div ref={targetRef} style={{ minHeight: "100px", padding: "20px" }}>
   Content
 </div>
 ```
@@ -44,30 +48,34 @@ const handleDownload = async () => {
 ## Images Not Showing
 
 ### Problem
+
 Images don't appear in the generated PDF.
 
 ### Solutions
 
 **1. Enable CORS for external images:**
+
 ```tsx
 const { targetRef, toPDF } = usePDF({
-  canvas: { useCORS: true }
+  canvas: { useCORS: true },
 });
 ```
 
 **2. Use base64 images:**
+
 ```tsx
 <img src="data:image/png;base64,iVBORw0KG..." alt="Logo" />
 ```
 
 **3. Wait for images to load:**
+
 ```tsx
 const handleDownload = async () => {
   // Wait for images to load
-  await new Promise(resolve => {
-    const images = document.querySelectorAll('img');
+  await new Promise((resolve) => {
+    const images = document.querySelectorAll("img");
     let loaded = 0;
-    images.forEach(img => {
+    images.forEach((img) => {
       if (img.complete) {
         loaded++;
       } else {
@@ -87,6 +95,7 @@ const handleDownload = async () => {
 ## Page Breaks Not Working
 
 ### Problem
+
 Content isn't breaking across pages correctly.
 
 ### Solution
@@ -107,18 +116,21 @@ React to PDF automatically handles page breaks. Ensure your content height excee
 ## Low Quality / Blurry PDF
 
 ### Problem
+
 PDF output looks blurry or low quality.
 
 ### Solutions
 
 **1. Increase canvas scale:**
+
 ```tsx
 const { targetRef, toPDF } = usePDF({
-  canvas: { scale: 3 } // Higher = better quality
+  canvas: { scale: 3 }, // Higher = better quality
 });
 ```
 
 **2. Use vector graphics when possible:**
+
 ```tsx
 // ✅ SVG (vector)
 <svg width="100" height="100">...</svg>
@@ -130,13 +142,15 @@ const { targetRef, toPDF } = usePDF({
 ## Fonts Not Loading
 
 ### Problem
+
 Custom fonts don't appear in the PDF.
 
 ### Solutions
 
 **1. Wait for fonts to load:**
+
 ```tsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 function PDFComponent() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -147,7 +161,7 @@ function PDFComponent() {
 
   const handleDownload = async () => {
     if (!fontsLoaded) {
-      alert('Please wait for fonts to load');
+      alert("Please wait for fonts to load");
       return;
     }
     await toPDF();
@@ -158,10 +172,11 @@ function PDFComponent() {
 ```
 
 **2. Use font-display: block:**
+
 ```css
 @font-face {
-  font-family: 'CustomFont';
-  src: url('/fonts/custom.woff2') format('woff2');
+  font-family: "CustomFont";
+  src: url("/fonts/custom.woff2") format("woff2");
   font-display: block; /* Ensures font loads before render */
 }
 ```
@@ -169,21 +184,24 @@ function PDFComponent() {
 ## TypeScript Errors
 
 ### Problem
+
 TypeScript shows type errors.
 
 ### Solutions
 
 **1. Import types:**
+
 ```tsx
-import { usePDF, Options } from 'react-to-pdf';
+import { usePDF, Options } from "react-to-pdf";
 
 const options: Options = {
-  filename: 'document.pdf',
-  page: { format: 'a4' }
+  filename: "document.pdf",
+  page: { format: "a4" },
 };
 ```
 
 **2. Type your ref:**
+
 ```tsx
 const targetRef = useRef<HTMLDivElement>(null);
 ```
@@ -191,6 +209,7 @@ const targetRef = useRef<HTMLDivElement>(null);
 ## Performance Issues
 
 ### Problem
+
 PDF generation is slow.
 
 ### Solutions
@@ -205,20 +224,23 @@ See [Performance Guide](/react-to-pdf/docs/advanced/performance) for details.
 ## Content Cut Off
 
 ### Problem
+
 Content is cut off or not fully visible.
 
 ### Solutions
 
 **1. Check margins:**
+
 ```tsx
 const { targetRef, toPDF } = usePDF({
   page: {
-    margin: 10 // Add margins
-  }
+    margin: 10, // Add margins
+  },
 });
 ```
 
 **2. Use page-break-inside:**
+
 ```css
 .keep-together {
   page-break-inside: avoid;
@@ -228,28 +250,32 @@ const { targetRef, toPDF } = usePDF({
 ## Module Not Found
 
 ### Problem
+
 `Module not found: Can't resolve 'react-to-pdf'`
 
 ### Solutions
 
 **1. Reinstall package:**
+
 ```bash
 npm install react-to-pdf
 ```
 
 **2. Clear cache and reinstall:**
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
 ```
 
 **3. Check import:**
+
 ```tsx
 // ✅ Correct
-import { usePDF } from 'react-to-pdf';
+import { usePDF } from "react-to-pdf";
 
 // ❌ Wrong
-import { usePDF } from 'react-pdf'; // Different package!
+import { usePDF } from "react-pdf"; // Different package!
 ```
 
 ## Still Having Issues?

@@ -1,10 +1,10 @@
 ---
-layout: '@layouts/DocsLayout.astro'
-title: 'Quick Start - React to PDF'
-description: 'Generate your first PDF document in minutes with this quick start guide.'
+layout: "@layouts/DocsLayout.astro"
+title: "Quick Start - React to PDF"
+description: "Generate your first PDF document in minutes with this quick start guide."
 ---
 
-import QuickStartExample from '@components/QuickStartExample';
+import QuickStartExample from "@components/QuickStartExample";
 
 # Quick Start
 
@@ -21,16 +21,14 @@ Try it out! Click the button below to generate a PDF:
 The simplest way to use React to PDF is with the `usePDF` hook:
 
 ```tsx
-import { usePDF } from 'react-to-pdf';
+import { usePDF } from "react-to-pdf";
 
 function MyDocument() {
-  const { targetRef, toPDF } = usePDF({ filename: 'page.pdf' });
+  const { targetRef, toPDF } = usePDF({ filename: "page.pdf" });
 
   return (
     <div>
-      <button onClick={() => toPDF()}>
-        Download PDF
-      </button>
+      <button onClick={() => toPDF()}>Download PDF</button>
 
       <div ref={targetRef}>
         <h1>Hello PDF!</h1>
@@ -54,23 +52,21 @@ That's it! When the user clicks the button, a PDF will be generated and download
 You can customize the PDF output by passing options to `usePDF`:
 
 ```tsx
-import { usePDF } from 'react-to-pdf';
+import { usePDF } from "react-to-pdf";
 
 function MyDocument() {
   const { targetRef, toPDF } = usePDF({
-    filename: 'my-document.pdf',
+    filename: "my-document.pdf",
     page: {
-      format: 'a4',
-      orientation: 'portrait',
-      margin: 10
-    }
+      format: "a4",
+      orientation: "portrait",
+      margin: 10,
+    },
   });
 
   return (
     <div>
-      <button onClick={() => toPDF()}>
-        Download PDF
-      </button>
+      <button onClick={() => toPDF()}>Download PDF</button>
 
       <div ref={targetRef}>
         <h1>Custom PDF</h1>
@@ -85,12 +81,12 @@ function MyDocument() {
 
 Here are some common options you can use:
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `filename` | `string` | `'document.pdf'` | Name of the generated PDF file |
-| `page.format` | `string` | `'a4'` | Page size (a4, letter, legal, etc.) |
-| `page.orientation` | `string` | `'portrait'` | Page orientation (portrait or landscape) |
-| `page.margin` | `number` | `0` | Margin in millimeters |
+| Option             | Type     | Default          | Description                              |
+| ------------------ | -------- | ---------------- | ---------------------------------------- |
+| `filename`         | `string` | `'document.pdf'` | Name of the generated PDF file           |
+| `page.format`      | `string` | `'a4'`           | Page size (a4, letter, legal, etc.)      |
+| `page.orientation` | `string` | `'portrait'`     | Page orientation (portrait or landscape) |
+| `page.margin`      | `number` | `0`              | Margin in millimeters                    |
 
 For a complete list of options, see the [API Reference](/react-to-pdf/docs/api/hooks).
 
@@ -99,16 +95,14 @@ For a complete list of options, see the [API Reference](/react-to-pdf/docs/api/h
 Alternatively, you can use the `PDF` component for a declarative approach:
 
 ```tsx
-import { PDF } from 'react-to-pdf';
+import { PDF } from "react-to-pdf";
 
 function MyDocument() {
   return (
     <PDF filename="document.pdf">
       {({ targetRef, toPDF }) => (
         <div>
-          <button onClick={toPDF}>
-            Download PDF
-          </button>
+          <button onClick={toPDF}>Download PDF</button>
 
           <div ref={targetRef}>
             <h1>Hello PDF!</h1>
@@ -127,19 +121,17 @@ React to PDF captures your HTML and CSS exactly as it appears in the browser. Yo
 
 ```tsx
 function StyledDocument() {
-  const { targetRef, toPDF } = usePDF({ filename: 'styled.pdf' });
+  const { targetRef, toPDF } = usePDF({ filename: "styled.pdf" });
 
   return (
     <div>
-      <button onClick={() => toPDF()}>
-        Download PDF
-      </button>
+      <button onClick={() => toPDF()}>Download PDF</button>
 
-      <div ref={targetRef} style={{ padding: '40px', fontFamily: 'Arial' }}>
-        <h1 style={{ color: '#333', borderBottom: '2px solid #0ea5e9' }}>
+      <div ref={targetRef} style={{ padding: "40px", fontFamily: "Arial" }}>
+        <h1 style={{ color: "#333", borderBottom: "2px solid #0ea5e9" }}>
           Styled Document
         </h1>
-        <p style={{ lineHeight: '1.6', color: '#666' }}>
+        <p style={{ lineHeight: "1.6", color: "#666" }}>
           All your CSS styles will be preserved in the PDF!
         </p>
       </div>
@@ -156,21 +148,19 @@ React to PDF automatically handles page breaks for content that exceeds one page
 
 ```tsx
 function LongDocument() {
-  const { targetRef, toPDF } = usePDF({ filename: 'long-document.pdf' });
+  const { targetRef, toPDF } = usePDF({ filename: "long-document.pdf" });
 
   return (
     <div>
-      <button onClick={() => toPDF()}>
-        Download PDF
-      </button>
+      <button onClick={() => toPDF()}>Download PDF</button>
 
       <div ref={targetRef}>
         <h1>Multi-Page Document</h1>
 
         {Array.from({ length: 50 }).map((_, i) => (
           <p key={i}>
-            This is paragraph {i + 1}. When the content is too long for one page,
-            it will automatically continue on the next page.
+            This is paragraph {i + 1}. When the content is too long for one
+            page, it will automatically continue on the next page.
           </p>
         ))}
       </div>

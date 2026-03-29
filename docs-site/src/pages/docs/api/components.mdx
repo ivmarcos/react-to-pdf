@@ -1,11 +1,11 @@
 ---
-layout: '@layouts/DocsLayout.astro'
-title: 'Components API - React to PDF'
-description: 'Complete API reference for React components in React to PDF including PDF, Header, Footer, and Body.'
+layout: "@layouts/DocsLayout.astro"
+title: "Components API - React to PDF"
+description: "Complete API reference for React components in React to PDF including PDF, Header, Footer, and Body."
 ---
 
-import PDFComponentExample from '@components/PDFComponentExample';
-import MultiPageExample from '@components/MultiPageExample';
+import PDFComponentExample from "@components/PDFComponentExample";
+import MultiPageExample from "@components/MultiPageExample";
 
 # Components API
 
@@ -24,7 +24,7 @@ Try the PDF component with a simple example:
 ### Basic Usage
 
 ```tsx
-import { PDF } from 'react-to-pdf';
+import { PDF } from "react-to-pdf";
 
 function MyDocument() {
   return (
@@ -46,13 +46,13 @@ function MyDocument() {
 
 The PDF component accepts the same options as the `usePDF` hook:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `filename` | `string` | `'document.pdf'` | Name of the PDF file |
-| `page` | `PageOptions` | `{}` | Page configuration |
-| `canvas` | `CanvasOptions` | `{}` | Canvas rendering options |
-| `method` | `'save' \| 'open' \| 'build'` | `'save'` | PDF output method |
-| `children` | `function` | Required | Render prop function |
+| Prop       | Type                          | Default          | Description              |
+| ---------- | ----------------------------- | ---------------- | ------------------------ |
+| `filename` | `string`                      | `'document.pdf'` | Name of the PDF file     |
+| `page`     | `PageOptions`                 | `{}`             | Page configuration       |
+| `canvas`   | `CanvasOptions`               | `{}`             | Canvas rendering options |
+| `method`   | `'save' \| 'open' \| 'build'` | `'save'`         | PDF output method        |
+| `children` | `function`                    | Required         | Render prop function     |
 
 ### Children Render Prop
 
@@ -68,20 +68,20 @@ The `children` prop is a function that receives an object with:
 ### Complete Example
 
 ```tsx
-import { PDF } from 'react-to-pdf';
+import { PDF } from "react-to-pdf";
 
 function InvoiceDocument() {
   return (
     <PDF
       filename="invoice-2024.pdf"
       page={{
-        format: 'a4',
-        orientation: 'portrait',
-        margin: 10
+        format: "a4",
+        orientation: "portrait",
+        margin: 10,
       }}
       canvas={{
         scale: 3,
-        useCORS: true
+        useCORS: true,
       }}
     >
       {({ targetRef, toPDF }) => (
@@ -110,7 +110,7 @@ Create custom headers that appear at the top of each page in multi-page PDFs.
 ### Basic Usage
 
 ```tsx
-import { PDF, Header } from 'react-to-pdf';
+import { PDF, Header } from "react-to-pdf";
 
 function DocumentWithHeader() {
   return (
@@ -126,9 +126,7 @@ function DocumentWithHeader() {
               </div>
             </Header>
 
-            <div className="content">
-              {/* Main content */}
-            </div>
+            <div className="content">{/* Main content */}</div>
           </div>
         </div>
       )}
@@ -148,17 +146,19 @@ function DocumentWithHeader() {
 
 ```tsx
 <Header>
-  <div style={{
-    padding: '20px',
-    borderBottom: '2px solid #0ea5e9',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  }}>
+  <div
+    style={{
+      padding: "20px",
+      borderBottom: "2px solid #0ea5e9",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}
+  >
     <img src="/logo.png" alt="Logo" height="40" />
     <div>
       <h2 style={{ margin: 0 }}>Company Name</h2>
-      <p style={{ margin: 0, fontSize: '12px', color: '#666' }}>
+      <p style={{ margin: 0, fontSize: "12px", color: "#666" }}>
         www.company.com
       </p>
     </div>
@@ -173,7 +173,7 @@ Create custom footers that appear at the bottom of each page in multi-page PDFs.
 ### Basic Usage
 
 ```tsx
-import { PDF, Footer } from 'react-to-pdf';
+import { PDF, Footer } from "react-to-pdf";
 
 function DocumentWithFooter() {
   return (
@@ -182,9 +182,7 @@ function DocumentWithFooter() {
         <div>
           <button onClick={toPDF}>Download</button>
           <div ref={targetRef}>
-            <div className="content">
-              {/* Main content */}
-            </div>
+            <div className="content">{/* Main content */}</div>
 
             <Footer>
               <div className="footer">
@@ -211,14 +209,16 @@ function DocumentWithFooter() {
 
 ```tsx
 <Footer>
-  <div style={{
-    padding: '15px 20px',
-    borderTop: '1px solid #e5e7eb',
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontSize: '12px',
-    color: '#6b7280'
-  }}>
+  <div
+    style={{
+      padding: "15px 20px",
+      borderTop: "1px solid #e5e7eb",
+      display: "flex",
+      justifyContent: "space-between",
+      fontSize: "12px",
+      color: "#6b7280",
+    }}
+  >
     <span>© 2024 Your Company. All rights reserved.</span>
     <span>contact@company.com | +1 (555) 123-4567</span>
   </div>
@@ -232,7 +232,7 @@ The main content area of your PDF document.
 ### Basic Usage
 
 ```tsx
-import { PDF, Header, Body, Footer } from 'react-to-pdf';
+import { PDF, Header, Body, Footer } from "react-to-pdf";
 
 function StructuredDocument() {
   return (
@@ -281,50 +281,55 @@ Try this interactive example showing Header, Body, and Footer components working
 Here's a complete example using all components together:
 
 ```tsx
-import { PDF, Header, Body, Footer } from 'react-to-pdf';
+import { PDF, Header, Body, Footer } from "react-to-pdf";
 
 function ProfessionalDocument() {
   return (
     <PDF
       filename="professional-document.pdf"
       page={{
-        format: 'a4',
-        margin: { top: 15, right: 15, bottom: 15, left: 15 }
+        format: "a4",
+        margin: { top: 15, right: 15, bottom: 15, left: 15 },
       }}
     >
       {({ targetRef, toPDF }) => (
         <div>
-          <div style={{ marginBottom: '20px' }}>
-            <button onClick={toPDF} style={{
-              padding: '10px 20px',
-              backgroundColor: '#0ea5e9',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}>
+          <div style={{ marginBottom: "20px" }}>
+            <button
+              onClick={toPDF}
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#0ea5e9",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
               Download PDF
             </button>
           </div>
 
           <div ref={targetRef}>
             <Header>
-              <div style={{
-                padding: '20px',
-                backgroundColor: '#f8fafc',
-                borderBottom: '3px solid #0ea5e9'
-              }}>
-                <h1 style={{ margin: 0, color: '#0f172a' }}>
+              <div
+                style={{
+                  padding: "20px",
+                  backgroundColor: "#f8fafc",
+                  borderBottom: "3px solid #0ea5e9",
+                }}
+              >
+                <h1 style={{ margin: 0, color: "#0f172a" }}>
                   Professional Report
                 </h1>
-                <p style={{ margin: '5px 0 0', color: '#64748b' }}>
+                <p style={{ margin: "5px 0 0", color: "#64748b" }}>
                   Generated on {new Date().toLocaleDateString()}
                 </p>
               </div>
             </Header>
 
             <Body>
-              <div style={{ padding: '40px 20px' }}>
+              <div style={{ padding: "40px 20px" }}>
                 <h2>Executive Summary</h2>
                 <p>This is the main content of the document...</p>
 
@@ -336,15 +341,17 @@ function ProfessionalDocument() {
             </Body>
 
             <Footer>
-              <div style={{
-                padding: '15px 20px',
-                backgroundColor: '#f8fafc',
-                borderTop: '1px solid #e2e8f0',
-                fontSize: '12px',
-                color: '#64748b',
-                display: 'flex',
-                justifyContent: 'space-between'
-              }}>
+              <div
+                style={{
+                  padding: "15px 20px",
+                  backgroundColor: "#f8fafc",
+                  borderTop: "1px solid #e2e8f0",
+                  fontSize: "12px",
+                  color: "#64748b",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
                 <span>© 2024 Your Company</span>
                 <span>Confidential</span>
               </div>
@@ -360,11 +367,13 @@ function ProfessionalDocument() {
 ## When to Use Components vs Hooks
 
 **Use Components when:**
+
 - You prefer a declarative API
 - You want to organize your PDF structure with Header/Body/Footer
 - You're building reusable PDF templates
 
 **Use Hooks when:**
+
 - You prefer a functional API
 - You need more control over the PDF generation process
 - You're building simple PDFs without complex structure

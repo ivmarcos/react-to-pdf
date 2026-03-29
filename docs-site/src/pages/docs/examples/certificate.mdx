@@ -1,10 +1,10 @@
 ---
-layout: '@layouts/DocsLayout.astro'
-title: 'Certificate Example - React to PDF'
-description: 'Create beautiful certificates for courses, events, and achievements with React to PDF.'
+layout: "@layouts/DocsLayout.astro"
+title: "Certificate Example - React to PDF"
+description: "Create beautiful certificates for courses, events, and achievements with React to PDF."
 ---
 
-import CertificateExample from '@components/CertificateExample';
+import CertificateExample from "@components/CertificateExample";
 
 # Certificate Generator
 
@@ -19,7 +19,7 @@ Try it out! Click the button to download a PDF certificate:
 ## Complete Example
 
 ```tsx
-import { usePDF } from 'react-to-pdf';
+import { usePDF } from "react-to-pdf";
 
 interface CertificateProps {
   recipientName: string;
@@ -32,26 +32,23 @@ function CertificateGenerator({
   recipientName,
   courseName,
   completionDate,
-  instructorName
+  instructorName,
 }: CertificateProps) {
   const { targetRef, toPDF } = usePDF({
-    filename: `certificate-${recipientName.replace(/ /g, '-')}.pdf`,
+    filename: `certificate-${recipientName.replace(/ /g, "-")}.pdf`,
     page: {
-      format: 'a4',
-      orientation: 'landscape',
-      margin: 0
+      format: "a4",
+      orientation: "landscape",
+      margin: 0,
     },
     canvas: {
-      scale: 3 // Higher quality for certificates
-    }
+      scale: 3, // Higher quality for certificates
+    },
   });
 
   return (
     <div className="certificate-container">
-      <button
-        onClick={() => toPDF()}
-        className="download-btn"
-      >
+      <button onClick={() => toPDF()} className="download-btn">
         Download Certificate
       </button>
 
@@ -65,7 +62,9 @@ function CertificateGenerator({
 
           {/* Body */}
           <div className="certificate-body">
-            <p className="presented-to">This certificate is proudly presented to</p>
+            <p className="presented-to">
+              This certificate is proudly presented to
+            </p>
 
             <h2 className="recipient-name">{recipientName}</h2>
 
@@ -93,8 +92,22 @@ function CertificateGenerator({
           <div className="seal">
             <svg width="80" height="80" viewBox="0 0 80 80">
               <circle cx="40" cy="40" r="35" fill="#0ea5e9" opacity="0.1" />
-              <circle cx="40" cy="40" r="30" fill="none" stroke="#0ea5e9" strokeWidth="2" />
-              <text x="40" y="45" textAnchor="middle" fill="#0ea5e9" fontSize="14" fontWeight="bold">
+              <circle
+                cx="40"
+                cy="40"
+                r="30"
+                fill="none"
+                stroke="#0ea5e9"
+                strokeWidth="2"
+              />
+              <text
+                x="40"
+                y="45"
+                textAnchor="middle"
+                fill="#0ea5e9"
+                fontSize="14"
+                fontWeight="bold"
+              >
                 ✓
               </text>
             </svg>
@@ -135,7 +148,7 @@ export default CertificateGenerator;
 }
 
 .certificate {
-  width: 297mm;  /* A4 landscape width */
+  width: 297mm; /* A4 landscape width */
   height: 210mm; /* A4 landscape height */
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   position: relative;
@@ -162,7 +175,7 @@ export default CertificateGenerator;
   font-size: 42px;
   color: #0ea5e9;
   margin: 0;
-  font-family: 'Georgia', serif;
+  font-family: "Georgia", serif;
   font-weight: normal;
   letter-spacing: 2px;
 }
@@ -183,7 +196,7 @@ export default CertificateGenerator;
   font-size: 48px;
   color: #0f172a;
   margin: 20px 0;
-  font-family: 'Georgia', serif;
+  font-family: "Georgia", serif;
   font-weight: bold;
   border-bottom: 2px solid #e2e8f0;
   display: inline-block;
@@ -200,7 +213,7 @@ export default CertificateGenerator;
   font-size: 28px;
   color: #0ea5e9;
   margin: 20px 0;
-  font-family: 'Georgia', serif;
+  font-family: "Georgia", serif;
 }
 
 .date-text {
@@ -250,13 +263,18 @@ export default CertificateGenerator;
 ## Tailwind CSS Version
 
 ```tsx
-import { usePDF } from 'react-to-pdf';
+import { usePDF } from "react-to-pdf";
 
-function CertificateTailwind({ recipientName, courseName, completionDate, instructorName }) {
+function CertificateTailwind({
+  recipientName,
+  courseName,
+  completionDate,
+  instructorName,
+}) {
   const { targetRef, toPDF } = usePDF({
-    filename: `certificate-${recipientName.replace(/ /g, '-')}.pdf`,
-    page: { format: 'a4', orientation: 'landscape', margin: 0 },
-    canvas: { scale: 3 }
+    filename: `certificate-${recipientName.replace(/ /g, "-")}.pdf`,
+    page: { format: "a4", orientation: "landscape", margin: 0 },
+    canvas: { scale: 3 },
   });
 
   return (
@@ -271,7 +289,7 @@ function CertificateTailwind({ recipientName, courseName, completionDate, instru
       <div
         ref={targetRef}
         className="relative bg-gradient-to-br from-white to-gray-50"
-        style={{ width: '297mm', height: '210mm' }}
+        style={{ width: "297mm", height: "210mm" }}
       >
         <div className="absolute inset-[15mm] border-4 border-blue-500 bg-white p-8 shadow-[inset_0_0_0_2px_#e0f2fe]">
           {/* Header */}
@@ -331,34 +349,41 @@ function CertificateTailwind({ recipientName, courseName, completionDate, instru
 ## With Logo and Background
 
 ```tsx
-function CertificateWithLogo({ recipientName, courseName, completionDate, instructorName }) {
+function CertificateWithLogo({
+  recipientName,
+  courseName,
+  completionDate,
+  instructorName,
+}) {
   const { targetRef, toPDF } = usePDF({
-    filename: `certificate-${recipientName.replace(/ /g, '-')}.pdf`,
-    page: { format: 'a4', orientation: 'landscape', margin: 0 },
-    canvas: { scale: 3, useCORS: true } // Enable CORS for logo
+    filename: `certificate-${recipientName.replace(/ /g, "-")}.pdf`,
+    page: { format: "a4", orientation: "landscape", margin: 0 },
+    canvas: { scale: 3, useCORS: true }, // Enable CORS for logo
   });
 
   return (
-    <div ref={targetRef} style={{ width: '297mm', height: '210mm' }}>
+    <div ref={targetRef} style={{ width: "297mm", height: "210mm" }}>
       {/* Background pattern */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundImage: 'url(/certificate-pattern.svg)',
-        opacity: 0.05,
-        pointerEvents: 'none'
-      }} />
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: "url(/certificate-pattern.svg)",
+          opacity: 0.05,
+          pointerEvents: "none",
+        }}
+      />
 
       <div className="certificate-border">
         {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+        <div style={{ textAlign: "center", marginBottom: "30px" }}>
           <img
             src="/company-logo.png"
             alt="Company Logo"
-            style={{ height: '60px', margin: '0 auto' }}
+            style={{ height: "60px", margin: "0 auto" }}
           />
         </div>
 

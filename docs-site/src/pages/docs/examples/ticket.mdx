@@ -1,10 +1,10 @@
 ---
-layout: '@layouts/DocsLayout.astro'
-title: 'Event Ticket Example - React to PDF'
-description: 'Generate event tickets with QR codes and custom designs using React to PDF.'
+layout: "@layouts/DocsLayout.astro"
+title: "Event Ticket Example - React to PDF"
+description: "Generate event tickets with QR codes and custom designs using React to PDF."
 ---
 
-import TicketExample from '@components/TicketExample';
+import TicketExample from "@components/TicketExample";
 
 # Event Ticket Generator
 
@@ -19,8 +19,8 @@ Try it out! Click the button to download a PDF ticket:
 ## Complete Example
 
 ```tsx
-import { usePDF } from 'react-to-pdf';
-import QRCode from 'qrcode.react'; // npm install qrcode.react
+import { usePDF } from "react-to-pdf";
+import QRCode from "qrcode.react"; // npm install qrcode.react
 
 interface TicketProps {
   eventName: string;
@@ -37,12 +37,12 @@ function EventTicket({
   venue,
   ticketNumber,
   attendeeName,
-  seatInfo
+  seatInfo,
 }: TicketProps) {
   const { targetRef, toPDF } = usePDF({
     filename: `ticket-${ticketNumber}.pdf`,
     page: { format: [600, 250], margin: 0 }, // Custom size: 600x250px
-    canvas: { scale: 3 }
+    canvas: { scale: 3 },
   });
 
   return (
@@ -79,11 +79,7 @@ function EventTicket({
         </div>
 
         <div className="ticket-stub">
-          <QRCode
-            value={`TICKET:${ticketNumber}`}
-            size={80}
-            level="H"
-          />
+          <QRCode value={`TICKET:${ticketNumber}`} size={80} level="H" />
           <p className="ticket-number">{ticketNumber}</p>
         </div>
       </div>
