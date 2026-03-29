@@ -37,7 +37,7 @@ describe("FooterHeaderPage Component", () => {
     const registerMock = vi.fn();
     const renderMock = vi.fn(() => <span>page</span>);
 
-    const { container } = render(
+    render(
       <FooterHeaderPage pages={3} register={registerMock} render={renderMock} />
     );
 

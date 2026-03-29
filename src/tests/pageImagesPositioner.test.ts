@@ -1,8 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Image } from "../models/image";
-import { TargetImage } from "../types";
-import { PageImagesBuilder } from "../services/pageImagesBuilder";
-import { createCanvas, createImage } from "./testUtils";
+import { createImage } from "./testUtils";
 import { PageImagesPositioner } from "../services/pageImagesPositioner";
 import { Document } from "../models/document";
 import { parseOptions } from "../services/documentConverter";

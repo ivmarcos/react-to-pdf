@@ -30,7 +30,9 @@ describe("getTargetElementOrPDFHandle (tested via create)", () => {
   });
 
   test("returns null and logs error when ref.current is null", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     const ref = { current: null };
     const result = await create(ref as any);
     expect(result).toBeNull();
@@ -39,7 +41,9 @@ describe("getTargetElementOrPDFHandle (tested via create)", () => {
   });
 
   test("returns null and logs error when ref is undefined", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     const ref = { current: undefined };
     const result = await create(ref as any);
     expect(result).toBeNull();
@@ -47,7 +51,9 @@ describe("getTargetElementOrPDFHandle (tested via create)", () => {
   });
 
   test("returns null and logs error when getter returns null", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     const getter = () => null;
     const result = await create(getter);
     expect(result).toBeNull();
@@ -98,9 +104,7 @@ describe("create", () => {
   });
 
   test("passes options to DocumentConverter", async () => {
-    const { DocumentConverter } = await import(
-      "../services/documentConverter"
-    );
+    const { DocumentConverter } = await import("../services/documentConverter");
     const mockDoc = createMockDocument();
     mockCreateDocument.mockResolvedValue(mockDoc);
     const element = document.createElement("div");
@@ -110,7 +114,9 @@ describe("create", () => {
   });
 
   test("propagates errors from createDocument", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     const error = new Error("conversion failed");
     mockCreateDocument.mockRejectedValue(error);
     const element = document.createElement("div");
@@ -137,14 +143,18 @@ describe("open", () => {
   });
 
   test("does not throw when element is null", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     await open(() => null);
     // create returns null, document?.open() is safe
     errorSpy.mockRestore();
   });
 
   test("propagates errors from create", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     mockCreateDocument.mockRejectedValue(new Error("open error"));
     const element = document.createElement("div");
     await expect(open(() => element)).rejects.toThrow("open error");
@@ -166,13 +176,17 @@ describe("save", () => {
   });
 
   test("does not throw when element is null", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     await save(() => null);
     errorSpy.mockRestore();
   });
 
   test("propagates errors from create", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     mockCreateDocument.mockRejectedValue(new Error("save error"));
     const element = document.createElement("div");
     await expect(save(() => element)).rejects.toThrow("save error");
@@ -194,7 +208,9 @@ describe("print", () => {
   });
 
   test("does not throw when element is null", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     await print(() => null);
     errorSpy.mockRestore();
   });
@@ -245,7 +261,9 @@ describe("generatePDF (default export)", () => {
   });
 
   test("propagates errors", async () => {
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
     mockCreateDocument.mockRejectedValue(new Error("generate error"));
     const element = document.createElement("div");
     await expect(generatePDF(() => element)).rejects.toThrow("generate error");
@@ -258,7 +276,11 @@ describe("usePDF", () => {
   // Stores the latest hook result so tests can inspect it
   let hookResult: ReturnType<typeof usePDF>;
 
-  function HookConsumer({ options }: { options?: Parameters<typeof usePDF>[0] }) {
+  function HookConsumer({
+    options,
+  }: {
+    options?: Parameters<typeof usePDF>[0];
+  }) {
     hookResult = usePDF(options);
     return null;
   }
@@ -287,14 +309,18 @@ describe("usePDF", () => {
   test("returns stable references across re-renders", () => {
     act(() => {
       ReactDOM.render(
-        React.createElement(HookConsumer, { options: { filename: "test.pdf" } }),
+        React.createElement(HookConsumer, {
+          options: { filename: "test.pdf" },
+        }),
         container
       );
     });
     const first = { ...hookResult };
     act(() => {
       ReactDOM.render(
-        React.createElement(HookConsumer, { options: { filename: "test.pdf" } }),
+        React.createElement(HookConsumer, {
+          options: { filename: "test.pdf" },
+        }),
         container
       );
     });
@@ -323,9 +349,7 @@ describe("usePDF", () => {
   });
 
   test("hook options take precedence over toPDF options", async () => {
-    const { DocumentConverter } = await import(
-      "../services/documentConverter"
-    );
+    const { DocumentConverter } = await import("../services/documentConverter");
     const mockDoc = createMockDocument();
     mockCreateDocument.mockResolvedValue(mockDoc);
     const element = document.createElement("div");
@@ -350,9 +374,7 @@ describe("usePDF", () => {
   });
 
   test("toPDF options are used when hook options are undefined", async () => {
-    const { DocumentConverter } = await import(
-      "../services/documentConverter"
-    );
+    const { DocumentConverter } = await import("../services/documentConverter");
     const mockDoc = createMockDocument();
     mockCreateDocument.mockResolvedValue(mockDoc);
     const element = document.createElement("div");
