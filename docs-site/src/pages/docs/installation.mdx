@@ -1,0 +1,105 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Installation - React to PDF'
+description: 'Learn how to install React to PDF in your React project using npm or yarn.'
+---
+
+# Installation
+
+Get started with React to PDF by installing it in your React project.
+
+## npm
+
+Install using npm:
+
+```bash
+npm install react-to-pdf
+```
+
+## yarn
+
+Or install using yarn:
+
+```bash
+yarn add react-to-pdf
+```
+
+## pnpm
+
+Or install using pnpm:
+
+```bash
+pnpm add react-to-pdf
+```
+
+## Verification
+
+After installation, verify that the package is installed correctly by checking your `package.json`:
+
+```json
+{
+  "dependencies": {
+    "react-to-pdf": "^2.1.0"
+  }
+}
+```
+
+## Peer Dependencies
+
+React to PDF requires **React 16.8 or higher** (for hooks support). The library automatically includes its own dependencies:
+
+- `html2canvas` - For capturing HTML content
+- `jspdf` - For PDF generation
+
+You don't need to install these separately.
+
+## TypeScript Support
+
+React to PDF is written in TypeScript and includes type definitions out of the box. No need to install `@types/react-to-pdf` - it's already included!
+
+If you're using TypeScript, you'll get full IntelliSense and type checking automatically:
+
+```typescript
+import { usePDF, Options } from 'react-to-pdf';
+
+const options: Options = {
+  filename: 'document.pdf',
+  page: {
+    format: 'a4',
+    orientation: 'portrait'
+  }
+};
+```
+
+## Next Steps
+
+Now that you have React to PDF installed, you're ready to:
+
+1. [Generate your first PDF](/react-to-pdf/docs/quick-start)
+2. [Explore the API](/react-to-pdf/docs/api/hooks)
+3. [Try the playground](/react-to-pdf/playground)
+
+## Troubleshooting
+
+### Module not found error
+
+If you see a "Module not found" error after installation:
+
+1. Make sure you've installed the package correctly
+2. Restart your development server
+3. Clear your node_modules and reinstall:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Version conflicts
+
+If you encounter peer dependency warnings with React:
+
+- React to PDF supports React 16.8+
+- Make sure your React version is compatible
+- Check `npm ls react` to see which version is installed
+
+For more help, check the [Troubleshooting guide](/react-to-pdf/docs/advanced/troubleshooting).

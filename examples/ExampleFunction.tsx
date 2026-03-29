@@ -1,14 +1,15 @@
 import React from "react";
-import generatePDF, { Margin } from "react-to-pdf";
+import generatePDF, { print, save, Margin } from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
+import { Alignment } from "../src/constants";
 
 export const ExampleFunction = () => {
   const downloadPDF = () => {
     // you can also pass React refs, e.g. `generatePDF(ref, options)`
-    generatePDF(() => document.getElementById("container"), {
-      method: "save",
+    print(() => document.getElementById("container"), {
+      // method: "open",
       filename: "function-example.pdf",
       page: { margin: Margin.MEDIUM },
     });

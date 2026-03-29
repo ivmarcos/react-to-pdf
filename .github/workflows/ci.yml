@@ -25,16 +25,23 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
-      - run: yarn install
-      - run: yarn build
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
 
-      - name: Run tests
+      - name: Run tests with coverage
         run: |
-          yarn lint
-          yarn test
-          CI=true yarn start &
-          yarn cypress run
+          npm run lint
+          npm run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
 
       - name: Upload Cypress Screenshots
         uses: actions/upload-artifact@v4

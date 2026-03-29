@@ -1,6 +1,13 @@
-import { ConversionOptions } from "./types";
+import {
+  AlignmentOption,
+  DashCaseToUpperSnakeCase,
+  DocumentConverterOptions,
+  SizeOption,
+} from "./types";
 
 export const MM_TO_PX = 3.77952755906;
+export const PREVIEW_ROOT_CLASS_NAME = "react-to-pdf--preview";
+export const OFFSCREEN_POSITION = "-10000rem";
 
 export enum Resolution {
   LOW = 1,
@@ -17,8 +24,23 @@ export enum Margin {
   LARGE = 25,
 }
 
-export const DEFAULT_OPTIONS: Readonly<ConversionOptions> = {
-  method: "save",
+export const Alignment: Record<
+  DashCaseToUpperSnakeCase<AlignmentOption>,
+  AlignmentOption
+> = {
+  TOP_LEFT: "top-left",
+  CENTER_Y: "center-y",
+  CENTER_X: "center-x",
+  CENTER_XY: "center-xy",
+};
+
+export const Size: Record<DashCaseToUpperSnakeCase<SizeOption>, SizeOption> = {
+  ORIGINAL: "original",
+  FILL_PAGE: "fill-page",
+  SHRINK_TO_FIT: "shrink-to-fit",
+};
+
+export const DEFAULT_OPTIONS: Readonly<DocumentConverterOptions> = {
   resolution: Resolution.MEDIUM,
   page: {
     margin: Margin.NONE,
@@ -27,9 +49,19 @@ export const DEFAULT_OPTIONS: Readonly<ConversionOptions> = {
   },
   canvas: {
     mimeType: "image/jpeg",
-    qualityRatio: 1,
+    qualityRatio: 0.9,
     useCORS: true,
     logging: false,
   },
   overrides: {},
+  align: Alignment.TOP_LEFT,
+  size: Size.ORIGINAL,
+  header: {
+    margin: 7,
+    align: "center",
+  },
+  footer: {
+    margin: 7,
+    align: "center",
+  },
 };

@@ -1,8 +1,14 @@
 # React to PDF
 
+[![CI](https://github.com/ivmarcos/react-to-pdf/actions/workflows/ci.yml/badge.svg)](https://github.com/ivmarcos/react-to-pdf/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/ivmarcos/react-to-pdf/branch/main/graph/badge.svg)](https://codecov.io/gh/ivmarcos/react-to-pdf)
+[![npm version](https://badge.fury.io/js/react-to-pdf.svg)](https://badge.fury.io/js/react-to-pdf)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Easily create PDF documents from React components.
 
 ## Install
+
 
 ```
 # Yarn
@@ -28,6 +34,8 @@ npm install --save react-to-pdf
 - [Stackblitz demo](https://stackblitz.com/edit/vitejs-vite-sd71svw8?file=src%2FApp.tsxx)
 - [Using `usePDF` hook](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleUsePDF.tsx) 
 - [Using default function](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleFunction.tsx) 
+- [PDF component](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExamplePDF.tsx) 
+- [PDF with preview](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExamplePDFPreview.tsx) 
 - [Multipage support](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleMultipage.tsx) 
 - [Advanced options](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleAdvanced.tsx) 
 
@@ -72,6 +80,45 @@ const Component = () => {
 }
 ```
 [Stackblitz demo](https://stackblitz.com/edit/vitejs-vite-zmjvmgft?file=src%2FApp.tsx)
+
+**Using PDF component**
+
+```jsx
+import { useRef } from 'react';
+import { PDFHandle } from 'react-to-pdf';
+
+const Component = () => {
+   const pdfRef = useRef<PDFHandle>(null);
+   return (
+      <div>
+         <button onClick={() => pdfRef.current?.save({filename: 'pdf.pdf'})}>Download PDF</button>
+         <PDF ref={pdfRef}>
+            Content to be included in the PDF
+         </PDF>
+      </div>
+   )
+}
+```
+
+**Using PDF with preview**
+
+```jsx
+import { useRef } from 'react';
+import { PDFHandle } from 'react-to-pdf';
+
+const Component = () => {
+   const pdfRef = useRef<PDFHandle>(null);
+   return (
+      <div>
+         <button onClick={() => pdfRef.current?.save({filename: 'pdf-preview.pdf'})}>Download PDF</button>
+         <PDF preview ref={pdfRef}>
+            Content to be included in the PDF
+         </PDF>
+      </div>
+   )
+}
+```
+
 
 **Advanced options**
 

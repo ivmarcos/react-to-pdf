@@ -1,0 +1,137 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Custom Fonts - React to PDF'
+description: 'Learn how to use custom fonts in your PDF documents.'
+---
+
+# Custom Fonts
+
+Use custom fonts in your PDF documents by loading web fonts or system fonts.
+
+## Using Google Fonts
+
+The easiest way to use custom fonts is with Google Fonts:
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+function CustomFontDocument() {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'custom-fonts.pdf',
+    canvas: {
+      scale: 3 // Higher scale for better font rendering
+    }
+  });
+
+  return (
+    <div>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet"
+      />
+
+      <button onClick={() => toPDF()}>Download PDF</button>
+
+      <div ref={targetRef} style={{ fontFamily: 'Roboto, sans-serif', padding: '40px' }}>
+        <h1 style={{ fontFamily: 'Playfair Display, serif' }}>
+          Beautiful Typography
+        </h1>
+        <p>This paragraph uses Roboto font from Google Fonts.</p>
+      </div>
+    </div>
+  );
+}
+```
+
+## Loading Custom Web Fonts
+
+For self-hosted or custom web fonts, use `@font-face`:
+
+```css
+@font-face {
+  font-family: 'CustomFont';
+  src: url('/fonts/custom-font.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block; /* Ensures font loads before PDF generation */
+}
+
+@font-face {
+  font-family: 'CustomFont';
+  src: url('/fonts/custom-font-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+```
+
+```tsx
+import './custom-fonts.css';
+
+function Document() {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'document.pdf'
+  });
+
+  return (
+    <div ref={targetRef} style={{ fontFamily: 'CustomFont, sans-serif' }}>
+      <h1>Using Custom Fonts</h1>
+      <p style={{ fontWeight: 700 }}>This text is bold.</p>
+    </div>
+  );
+}
+```
+
+## Ensuring Fonts Load
+
+Make sure fonts are loaded before generating the PDF:
+
+```tsx
+import { useState } from 'react';
+import { usePDF } from 'react-to-pdf';
+
+function SafeFontDocument() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const { targetRef, toPDF } = usePDF({ filename: 'document.pdf' });
+
+  // Wait for fonts to load
+  useEffect(() => {
+    document.fonts.ready.then(() => {
+      setFontsLoaded(true);
+    });
+  }, []);
+
+  const handleDownload = async () => {
+    if (!fontsLoaded) {
+      alert('Fonts are still loading, please wait...');
+      return;
+    }
+    await toPDF();
+  };
+
+  return (
+    <div>
+      <button onClick={handleDownload} disabled={!fontsLoaded}>
+        {fontsLoaded ? 'Download PDF' : 'Loading fonts...'}
+      </button>
+
+      <div ref={targetRef} style={{ fontFamily: 'Roboto, sans-serif' }}>
+        Content with custom fonts
+      </div>
+    </div>
+  );
+}
+```
+
+## Best Practices
+
+1. **Use web-safe fallbacks** - Always provide fallback fonts
+2. **Preload fonts** - Use `font-display: block` or wait for `document.fonts.ready`
+3. **Test thoroughly** - Different browsers may render fonts differently
+4. **Higher scale** - Use `scale: 3` or higher for better font rendering
+5. **Limit font weights** - Only load the font weights you need
+
+## See Also
+
+- [Styling Guide](/react-to-pdf/docs/advanced/styling)
+- [Performance Tips](/react-to-pdf/docs/advanced/performance)

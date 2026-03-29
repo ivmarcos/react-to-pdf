@@ -1,0 +1,211 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const faqs = [
+  {
+    question: "What is React to PDF?",
+    answer: "React to PDF is a library that allows you to generate PDF documents from React components. It uses html2canvas and jsPDF under the hood to capture your components and convert them to PDF format."
+  },
+  {
+    question: "Which React versions are supported?",
+    answer: "React to PDF supports React 16.8 and above (any version with hooks support). It works with React 16, 17, 18, and 19."
+  },
+  {
+    question: "Can I use this in production?",
+    answer: "Yes! React to PDF is production-ready with 55 tests, 48% code coverage, and is used by many applications in production."
+  },
+  {
+    question: "Does it work with TypeScript?",
+    answer: "Yes, React to PDF is written in TypeScript and includes full type definitions out of the box."
+  },
+  {
+    question: "Can I customize the PDF output?",
+    answer: "Absolutely! You can customize page size, orientation, margins, scaling, and more. You have full control over the styling using CSS, Tailwind, or any CSS-in-JS solution."
+  },
+  {
+    question: "How do I handle multi-page documents?",
+    answer: "React to PDF automatically handles page breaks. When your content exceeds one page, it will automatically continue on subsequent pages."
+  },
+  {
+    question: "Can I add headers and footers?",
+    answer: "Yes, use the Header and Footer components to add content that appears on every page of your PDF."
+  },
+  {
+    question: "Why are images not showing in my PDF?",
+    answer: "If images are from external domains, you need to enable CORS: set `canvas: { useCORS: true }` in your options. For local images, make sure they're properly loaded before generating the PDF."
+  },
+  {
+    question: "How can I improve PDF quality?",
+    answer: "Increase the canvas scale: `canvas: { scale: 3 }`. Higher scale values produce better quality but take longer to generate."
+  },
+  {
+    question: "Is it free to use?",
+    answer: "Yes! React to PDF is open source and released under the MIT License. You can use it freely in both personal and commercial projects."
+  },
+  {
+    question: "Can I generate PDFs server-side?",
+    answer: "React to PDF is designed for browser environments. For server-side PDF generation, consider using Puppeteer or similar tools."
+  },
+  {
+    question: "How large can my PDFs be?",
+    answer: "There's no hard limit, but very large PDFs (100+ pages) may be slow to generate. Consider pagination or splitting into multiple PDFs for better performance."
+  },
+  {
+    question: "Can I use custom fonts?",
+    answer: "Yes! You can use Google Fonts, custom web fonts, or any fonts available in your application. See the Custom Fonts guide for details."
+  },
+  {
+    question: "Does it work with Next.js?",
+    answer: "Yes, React to PDF works with Next.js. Make sure to use it in client components only (not server components)."
+  },
+  {
+    question: "How do I report bugs or request features?",
+    answer: "Open an issue on our GitHub repository: https://github.com/ivmarcos/react-to-pdf/issues"
+  }
+];
+---
+
+<BaseLayout
+  title="FAQ - React to PDF"
+  description="Frequently asked questions about React to PDF"
+>
+  <div class="faq-container">
+    <div class="faq-header">
+      <h1>Frequently Asked Questions</h1>
+      <p>Common questions about React to PDF</p>
+    </div>
+
+    <div class="faq-list">
+      {faqs.map((faq, index) => (
+        <details class="faq-item" key={index}>
+          <summary class="faq-question">
+            {faq.question}
+          </summary>
+          <div class="faq-answer">
+            <p>{faq.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <div class="faq-footer">
+      <h2>Still have questions?</h2>
+      <p>Check out our <a href="/react-to-pdf/docs/getting-started">documentation</a> or <a href="https://github.com/ivmarcos/react-to-pdf/issues" target="_blank" rel="noopener noreferrer">open an issue</a> on GitHub.</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+
+  .faq-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .faq-header h1 {
+    font-size: 42px;
+    color: #0f172a;
+    margin-bottom: 15px;
+  }
+
+  .faq-header p {
+    font-size: 20px;
+    color: #64748b;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .faq-item {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .faq-item:hover {
+    border-color: #0ea5e9;
+  }
+
+  .faq-item[open] {
+    border-color: #0ea5e9;
+  }
+
+  .faq-question {
+    font-size: 18px;
+    font-weight: 600;
+    color: #0f172a;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question::after {
+    content: '+';
+    font-size: 24px;
+    color: #0ea5e9;
+    font-weight: normal;
+    transition: transform 0.2s;
+  }
+
+  .faq-item[open] .faq-question::after {
+    transform: rotate(45deg);
+  }
+
+  .faq-answer {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .faq-answer p {
+    color: #475569;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .faq-footer {
+    margin-top: 80px;
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    color: white;
+  }
+
+  .faq-footer h2 {
+    margin: 0 0 15px 0;
+    font-size: 28px;
+  }
+
+  .faq-footer p {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .faq-footer a {
+    color: white;
+    text-decoration: underline;
+    font-weight: 600;
+  }
+
+  .faq-footer a:hover {
+    text-decoration: none;
+  }
+</style>

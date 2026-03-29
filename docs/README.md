@@ -27,10 +27,10 @@ npm install --save
 ## Examples
 
 - [Code Sandbox demo](https://codesandbox.io/s/ancient-violet-sznj9q?file=/src/App.tsx)
-- [Using `usePDF` hook](blob/main/examples/ExampleUsePDF.tsx) 
-- [Using default function](blob/main/examples/ExampleFunction.tsx) 
-- [Multipage support](blob/main/examples/ExampleMultipage.tsx) 
-- [Advanced options](blob/main/examples/ExampleAdvanced.tsx) 
+- [Using `usePDF` hook](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleUsePDF.tsx) 
+- [Using default function](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleFunction.tsx) 
+- [Multipage support](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleMultipage.tsx) 
+- [Advanced options](https://github.com/ivmarcos/react-to-pdf/blob/main/examples/ExampleAdvanced.tsx) 
 
 ## Usage
 
@@ -51,6 +51,7 @@ const Component = () => {
    )
 }
 ```
+[Code Sandbox demo](https://codesandbox.io/s/ancient-violet-sznj9q?file=/src/App.tsx)
 
 **Using default function**
 
@@ -70,6 +71,7 @@ const Component = () => {
    )
 }
 ```
+[Code Sandbox demo](https://codesandbox.io/s/condescending-danilo-5yj655?file=/src/App.tsx:0-644)
 
 **Advanced options**
 
@@ -94,7 +96,7 @@ const options = {
    },
    canvas: {
       // default is 'image/jpeg' for better size performance
-      mimeType: 'image/png'
+      mimeType: 'image/png',
       qualityRatio: 1
    },
    // Customize any value passed to the jsPDF instance and html2canvas
@@ -107,7 +109,7 @@ const options = {
       },
       // see https://html2canvas.hertzen.com/configuration for more options
       canvas: {
-         useCORS: false
+         useCORS: true
       }
    },
 };
@@ -126,3 +128,4 @@ const Component = () => {
    );
 }
 ```
+[Code Sandbox demo](https://codesandbox.io/s/billowing-fog-lq4xj6?file=/src/App.tsx)

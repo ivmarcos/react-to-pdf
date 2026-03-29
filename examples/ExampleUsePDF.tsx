@@ -1,20 +1,21 @@
 import React from "react";
-import { Margin, usePDF } from "react-to-pdf";
+import { Margin, Position, Size, usePDF } from "react-to-pdf";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Container } from "./Container";
 
 export const ExampleUsePDF = () => {
   const { toPDF, targetRef } = usePDF({
-    method: "save",
     filename: "usepdf-example.pdf",
     page: { margin: Margin.MEDIUM },
+    align: Position.CENTER_X,
+    size: Size.FILL_PAGE,
   });
   return (
     <Container>
       <Button onClick={toPDF}>Download PDF</Button>
       <div ref={targetRef}>
-        <Card imageId={22} title="usePDF hook example" />
+        <Card imageId={12} title="usePDF hook example" />
       </div>
     </Container>
   );

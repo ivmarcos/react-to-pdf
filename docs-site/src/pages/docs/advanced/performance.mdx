@@ -1,0 +1,228 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Performance Optimization - React to PDF'
+description: 'Tips and techniques to optimize PDF generation performance.'
+---
+
+# Performance Optimization
+
+Optimize PDF generation for large documents and improve user experience.
+
+## Key Performance Factors
+
+### 1. Canvas Scale
+
+Higher scale = better quality but slower generation:
+
+```tsx
+// Fast, lower quality
+const { targetRef, toPDF } = usePDF({
+  canvas: { scale: 1 }
+});
+
+// Balanced (recommended)
+const { targetRef, toPDF } = usePDF({
+  canvas: { scale: 2 }
+});
+
+// High quality, slower
+const { targetRef, toPDF } = usePDF({
+  canvas: { scale: 3 }
+});
+```
+
+### 2. Content Size
+
+Reduce the amount of content rendered at once:
+
+```tsx
+// Bad: Rendering thousands of rows
+<div ref={targetRef}>
+  {data.map(item => <Row key={item.id} data={item} />)}
+</div>
+
+// Good: Paginate or limit data
+<div ref={targetRef}>
+  {data.slice(0, 100).map(item => <Row key={item.id} data={item} />)}
+</div>
+```
+
+### 3. Image Optimization
+
+Optimize images before rendering:
+
+```tsx
+// Use appropriately sized images
+<img
+  src="/optimized-image.jpg"
+  alt="Logo"
+  style={{ width: '100px', height: '100px' }}
+/>
+
+// Enable CORS for external images
+const { targetRef, toPDF } = usePDF({
+  canvas: { useCORS: true }
+});
+```
+
+## Loading States
+
+Show progress to users during generation:
+
+```tsx
+import { useState } from 'react';
+import { usePDF } from 'react-to-pdf';
+
+function PDFWithLoading() {
+  const [loading, setLoading] = useState(false);
+  const { targetRef, toPDF } = usePDF({ filename: 'document.pdf' });
+
+  const handleDownload = async () => {
+    setLoading(true);
+    try {
+      await toPDF();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleDownload} disabled={loading}>
+        {loading ? 'Generating PDF...' : 'Download PDF'}
+      </button>
+      <div ref={targetRef}>
+        {/* Content */}
+      </div>
+    </div>
+  );
+}
+```
+
+## Caching Strategy
+
+React to PDF includes built-in caching for margins and performance optimizations. For additional caching:
+
+```tsx
+import { useMemo } from 'react';
+
+function OptimizedPDF({ data }) {
+  // Memoize expensive calculations
+  const processedData = useMemo(() => {
+    return data.map(item => ({
+      ...item,
+      total: item.quantity * item.price
+    }));
+  }, [data]);
+
+  const { targetRef, toPDF } = usePDF({ filename: 'report.pdf' });
+
+  return (
+    <div ref={targetRef}>
+      {processedData.map(item => (
+        <div key={item.id}>{item.total}</div>
+      ))}
+    </div>
+  );
+}
+```
+
+## Lazy Loading
+
+Only render PDF content when needed:
+
+```tsx
+import { useState } from 'react';
+
+function LazyPDF() {
+  const [showPreview, setShowPreview] = useState(false);
+  const { targetRef, toPDF } = usePDF({ filename: 'document.pdf' });
+
+  return (
+    <div>
+      <button onClick={() => {
+        setShowPreview(true);
+        setTimeout(() => toPDF(), 100);
+      }}>
+        Generate & Download PDF
+      </button>
+
+      {showPreview && (
+        <div ref={targetRef}>
+          {/* Heavy content only rendered when needed */}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## Background Processing
+
+For very large PDFs, consider generating in the background:
+
+```tsx
+function BackgroundPDF() {
+  const { targetRef, toPDF } = usePDF({ filename: 'large-document.pdf' });
+
+  const handleGenerate = async () => {
+    // Show notification
+    alert('PDF generation started. This may take a moment...');
+
+    // Generate in background (non-blocking)
+    setTimeout(async () => {
+      try {
+        await toPDF();
+        alert('PDF generated successfully!');
+      } catch (error) {
+        alert('Error generating PDF');
+      }
+    }, 0);
+  };
+
+  return (
+    <div>
+      <button onClick={handleGenerate}>Generate Large PDF</button>
+      <div ref={targetRef}>{/* Large content */}</div>
+    </div>
+  );
+}
+```
+
+## Performance Checklist
+
+- ✅ Use appropriate canvas scale (2 is usually optimal)
+- ✅ Optimize and compress images
+- ✅ Limit rendered content size
+- ✅ Show loading indicators
+- ✅ Use memoization for expensive calculations
+- ✅ Lazy load PDF content
+- ✅ Enable CORS only when needed
+- ✅ Test with realistic data volumes
+
+## Measuring Performance
+
+```tsx
+function MeasuredPDF() {
+  const { targetRef, toPDF } = usePDF({ filename: 'document.pdf' });
+
+  const handleDownload = async () => {
+    const start = performance.now();
+    await toPDF();
+    const end = performance.now();
+    console.log(`PDF generated in ${(end - start).toFixed(2)}ms`);
+  };
+
+  return (
+    <div>
+      <button onClick={handleDownload}>Download PDF</button>
+      <div ref={targetRef}>{/* Content */}</div>
+    </div>
+  );
+}
+```
+
+## See Also
+
+- [Troubleshooting](/react-to-pdf/docs/advanced/troubleshooting)
+- [Styling Guide](/react-to-pdf/docs/advanced/styling)

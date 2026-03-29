@@ -1,0 +1,71 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'Getting Started - React to PDF'
+description: 'Learn how to get started with React to PDF and generate your first PDF document from React components.'
+---
+
+# Getting Started
+
+Welcome to **React to PDF**! This library makes it simple to generate PDF documents from your React components with just a few lines of code.
+
+## What is React to PDF?
+
+React to PDF is a lightweight, powerful library that converts your React components into PDF documents. Whether you need to generate invoices, certificates, reports, or any other type of document, React to PDF provides an intuitive API that feels natural to React developers.
+
+## Key Features
+
+- **Simple API** - Generate PDFs with a single hook or component
+- **React-First** - Use familiar React patterns and components
+- **Multi-Page Support** - Automatically handles page breaks for long content
+- **TypeScript Ready** - Full TypeScript support with complete type definitions
+- **Customizable** - Control page size, orientation, margins, headers, and footers
+- **Performance** - Optimized rendering with caching and canvas cleanup
+- **No Dependencies** - Works with React 16.8+ without additional peer dependencies
+
+## How It Works
+
+React to PDF uses the following approach to generate PDFs:
+
+1. **Render** - Your React component is rendered to the DOM
+2. **Capture** - The library captures the rendered HTML using html2canvas
+3. **Convert** - The captured content is converted to PDF using jsPDF
+4. **Download** - The PDF is automatically downloaded or can be programmatically saved
+
+## Browser Support
+
+React to PDF works in all modern browsers that support:
+
+- Canvas API
+- Blob API
+- ES6 features
+
+Supported browsers include:
+- Chrome/Edge (latest 2 versions)
+- Firefox (latest 2 versions)
+- Safari (latest 2 versions)
+
+## Requirements
+
+Before you begin, make sure you have:
+
+- **Node.js** 14 or higher
+- **React** 16.8 or higher (hooks support required)
+- **npm** or **yarn** package manager
+
+## Next Steps
+
+Ready to start? Check out the following guides:
+
+- [Installation](/react-to-pdf/docs/installation) - Install the library in your project
+- [Quick Start](/react-to-pdf/docs/quick-start) - Generate your first PDF in minutes
+- [API Reference](/react-to-pdf/docs/api/hooks) - Explore the full API
+
+## Community & Support
+
+- **GitHub** - [Report issues and contribute](https://github.com/ivmarcos/react-to-pdf)
+- **npm** - [View package details](https://www.npmjs.com/package/react-to-pdf)
+- **FAQ** - [Common questions and answers](/react-to-pdf/faq)
+
+---
+
+Have questions? Check out our [FAQ](/react-to-pdf/faq) or [open an issue](https://github.com/ivmarcos/react-to-pdf/issues) on GitHub.

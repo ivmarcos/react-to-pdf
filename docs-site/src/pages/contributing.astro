@@ -1,0 +1,283 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CodeBlock from '@components/CodeBlock.astro';
+---
+
+<BaseLayout
+  title="Contributing - React to PDF"
+  description="Learn how to contribute to React to PDF"
+>
+  <div class="contributing-container">
+    <h1>Contributing to React to PDF</h1>
+
+    <p class="intro">
+      Thank you for your interest in contributing to React to PDF! We welcome contributions
+      from the community.
+    </p>
+
+    <section>
+      <h2>Getting Started</h2>
+
+      <h3>1. Fork and Clone</h3>
+      <CodeBlock
+        code={`# Fork the repository on GitHub, then clone your fork
+git clone https://github.com/YOUR_USERNAME/react-to-pdf.git
+cd react-to-pdf`}
+        language="bash"
+      />
+
+      <h3>2. Install Dependencies</h3>
+      <CodeBlock
+        code={`npm install`}
+        language="bash"
+      />
+
+      <h3>3. Run Tests</h3>
+      <CodeBlock
+        code={`npm test`}
+        language="bash"
+      />
+
+      <h3>4. Build the Project</h3>
+      <CodeBlock
+        code={`npm run build`}
+        language="bash"
+      />
+    </section>
+
+    <section>
+      <h2>Development Workflow</h2>
+
+      <ol>
+        <li><strong>Create a branch</strong> for your feature or fix:
+          <CodeBlock
+            code={`git checkout -b feature/my-new-feature`}
+            language="bash"
+          />
+        </li>
+
+        <li><strong>Make your changes</strong> and write tests if applicable</li>
+
+        <li><strong>Run tests</strong> to ensure everything works:
+          <CodeBlock
+            code={`npm test`}
+            language="bash"
+          />
+        </li>
+
+        <li><strong>Commit your changes</strong> with a descriptive message:
+          <CodeBlock
+            code={`git commit -m "Add new feature: description of feature"`}
+            language="bash"
+          />
+        </li>
+
+        <li><strong>Push to your fork</strong>:
+          <CodeBlock
+            code={`git push origin feature/my-new-feature`}
+            language="bash"
+          />
+        </li>
+
+        <li><strong>Open a Pull Request</strong> on GitHub</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Code Guidelines</h2>
+
+      <ul>
+        <li><strong>TypeScript</strong> - All code should be written in TypeScript</li>
+        <li><strong>Tests</strong> - Add tests for new features using Vitest</li>
+        <li><strong>Code Style</strong> - Follow existing code style (we use ESLint)</li>
+        <li><strong>Documentation</strong> - Update docs for new features</li>
+        <li><strong>Commits</strong> - Write clear, descriptive commit messages</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>What to Contribute</h2>
+
+      <div class="contribution-types">
+        <div class="contribution-card">
+          <h3>🐛 Bug Fixes</h3>
+          <p>Found a bug? Please create an issue first, then submit a PR with the fix.</p>
+        </div>
+
+        <div class="contribution-card">
+          <h3>✨ Features</h3>
+          <p>Have an idea for a new feature? Open an issue to discuss it before implementing.</p>
+        </div>
+
+        <div class="contribution-card">
+          <h3>📝 Documentation</h3>
+          <p>Improve docs, add examples, fix typos. Documentation PRs are always welcome!</p>
+        </div>
+
+        <div class="contribution-card">
+          <h3>🧪 Tests</h3>
+          <p>Add test coverage for untested code or improve existing tests.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Pull Request Process</h2>
+
+      <ol>
+        <li>Ensure all tests pass</li>
+        <li>Update documentation as needed</li>
+        <li>Follow the existing code style</li>
+        <li>Write clear commit messages</li>
+        <li>Reference any related issues in your PR description</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Code of Conduct</h2>
+
+      <p>
+        Be respectful and inclusive. We want this project to be welcoming to contributors
+        of all skill levels and backgrounds.
+      </p>
+    </section>
+
+    <section>
+      <h2>Questions?</h2>
+
+      <p>
+        If you have questions about contributing, feel free to:
+      </p>
+
+      <ul>
+        <li>Open an issue on <a href="https://github.com/ivmarcos/react-to-pdf/issues" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li>Check the <a href="/react-to-pdf/faq">FAQ</a></li>
+        <li>Review existing <a href="https://github.com/ivmarcos/react-to-pdf/pulls" target="_blank" rel="noopener noreferrer">pull requests</a></li>
+      </ul>
+    </section>
+
+    <div class="thank-you">
+      <h2>Thank You! 🎉</h2>
+      <p>Your contributions make React to PDF better for everyone!</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .contributing-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+
+  .contributing-container h1 {
+    font-size: 42px;
+    color: #0f172a;
+    margin-bottom: 20px;
+  }
+
+  .intro {
+    font-size: 20px;
+    color: #64748b;
+    margin-bottom: 60px;
+    line-height: 1.7;
+  }
+
+  section {
+    margin-bottom: 60px;
+  }
+
+  h2 {
+    font-size: 28px;
+    color: #0f172a;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  h3 {
+    font-size: 20px;
+    color: #0f172a;
+    margin-top: 30px;
+    margin-bottom: 15px;
+  }
+
+  p {
+    line-height: 1.7;
+    color: #475569;
+    margin-bottom: 15px;
+  }
+
+  ul, ol {
+    margin: 20px 0;
+    padding-left: 30px;
+  }
+
+  li {
+    margin: 10px 0;
+    line-height: 1.7;
+    color: #475569;
+  }
+
+  a {
+    color: #0ea5e9;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .contribution-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+  }
+
+  .contribution-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 25px;
+    transition: border-color 0.2s;
+  }
+
+  .contribution-card:hover {
+    border-color: #0ea5e9;
+  }
+
+  .contribution-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+
+  .contribution-card p {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .thank-you {
+    margin-top: 80px;
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    color: white;
+  }
+
+  .thank-you h2 {
+    margin: 0 0 15px 0;
+    font-size: 32px;
+    border: none;
+    color: white;
+  }
+
+  .thank-you p {
+    margin: 0;
+    font-size: 18px;
+    color: white;
+  }
+</style>

@@ -1,0 +1,239 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Badge from '@components/Badge.astro';
+---
+
+<BaseLayout
+  title="Release Notes - React to PDF"
+  description="Latest updates and changes to React to PDF"
+>
+  <div class="release-notes-container">
+    <h1>Release Notes</h1>
+
+    <p class="intro">
+      Stay up to date with the latest features, improvements, and bug fixes.
+    </p>
+
+    <!-- Version 2.1.0 -->
+    <article class="release">
+      <div class="release-header">
+        <div>
+          <h2>Version 2.1.0</h2>
+          <time>January 15, 2025</time>
+        </div>
+        <Badge variant="success">Latest</Badge>
+      </div>
+
+      <div class="release-content">
+        <h3>✨ New Features</h3>
+        <ul>
+          <li>Added performance optimizations with margin caching</li>
+          <li>Improved canvas cleanup for large documents</li>
+          <li>Added comprehensive TypeScript type definitions</li>
+        </ul>
+
+        <h3>🐛 Bug Fixes</h3>
+        <ul>
+          <li>Fixed memory leaks in canvas rendering</li>
+          <li>Resolved issues with multi-page document generation</li>
+          <li>Fixed header/footer positioning on subsequent pages</li>
+        </ul>
+
+        <h3>📝 Documentation</h3>
+        <ul>
+          <li>Complete documentation website with examples</li>
+          <li>Added interactive playground</li>
+          <li>Improved API reference documentation</li>
+        </ul>
+
+        <h3>🧪 Testing</h3>
+        <ul>
+          <li>Increased test coverage to 48%</li>
+          <li>Added 55 comprehensive tests</li>
+          <li>Integrated Codecov for coverage reporting</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Version 2.0.0 -->
+    <article class="release">
+      <div class="release-header">
+        <div>
+          <h2>Version 2.0.0</h2>
+          <time>December 1, 2024</time>
+        </div>
+        <Badge variant="info">Major</Badge>
+      </div>
+
+      <div class="release-content">
+        <h3>🎉 Major Changes</h3>
+        <ul>
+          <li>Complete rewrite in TypeScript</li>
+          <li>New architecture with models, services, and components</li>
+          <li>Improved error handling throughout</li>
+        </ul>
+
+        <h3>✨ New Features</h3>
+        <ul>
+          <li>Added Header and Footer components</li>
+          <li>Introduced Body component for structured documents</li>
+          <li>Added support for custom page margins</li>
+          <li>Improved multi-page document handling</li>
+        </ul>
+
+        <h3>⚠️ Breaking Changes</h3>
+        <ul>
+          <li>Minimum React version is now 16.8 (hooks required)</li>
+          <li>Changed options API structure</li>
+          <li>Updated component props interface</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Version 1.5.0 -->
+    <article class="release">
+      <div class="release-header">
+        <div>
+          <h2>Version 1.5.0</h2>
+          <time>October 15, 2024</time>
+        </div>
+      </div>
+
+      <div class="release-content">
+        <h3>✨ New Features</h3>
+        <ul>
+          <li>Added landscape orientation support</li>
+          <li>Introduced custom page formats</li>
+          <li>Added canvas scale option for quality control</li>
+        </ul>
+
+        <h3>🐛 Bug Fixes</h3>
+        <ul>
+          <li>Fixed image loading issues</li>
+          <li>Resolved PDF generation failures on Safari</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- Version 1.0.0 -->
+    <article class="release">
+      <div class="release-header">
+        <div>
+          <h2>Version 1.0.0</h2>
+          <time>September 1, 2024</time>
+        </div>
+        <Badge variant="primary">Initial Release</Badge>
+      </div>
+
+      <div class="release-content">
+        <h3>🎉 Initial Release</h3>
+        <ul>
+          <li>Basic PDF generation from React components</li>
+          <li>Support for A4, Letter, and Legal page formats</li>
+          <li>Simple usePDF hook API</li>
+          <li>PDF component for declarative usage</li>
+        </ul>
+      </div>
+    </article>
+
+    <div class="cta-section">
+      <h2>Get the Latest Version</h2>
+      <p>Install or upgrade to the latest version of React to PDF</p>
+      <code>npm install react-to-pdf@latest</code>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .release-notes-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+
+  h1 {
+    font-size: 42px;
+    color: #0f172a;
+    margin-bottom: 15px;
+  }
+
+  .intro {
+    font-size: 20px;
+    color: #64748b;
+    margin-bottom: 60px;
+  }
+
+  .release {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+  }
+
+  .release-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f1f5f9;
+  }
+
+  .release-header h2 {
+    font-size: 28px;
+    color: #0f172a;
+    margin: 0 0 5px 0;
+  }
+
+  .release-header time {
+    font-size: 14px;
+    color: #64748b;
+  }
+
+  .release-content h3 {
+    font-size: 18px;
+    color: #0f172a;
+    margin: 25px 0 15px 0;
+  }
+
+  .release-content ul {
+    margin: 0 0 20px 0;
+    padding-left: 25px;
+  }
+
+  .release-content li {
+    margin: 8px 0;
+    color: #475569;
+    line-height: 1.6;
+  }
+
+  .cta-section {
+    margin-top: 80px;
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    color: white;
+  }
+
+  .cta-section h2 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+  }
+
+  .cta-section p {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    opacity: 0.95;
+  }
+
+  .cta-section code {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: 'Monaco', 'Menlo', monospace;
+  }
+</style>

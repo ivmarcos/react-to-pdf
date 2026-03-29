@@ -1,0 +1,56 @@
+---
+import { Code } from 'astro:components';
+
+interface Props {
+  code: string;
+  language?: string;
+  title?: string;
+  showLineNumbers?: boolean;
+}
+
+const { code, language = 'typescript', title, showLineNumbers = true } = Astro.props;
+---
+
+<div class="relative rounded-lg overflow-hidden border border-gray-200 shadow-sm my-6">
+  {title && (
+    <div class="bg-gray-800 px-4 py-2 border-b border-gray-700">
+      <span class="text-sm text-gray-300 font-medium">{title}</span>
+    </div>
+  )}
+  <div class="relative">
+    <Code
+      code={code.trim()}
+      lang={language}
+      theme="github-dark"
+      class="text-sm"
+    />
+    <button
+      class="copy-button absolute top-3 right-3 p-2 rounded-md bg-gray-700 hover:bg-gray-600 text-gray-300 transition-colors"
+      data-code={code.trim()}
+      aria-label="Copy code"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.copy-button').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const code = button.getAttribute('data-code');
+      if (code) {
+        await navigator.clipboard.writeText(code);
+
+        // Visual feedback
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+
+        setTimeout(() => {
+          button.innerHTML = originalHTML;
+        }, 2000);
+      }
+    });
+  });
+</script>

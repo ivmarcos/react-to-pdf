@@ -1,0 +1,37 @@
+---
+import { navigation } from '@utils/navigation';
+
+const { pathname } = Astro.url;
+const isActive = (href: string) => pathname.endsWith(href) || pathname.includes(href);
+---
+
+<aside class="w-64 flex-shrink-0 border-r border-gray-200 bg-gray-50">
+  <nav class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-6">
+    <div class="space-y-8">
+      {navigation.docs.map((section) => (
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wider">
+            {section.title}
+          </h3>
+          <ul class="space-y-2">
+            {section.links.map((link) => (
+              <li>
+                <a
+                  href={`/react-to-pdf${link.href}`}
+                  class:list={[
+                    'block py-1.5 px-3 rounded-md text-sm transition-colors',
+                    isActive(link.href)
+                      ? 'bg-primary-100 text-primary-700 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  ]}
+                >
+                  {link.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </nav>
+</aside>

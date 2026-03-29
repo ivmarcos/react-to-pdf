@@ -1,0 +1,140 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import LivePlayground from '@components/LivePlayground';
+---
+
+<BaseLayout
+  title="Playground - React to PDF"
+  description="Try React to PDF in your browser with live preview and interactive examples."
+>
+  <div class="playground-container">
+    <div class="playground-header">
+      <h1>React to PDF Playground</h1>
+      <p>See live examples and try generating PDFs directly in your browser</p>
+    </div>
+
+    <LivePlayground client:load />
+
+    <div class="info-section">
+      <h2>How to Use in Your Project</h2>
+      <ol>
+        <li>Install the package: <code>npm install react-to-pdf</code></li>
+        <li>Copy the code from the examples above</li>
+        <li>Paste into your React component</li>
+        <li>Click the "Download PDF" button to generate your PDF!</li>
+      </ol>
+
+      <div class="links">
+        <a href="/react-to-pdf/docs/getting-started" class="link-card">
+          <strong>📖 Read the Docs</strong>
+          <span>Learn more about all features and options</span>
+        </a>
+        <a href="/react-to-pdf/docs/examples/invoice" class="link-card">
+          <strong>💼 See More Examples</strong>
+          <span>Invoices, certificates, reports, and more</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .playground-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .playground-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .playground-header h1 {
+    font-size: 36px;
+    color: #0f172a;
+    margin-bottom: 10px;
+  }
+
+  .playground-header p {
+    color: #64748b;
+    font-size: 18px;
+  }
+
+  .info-section {
+    max-width: 900px;
+    margin: 60px auto 0;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .info-section h2 {
+    font-size: 24px;
+    color: #0f172a;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  .info-section ol {
+    padding-left: 25px;
+    line-height: 1.8;
+    color: #475569;
+    margin-bottom: 30px;
+  }
+
+  .info-section li {
+    margin: 10px 0;
+  }
+
+  .info-section code {
+    background: #f1f5f9;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #0ea5e9;
+    font-family: Monaco, Menlo, monospace;
+  }
+
+  .links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  @media (max-width: 768px) {
+    .links {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .link-card {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .link-card:hover {
+    background: #e0f2fe;
+    border-color: #0ea5e9;
+    transform: translateY(-2px);
+  }
+
+  .link-card strong {
+    color: #0f172a;
+    font-size: 16px;
+  }
+
+  .link-card span {
+    color: #64748b;
+    font-size: 14px;
+  }
+</style>

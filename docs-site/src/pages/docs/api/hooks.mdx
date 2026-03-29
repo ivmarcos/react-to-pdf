@@ -1,0 +1,259 @@
+---
+layout: '@layouts/DocsLayout.astro'
+title: 'React Hooks API - React to PDF'
+description: 'Complete API reference for the usePDF hook and other React hooks in React to PDF.'
+---
+
+# React Hooks API
+
+React to PDF provides a powerful `usePDF` hook that makes PDF generation simple and intuitive.
+
+## usePDF
+
+The primary hook for generating PDFs from React components.
+
+### Basic Usage
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+function MyComponent() {
+  const { targetRef, toPDF } = usePDF({ filename: 'document.pdf' });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>Download</button>
+      <div ref={targetRef}>Content to PDF</div>
+    </div>
+  );
+}
+```
+
+### Return Value
+
+The hook returns an object with the following properties:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `targetRef` | `React.RefObject` | Ref to attach to the element you want to convert |
+| `toPDF` | `() => Promise<void>` | Function to trigger PDF generation |
+
+### Options
+
+The `usePDF` hook accepts an options object with the following properties:
+
+#### General Options
+
+```tsx
+interface Options {
+  filename?: string;
+  page?: PageOptions;
+  canvas?: CanvasOptions;
+  overrides?: Overrides;
+  method?: 'save' | 'open' | 'build';
+}
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `filename` | `string` | `'document.pdf'` | Name of the generated PDF file |
+| `method` | `'save' \| 'open' \| 'build'` | `'save'` | How to handle the PDF (`save` downloads it, `open` opens in new tab, `build` returns the PDF object) |
+
+#### Page Options
+
+```tsx
+interface PageOptions {
+  format?: Format;
+  orientation?: 'portrait' | 'landscape';
+  margin?: number | Margin;
+}
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `format` | `Format` | `'a4'` | Page size (a4, letter, legal, a3, a5, tabloid) |
+| `orientation` | `'portrait' \| 'landscape'` | `'portrait'` | Page orientation |
+| `margin` | `number \| Margin` | `0` | Margin in mm (single number or object with top/right/bottom/left) |
+
+**Format Values**: `'a4'`, `'letter'`, `'legal'`, `'a3'`, `'a5'`, `'tabloid'`
+
+**Margin Object**:
+```tsx
+interface Margin {
+  top?: number;
+  right?: number;
+  bottom?: number;
+  left?: number;
+}
+```
+
+#### Canvas Options
+
+```tsx
+interface CanvasOptions {
+  scale?: number;
+  useCORS?: boolean;
+  logging?: boolean;
+}
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `scale` | `number` | `2` | Scale factor for canvas rendering (higher = better quality) |
+| `useCORS` | `boolean` | `false` | Enable CORS for loading external images |
+| `logging` | `boolean` | `false` | Enable console logging for debugging |
+
+#### Overrides
+
+```tsx
+interface Overrides {
+  canvas?: Partial<Html2CanvasOptions>;
+  pdf?: Partial<jsPDFOptions>;
+}
+```
+
+Advanced options to override default html2canvas and jsPDF settings.
+
+### Complete Example
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+function AdvancedPDF() {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'invoice.pdf',
+    page: {
+      format: 'a4',
+      orientation: 'portrait',
+      margin: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10
+      }
+    },
+    canvas: {
+      scale: 3,
+      useCORS: true,
+      logging: false
+    },
+    method: 'save'
+  });
+
+  return (
+    <div>
+      <button onClick={() => toPDF()}>
+        Download Invoice
+      </button>
+
+      <div ref={targetRef}>
+        {/* Your content here */}
+      </div>
+    </div>
+  );
+}
+```
+
+### Method Options
+
+#### save (default)
+
+Downloads the PDF file to the user's device:
+
+```tsx
+const { toPDF } = usePDF({
+  filename: 'document.pdf',
+  method: 'save'
+});
+```
+
+#### open
+
+Opens the PDF in a new browser tab:
+
+```tsx
+const { toPDF } = usePDF({
+  filename: 'document.pdf',
+  method: 'open'
+});
+```
+
+#### build
+
+Returns the jsPDF instance for custom handling:
+
+```tsx
+const { toPDF } = usePDF({
+  filename: 'document.pdf',
+  method: 'build'
+});
+
+// Custom handling
+const handleDownload = async () => {
+  const pdf = await toPDF();
+  // pdf is a jsPDF instance
+  // You can use it for custom operations
+  pdf.save('custom-name.pdf');
+};
+```
+
+## TypeScript Support
+
+All hooks are fully typed with TypeScript:
+
+```tsx
+import { usePDF, Options, PageOptions } from 'react-to-pdf';
+
+const pageOptions: PageOptions = {
+  format: 'a4',
+  orientation: 'landscape'
+};
+
+const options: Options = {
+  filename: 'typed-document.pdf',
+  page: pageOptions
+};
+
+const { targetRef, toPDF } = usePDF(options);
+```
+
+## Error Handling
+
+The `toPDF` function returns a Promise, so you can handle errors:
+
+```tsx
+function PDFWithErrorHandling() {
+  const { targetRef, toPDF } = usePDF({ filename: 'document.pdf' });
+
+  const handleDownload = async () => {
+    try {
+      await toPDF();
+      console.log('PDF generated successfully!');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleDownload}>Download PDF</button>
+      <div ref={targetRef}>Content</div>
+    </div>
+  );
+}
+```
+
+## Best Practices
+
+1. **Keep the ref stable** - Don't recreate the component while generating the PDF
+2. **Handle loading states** - Show a loading indicator during PDF generation
+3. **Test in multiple browsers** - Different browsers may render slightly differently
+4. **Use appropriate scale** - Higher scale = better quality but slower generation
+5. **Enable CORS for external images** - Set `useCORS: true` if loading images from other domains
+
+## See Also
+
+- [Components API](/react-to-pdf/docs/api/components) - Learn about the PDF component
+- [Functions API](/react-to-pdf/docs/api/functions) - Standalone functions for advanced use cases
+- [Examples](/react-to-pdf/docs/examples/invoice) - Real-world examples
