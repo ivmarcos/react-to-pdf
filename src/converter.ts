@@ -161,6 +161,17 @@ export default class Converter {
         this.options.canvas.qualityRatio
       );
       this.pdf.setPage(pageNumber);
+
+      if(this.options.page.background){
+        this.pdf.addImage({
+          imageData: this.options.page.background,
+          width: this.pdf.internal.pageSize.getWidth(),
+          height: this.pdf.internal.pageSize.getHeight(),
+          x: 0,
+          y: 0
+        });
+      }
+      
       this.pdf.addImage({
         imageData: pageImageDataURL,
         width:
