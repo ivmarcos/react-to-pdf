@@ -15,24 +15,27 @@ import LivePlayground from '@components/LivePlayground';
 
     <LivePlayground client:load />
 
-    <div class="info-section">
-      <h2>How to Use in Your Project</h2>
-      <ol>
-        <li>Install the package: <code>npm install react-to-pdf</code></li>
-        <li>Copy the code from the examples above</li>
-        <li>Paste into your React component</li>
-        <li>Click the "Download PDF" button to generate your PDF!</li>
-      </ol>
+    <div class="info-wrapper">
+      <h2 class="info-heading">How to Use in Your Project</h2>
 
-      <div class="links">
-        <a href="/react-to-pdf/docs/getting-started" class="link-card">
-          <strong>📖 Read the Docs</strong>
-          <span>Learn more about all features and options</span>
-        </a>
-        <a href="/react-to-pdf/docs/examples/invoice" class="link-card">
-          <strong>💼 See More Examples</strong>
-          <span>Invoices, certificates, reports, and more</span>
-        </a>
+      <div class="info-section">
+        <ol>
+          <li>Install the package: <code>npm install react-to-pdf</code></li>
+          <li>Copy the code from the examples above</li>
+          <li>Paste into your React component</li>
+          <li>Click the "Download PDF" button to generate your PDF!</li>
+        </ol>
+
+        <div class="links">
+          <a href="/react-to-pdf/docs/getting-started" class="link-card">
+            <strong>📖 Read the Docs</strong>
+            <span>Learn more about all features and options</span>
+          </a>
+          <a href="/react-to-pdf/docs/examples/invoice" class="link-card">
+            <strong>💼 See More Examples</strong>
+            <span>Invoices, certificates, reports, and more</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -51,7 +54,9 @@ import LivePlayground from '@components/LivePlayground';
   }
 
   .playground-header h1 {
-    font-size: 36px;
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     color: #0f172a;
     margin-bottom: 10px;
   }
@@ -69,10 +74,25 @@ import LivePlayground from '@components/LivePlayground';
     color: #94a3b8;
   }
 
-  .info-section {
+  .info-wrapper {
     max-width: 900px;
     margin: 60px auto 0;
-    padding: 40px;
+  }
+
+  .info-heading {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #0f172a;
+    margin: 0 0 20px;
+  }
+
+  :global(html.dark) .info-heading {
+    color: #f1f5f9;
+  }
+
+  .info-section {
+    padding: 32px 40px;
     background: white;
     border-radius: 12px;
     border: 1px solid #e2e8f0;
@@ -81,17 +101,6 @@ import LivePlayground from '@components/LivePlayground';
   :global(html.dark) .info-section {
     background: #0f172a;
     border-color: #1f2937;
-  }
-
-  .info-section h2 {
-    font-size: 24px;
-    color: #0f172a;
-    margin-top: 0;
-    margin-bottom: 20px;
-  }
-
-  :global(html.dark) .info-section h2 {
-    color: #f1f5f9;
   }
 
   .info-section ol {

@@ -10,17 +10,45 @@ const examples = {
 
 function MyDocument() {
   const { targetRef, toPDF } = usePDF({
-    filename: 'document.pdf'
+    filename: 'hello.pdf'
   });
 
+  const buttonStyle = {
+    background: 'linear-gradient(135deg,#0ea5e9,#d946ef)',
+    color: 'white',
+    border: 'none',
+    padding: '10px 20px',
+    borderRadius: 8,
+    fontWeight: 600,
+    fontSize: 14,
+    cursor: 'pointer',
+    boxShadow: '0 4px 10px rgba(14,165,233,0.25)'
+  };
+
   return (
-    <div>
-      <button onClick={() => toPDF()}>
-        Download PDF
+    <div style={{ display: 'grid', gap: 16 }}>
+      <button style={buttonStyle} onClick={() => toPDF()}>
+        ⬇ Download PDF
       </button>
-      <div ref={targetRef}>
-        <h1>Hello PDF!</h1>
-        <p>This is a basic example.</p>
+
+      <div
+        ref={targetRef}
+        style={{
+          background: 'white',
+          color: '#0f172a',
+          padding: 32,
+          borderRadius: 12,
+          border: '1px solid #e2e8f0',
+          boxShadow: '0 2px 8px rgba(15,23,42,0.06)'
+        }}
+      >
+        <h1 style={{ margin: 0, color: '#0ea5e9', fontSize: 24 }}>
+          Hello PDF!
+        </h1>
+        <p style={{ marginTop: 8, color: '#475569', lineHeight: 1.6 }}>
+          Edit this code and click <strong>Download PDF</strong> to see it
+          rendered as a real PDF document.
+        </p>
       </div>
     </div>
   );
@@ -35,22 +63,39 @@ function StyledDocument() {
     filename: 'styled-document.pdf'
   });
 
+  const buttonStyle = {
+    background: '#0ea5e9',
+    color: 'white',
+    border: 'none',
+    padding: '10px 20px',
+    borderRadius: 8,
+    fontWeight: 600,
+    cursor: 'pointer'
+  };
+
   return (
-    <div>
-      <button onClick={() => toPDF()}>
+    <div style={{ display: 'grid', gap: 16 }}>
+      <button style={buttonStyle} onClick={() => toPDF()}>
         Download PDF
       </button>
+
       <div ref={targetRef} style={{
-        padding: '40px',
-        fontFamily: 'Arial, sans-serif'
+        padding: 40,
+        background: 'white',
+        color: '#0f172a',
+        fontFamily: 'Arial, sans-serif',
+        border: '1px solid #e2e8f0',
+        borderRadius: 12
       }}>
         <h1 style={{
           color: '#0ea5e9',
-          borderBottom: '3px solid #0ea5e9'
+          borderBottom: '3px solid #0ea5e9',
+          paddingBottom: 8,
+          margin: 0
         }}>
           Styled Document
         </h1>
-        <p style={{ lineHeight: '1.6', color: '#64748b' }}>
+        <p style={{ lineHeight: 1.6, color: '#475569', marginTop: 16 }}>
           This document has custom styling applied!
         </p>
       </div>
@@ -73,12 +118,22 @@ function TableDocument() {
     { name: 'Item 3', price: 150 }
   ];
 
+  const buttonStyle = {
+    background: '#0ea5e9',
+    color: 'white',
+    border: 'none',
+    padding: '10px 20px',
+    borderRadius: 8,
+    fontWeight: 600,
+    cursor: 'pointer'
+  };
+
   return (
-    <div>
-      <button onClick={() => toPDF()}>
+    <div style={{ display: 'grid', gap: 16 }}>
+      <button style={buttonStyle} onClick={() => toPDF()}>
         Download PDF
       </button>
-      <div ref={targetRef} style={{ padding: '40px' }}>
+      <div ref={targetRef} style={{ padding: 40, background: 'white', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: 12 }}>
         <h2>Invoice</h2>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
