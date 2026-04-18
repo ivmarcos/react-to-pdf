@@ -2,6 +2,7 @@
 import { navigation } from '@utils/navigation';
 import Logo from '@components/Logo.astro';
 import ThemeToggle from '@components/ThemeToggle.astro';
+import SearchBar from '@components/SearchBar.astro';
 
 const { pathname } = Astro.url;
 const isActive = (href: string) => pathname === href || pathname.startsWith(href);
@@ -17,7 +18,8 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(href
       </a>
 
       <!-- Navigation Links -->
-      <div class="hidden md:flex items-center gap-6">
+      <div class="hidden md:flex items-center gap-4">
+        <SearchBar />
         {navigation.main.map((item) => (
           <a
             href={item.href}

@@ -1,0 +1,268 @@
+---
+const indexUrl = `${import.meta.env.BASE_URL}/search-index.json`.replace(
+  /\/+/g,
+  "/"
+);
+---
+
+<div data-search-root data-search-index-url={indexUrl}>
+  <button
+    type="button"
+    data-search-open
+    aria-label="Search docs"
+    class="inline-flex items-center gap-2 rounded-md border border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/60 pl-3 pr-2 h-9 text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/>
+    </svg>
+    <span class="hidden sm:inline">Search docs</span>
+    <kbd class="hidden md:inline-flex items-center justify-center min-w-[1.25rem] h-5 rounded border border-gray-300 dark:border-gray-700 px-1 text-[11px] font-sans text-gray-500 dark:text-gray-400">/</kbd>
+  </button>
+
+  <div
+    data-search-modal
+    class="fixed inset-0 z-[60] hidden items-start justify-center pt-20 px-4 bg-gray-900/50 dark:bg-black/70 backdrop-blur-sm"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Search"
+  >
+    <div class="w-full max-w-xl rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-2xl overflow-hidden">
+      <div class="flex items-center gap-2 border-b border-gray-200 dark:border-gray-800 px-4 h-14">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input
+          data-search-input
+          type="search"
+          placeholder="Search docs…"
+          aria-label="Search docs"
+          autocomplete="off"
+          class="flex-1 bg-transparent outline-none text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+        />
+        <button
+          type="button"
+          data-search-close
+          class="text-xs rounded border border-gray-300 dark:border-gray-700 px-1.5 py-0.5 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+        >Esc</button>
+      </div>
+      <ul data-search-results class="max-h-80 overflow-y-auto"></ul>
+      <div data-search-hint class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+        Start typing to search the documentation.
+      </div>
+      <div data-search-empty class="hidden px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+        No matches for your query.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector("[data-search-root]");
+    if (!root) return;
+    if (root.dataset.searchReady === "1") return;
+    root.dataset.searchReady = "1";
+
+    const openBtn = root.querySelector("[data-search-open]");
+    const modal = root.querySelector("[data-search-modal]");
+    const input = root.querySelector("[data-search-input]");
+    const results = root.querySelector("[data-search-results]");
+    const empty = root.querySelector("[data-search-empty]");
+    const hint = root.querySelector("[data-search-hint]");
+    const closeBtn = root.querySelector("[data-search-close]");
+    const indexUrl = root.dataset.searchIndexUrl;
+
+    let index = null;
+    let loading = null;
+    let activeIndex = -1;
+    let currentResults = [];
+
+    const escapeHtml = (s) =>
+      String(s).replace(
+        /[&<>"']/g,
+        (c) =>
+          ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          })[c]
+      );
+
+    const highlight = (text, query) => {
+      if (!query) return escapeHtml(text);
+      const q = query.trim();
+      if (!q) return escapeHtml(text);
+      const re = new RegExp(
+        "(" + q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")",
+        "gi"
+      );
+      return escapeHtml(text).replace(
+        re,
+        '<mark class="bg-primary-100 dark:bg-primary-900/60 text-primary-900 dark:text-primary-200 rounded px-0.5">$1</mark>'
+      );
+    };
+
+    const excerpt = (text, query) => {
+      if (!text) return "";
+      const q = query.toLowerCase();
+      const lower = text.toLowerCase();
+      const i = q ? lower.indexOf(q) : -1;
+      if (i === -1) return text.slice(0, 160);
+      const start = Math.max(0, i - 40);
+      const end = Math.min(text.length, i + q.length + 120);
+      return (start > 0 ? "… " : "") + text.slice(start, end) + (end < text.length ? " …" : "");
+    };
+
+    const loadIndex = async () => {
+      if (index) return index;
+      if (!loading) {
+        loading = fetch(indexUrl)
+          .then((r) => r.json())
+          .then((data) => {
+            index = data;
+            return data;
+          })
+          .catch((err) => {
+            console.error("[SearchBar] failed to load index:", err);
+            index = [];
+            return [];
+          });
+      }
+      return loading;
+    };
+
+    const search = (query) => {
+      if (!index) return [];
+      const q = query.trim().toLowerCase();
+      if (!q) return [];
+      const scored = [];
+      for (const page of index) {
+        const title = (page.title || "").toLowerCase();
+        const desc = (page.description || "").toLowerCase();
+        const text = (page.text || "").toLowerCase();
+        let score = 0;
+        if (title.includes(q)) score += 100 + (title.startsWith(q) ? 50 : 0);
+        if (desc.includes(q)) score += 20;
+        if (text.includes(q)) score += 5;
+        if (score > 0) scored.push({ page, score });
+      }
+      scored.sort((a, b) => b.score - a.score);
+      return scored.slice(0, 20).map((s) => s.page);
+    };
+
+    const render = (query) => {
+      currentResults = search(query);
+      activeIndex = currentResults.length > 0 ? 0 : -1;
+
+      if (!query.trim()) {
+        results.innerHTML = "";
+        hint.classList.remove("hidden");
+        empty.classList.add("hidden");
+        return;
+      }
+
+      hint.classList.add("hidden");
+      if (currentResults.length === 0) {
+        results.innerHTML = "";
+        empty.classList.remove("hidden");
+        return;
+      }
+      empty.classList.add("hidden");
+
+      results.innerHTML = currentResults
+        .map((r, i) => {
+          const titleHtml = highlight(r.title, query);
+          const descSource = r.description || r.text || "";
+          const exc = excerpt(descSource, query);
+          const descHtml = highlight(exc, query);
+          return `
+            <li>
+              <a href="${escapeHtml(r.url)}" data-idx="${i}" class="search-result flex flex-col gap-1 px-4 py-3 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/60 ${i === 0 ? "bg-gray-50 dark:bg-gray-800/60" : ""}">
+                <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">${titleHtml}</span>
+                <span class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">${descHtml}</span>
+              </a>
+            </li>
+          `;
+        })
+        .join("");
+    };
+
+    const setActive = (idx) => {
+      const items = results.querySelectorAll(".search-result");
+      items.forEach((el, i) => {
+        if (i === idx) {
+          el.classList.add("bg-gray-50", "dark:bg-gray-800/60");
+          el.scrollIntoView({ block: "nearest" });
+        } else {
+          el.classList.remove("bg-gray-50", "dark:bg-gray-800/60");
+        }
+      });
+      activeIndex = idx;
+    };
+
+    const open = async () => {
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      document.body.style.overflow = "hidden";
+      input.value = "";
+      results.innerHTML = "";
+      hint.classList.remove("hidden");
+      empty.classList.add("hidden");
+      await loadIndex();
+      setTimeout(() => input.focus(), 0);
+    };
+
+    const close = () => {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      document.body.style.overflow = "";
+    };
+
+    openBtn?.addEventListener("click", open);
+    closeBtn?.addEventListener("click", close);
+
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) close();
+    });
+
+    input?.addEventListener("input", (e) => {
+      render(e.target.value);
+    });
+
+    input?.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        close();
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (currentResults.length === 0) return;
+        setActive((activeIndex + 1) % currentResults.length);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (currentResults.length === 0) return;
+        setActive((activeIndex - 1 + currentResults.length) % currentResults.length);
+      } else if (e.key === "Enter") {
+        if (activeIndex >= 0 && currentResults[activeIndex]) {
+          window.location.href = currentResults[activeIndex].url;
+        }
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      const isModalOpen = !modal.classList.contains("hidden");
+      const target = e.target;
+      const isTyping =
+        target instanceof HTMLElement &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable);
+      if (!isModalOpen && !isTyping) {
+        if (e.key === "/" || (e.key === "k" && (e.metaKey || e.ctrlKey))) {
+          e.preventDefault();
+          open();
+        }
+      }
+    });
+  })();
+</script>
