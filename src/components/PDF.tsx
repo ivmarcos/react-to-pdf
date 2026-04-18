@@ -265,9 +265,13 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
       createDocument();
     }, []);
 
+    // Re-run whenever the document or the header/footer React components
+    // change. Including `document` as a dep ensures the embed gets its
+    // blob URL even when neither a header nor a footer is provided (both
+    // memos stay null and wouldn't trigger the effect on their own).
     useEffect(() => {
       addFootersAndHeaders();
-    }, [footerComponents, headerComponents]);
+    }, [document, footerComponents, headerComponents]);
 
     useImperativeHandle(
       forwardedRef,
