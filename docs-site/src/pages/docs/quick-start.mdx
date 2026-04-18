@@ -5,6 +5,7 @@ description: "Generate your first PDF document in minutes with this quick start 
 ---
 
 import QuickStartExample from "@components/QuickStartExample";
+import PreviewModeExample from "@components/PreviewModeExample";
 
 # Quick Start
 
@@ -15,6 +16,47 @@ Generate your first PDF in just a few minutes! This guide will walk you through 
 Try it out! Click the button below to generate a PDF:
 
 <QuickStartExample client:load />
+
+## Previewing before download
+
+The `<PDF>` component can show the file inline while the user is still
+deciding whether to download it. Flip between `preview="embed"` (an
+`<embed>` showing the generated PDF itself) and `preview="children"` (the
+React children rendered in place) with the tabs below.
+
+<PreviewModeExample client:load />
+
+```tsx
+import { useRef } from "react";
+import { PDF, Margin, PDFHandle } from "react-to-pdf";
+
+function PreviewDemo() {
+  const pdfRef = useRef<PDFHandle>(null);
+
+  return (
+    <>
+      <button onClick={() => pdfRef.current?.save("preview.pdf")}>
+        Download PDF
+      </button>
+
+      <PDF
+        ref={pdfRef}
+        preview="embed" // or "children", true, false
+        page={{ format: "a4", margin: Margin.MEDIUM }}
+        embedProps={{ width: "100%", height: 480 }}
+        loading={<div>Building the PDF…</div>}
+      >
+        <article>
+          <h1>Preview-mode demo</h1>
+          <p>Flip the <code>preview</code> prop to see each mode.</p>
+        </article>
+      </PDF>
+    </>
+  );
+}
+```
+
+See the [Components API](/react-to-pdf/docs/api/components) for the full list of preview modes.
 
 ## Basic Example
 
