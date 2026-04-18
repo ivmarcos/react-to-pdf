@@ -13,10 +13,10 @@ export class Document {
   ) {}
 
   async save(filename?: string): Promise<void> {
-    return this.instance.save(
-      filename ?? this.filename ?? `${Date.now()}.pdf`,
-      { returnPromise: true }
-    );
+    const resolved =
+      filename ?? this.filename ?? `document-${Date.now()}.pdf`;
+    const withExt = ensurePdfExtension(resolved);
+    return this.instance.save(withExt, { returnPromise: true });
   }
 
   open(): void {
@@ -45,4 +45,9 @@ export class Document {
   getNumberOfPages(): number {
     return this.instance.getNumberOfPages();
   }
+}
+
+function ensurePdfExtension(name: string): string {
+  if (!name) return `document-${Date.now()}.pdf`;
+  return /\.pdf$/i.test(name) ? name : `${name}.pdf`;
 }

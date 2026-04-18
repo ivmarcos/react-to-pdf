@@ -79,6 +79,47 @@ describe("resolveOptions", () => {
   });
 });
 
+describe("Document.save filename handling", () => {
+  test("appends .pdf when the caller omits the extension", async () => {
+    const saveMock = vi.fn();
+    const fake = { save: saveMock } as any;
+    const doc = new Document(fake, "no-extension");
+    await doc.save();
+    expect(saveMock).toHaveBeenCalledWith("no-extension.pdf", {
+      returnPromise: true,
+    });
+  });
+
+  test("keeps the name as-is when it already ends in .pdf", async () => {
+    const saveMock = vi.fn();
+    const fake = { save: saveMock } as any;
+    const doc = new Document(fake, "already.pdf");
+    await doc.save();
+    expect(saveMock).toHaveBeenCalledWith("already.pdf", {
+      returnPromise: true,
+    });
+  });
+
+  test("explicit filename at call-time wins over stored", async () => {
+    const saveMock = vi.fn();
+    const fake = { save: saveMock } as any;
+    const doc = new Document(fake, "stored.pdf");
+    await doc.save("override");
+    expect(saveMock).toHaveBeenCalledWith("override.pdf", {
+      returnPromise: true,
+    });
+  });
+
+  test("falls back to document-<timestamp>.pdf when no filename is known", async () => {
+    const saveMock = vi.fn();
+    const fake = { save: saveMock } as any;
+    const doc = new Document(fake);
+    await doc.save();
+    const call = saveMock.mock.calls[0][0];
+    expect(call).toMatch(/^document-\d+\.pdf$/);
+  });
+});
+
 describe("create / save / open / print / generatePDF", () => {
   beforeEach(() => {
     renderCanvasBodyMock.mockClear();
