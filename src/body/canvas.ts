@@ -14,6 +14,10 @@ import * as utils from "../utils";
  * the resulting canvas into page-sized chunks, and adds each chunk as an
  * image to the jsPDF document.
  *
+ * `reservedTopMM` / `reservedBottomMM` shrink the effective content height
+ * beyond `page.margin` so header/footer fragments can sit above and below
+ * the body without overlapping.
+ *
  * Replaces the old `DocumentConverter` / `CanvasConverter` /
  * `PageImagesBuilder` / `PageImagesPositioner` class tree — their logic is
  * inlined here.
@@ -21,11 +25,14 @@ import * as utils from "../utils";
 export async function renderCanvasBody(
   doc: InstanceType<typeof jsPDF>,
   targets: TargetElement[],
-  options: ResolvedOptions
+  options: ResolvedOptions,
+  reservedTopMM = 0,
+  reservedBottomMM = 0
 ): Promise<void> {
   if (targets.length === 0) return;
 
-  const pageMaxHeightMM = getPageMaxHeight(doc, options);
+  const pageMaxHeightMM =
+    getPageMaxHeight(doc, options) - reservedTopMM - reservedBottomMM;
   const pageMaxWidthMM = getPageMaxWidth(doc, options);
   const pageMaxHeightPX = utils.mmToPX(pageMaxHeightMM);
   const pageMaxWidthPX = utils.mmToPX(pageMaxWidthMM);
@@ -128,6 +135,7 @@ export async function renderCanvasBody(
     for (const slice of slices) {
       const widthMM = utils.pxToMM(slice.canvas.width / slice.displayScale);
       const heightMM = utils.pxToMM(slice.canvas.height / slice.displayScale);
+      const margin = getMargins(options);
       const coords = placeOnPage({
         doc,
         imageWidth: widthMM,
@@ -136,7 +144,11 @@ export async function renderCanvasBody(
         pageCount: pages.length,
         contentHeightMM,
         cursorYOffsetMM,
-        margin: getMargins(options),
+        margin: {
+          ...margin,
+          top: margin.top + reservedTopMM,
+          bottom: margin.bottom + reservedBottomMM,
+        },
       });
 
       const hookPayload = {

@@ -8,6 +8,7 @@ import { stampHeaderFooter } from "./overlay/headerFooter";
 import { renderFragmentsPerPage } from "./overlay/renderFragments";
 import { resolveOptions } from "./options";
 import { MM_TO_PX } from "./constants";
+import * as utils from "./utils";
 import {
   Options,
   PDFHandle,
@@ -64,24 +65,77 @@ async function buildDocument<T extends HTMLElement>(
   });
 
   const targets: TargetElement[] = [{ element: targetOrHandle }];
+  const margins = getMargins(options);
+  const pageWidthMM = doc.internal.pageSize.getWidth();
+  const contentWidthPx = Math.max(
+    200,
+    Math.round((pageWidthMM - margins.left - margins.right) * MM_TO_PX)
+  );
 
-  if (options.engine === "html") {
-    // Both engines now use `page.margin` as-is; neither reserves extra space
-    // for header/footer. Users who need a larger band for ornate headers
-    // should bump `page.margin.top` / `page.margin.bottom` accordingly.
-    await renderHtmlBody(doc, targets, options, 0, 0);
-  } else {
-    await renderCanvasBody(doc, targets, options);
+  // Pass 1: measure the header/footer React fragments so the body renderer
+  // can reserve the right amount of top/bottom space. We render with
+  // `pages: 1` — good enough to read the natural height, which is the same
+  // on every page.
+  const gapMM = 2;
+  let reservedTopMM = 0;
+  let reservedBottomMM = 0;
+  if (options.header || options.footer) {
+    const preHeader = await renderFragmentsPerPage(
+      options.header,
+      options.header ? 1 : 0,
+      contentWidthPx
+    );
+    const preFooter = await renderFragmentsPerPage(
+      options.footer,
+      options.footer ? 1 : 0,
+      contentWidthPx
+    );
+    try {
+      if (options.header) {
+        const el = preHeader.elements[0];
+        const hMM = el
+          ? utils.pxToMM(el.getBoundingClientRect().height)
+          : 0;
+        const headerMargin = Number(options.header.margin ?? 0);
+        reservedTopMM = Math.max(
+          0,
+          headerMargin + hMM + gapMM - margins.top
+        );
+      }
+      if (options.footer) {
+        const el = preFooter.elements[0];
+        const fMM = el
+          ? utils.pxToMM(el.getBoundingClientRect().height)
+          : 0;
+        const footerMargin = Number(options.footer.margin ?? 0);
+        reservedBottomMM = Math.max(
+          0,
+          footerMargin + fMM + gapMM - margins.bottom
+        );
+      }
+    } finally {
+      preHeader.cleanup();
+      preFooter.cleanup();
+    }
   }
 
+  // Pass 2: render the body with the reservations applied.
+  if (options.engine === "html") {
+    await renderHtmlBody(doc, targets, options, reservedTopMM, reservedBottomMM);
+  } else {
+    await renderCanvasBody(
+      doc,
+      targets,
+      options,
+      reservedTopMM,
+      reservedBottomMM
+    );
+  }
+
+  // Pass 3: render the header/footer again with the correct total page
+  // count (now known) and stamp them onto every page.
   if (options.header || options.footer) {
     const numberOfPages = doc.getNumberOfPages();
-    const margins = getMargins(options);
-    const pageWidthMM = doc.internal.pageSize.getWidth();
-    const contentWidthPx = Math.max(
-      200,
-      Math.round((pageWidthMM - margins.left - margins.right) * MM_TO_PX)
-    );
     const header = await renderFragmentsPerPage(
       options.header,
       numberOfPages,
