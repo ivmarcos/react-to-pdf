@@ -1,5 +1,4 @@
 import { MM_TO_PX } from "./constants";
-import { Image } from "./models/image";
 
 export const mmToPX = (mm: number) => mm * MM_TO_PX;
 export const pxToMM = (px: number) => px / MM_TO_PX;
@@ -19,8 +18,7 @@ export const cropY = ({
   croppedCanvas.setAttribute("width", String(width));
   croppedCanvas.setAttribute("height", String(height));
   const ctx = croppedCanvas.getContext("2d");
-  // const ctx = croppedCanvas.getContext("webgl", {preserveDrawingBuffer: true});
-  ctx.drawImage(
+  ctx?.drawImage(
     canvas,
     0,
     offsetY,
@@ -33,10 +31,15 @@ export const cropY = ({
   );
   return croppedCanvas;
 };
+
 export const calculateHeightOffset = ({
   maxHeight,
   height,
   offsetY,
+}: {
+  maxHeight: number;
+  height: number;
+  offsetY: number;
 }): number => {
   if (height < maxHeight) {
     return height;
@@ -59,6 +62,7 @@ export const calculateFitRatio = ({
   }
   return 1;
 };
+
 export const calculateFillRatio = ({
   targetSize,
   size,
@@ -69,9 +73,15 @@ export const calculateFillRatio = ({
   return targetSize / size;
 };
 
-export const getImageDimensionsMM = (image: InstanceType<typeof Image>) => {
-  return {
-    width: pxToMM(image.getOriginalWidth()),
-    height: pxToMM(image.getOriginalHeight()),
-  };
-};
+/**
+ * Convert pixel dimensions of a canvas at a given display scale to mm.
+ * `displayScale` is the html2canvas scale that was used to capture the
+ * canvas; dividing by it yields the original on-screen size.
+ */
+export const canvasDimensionsMM = (
+  canvas: HTMLCanvasElement,
+  displayScale: number
+) => ({
+  width: pxToMM(canvas.width / displayScale),
+  height: pxToMM(canvas.height / displayScale),
+});

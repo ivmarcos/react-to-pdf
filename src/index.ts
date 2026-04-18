@@ -1,10 +1,23 @@
+import jsPDF from "jspdf";
 import { MutableRefObject, useCallback, useRef } from "react";
 
-import jsPDF from "jspdf";
-import { Document } from "./models/document";
-import { Options, PDFHandle, TargetElementFinder, UsePDFResult } from "./types";
-import { DocumentConverter } from "./services/documentConverter";
+import { Document } from "./document";
+import { renderCanvasBody, getMargins } from "./body/canvas";
+import { renderHtmlBody } from "./body/html";
+import { stampHeaderFooter } from "./overlay/headerFooter";
+import { renderFragmentsPerPage } from "./overlay/renderFragments";
+import { resolveOptions } from "./options";
+import {
+  Options,
+  PDFHandle,
+  TargetElement,
+  TargetElementFinder,
+  UsePDFResult,
+} from "./types";
+
 export { Margin, Resolution, Alignment as Position, Size } from "./constants";
+export { Document } from "./document";
+export { resolveOptions } from "./options";
 export * from "./components/PDF";
 export * from "./components/Body";
 export * from "./types";
@@ -16,17 +29,82 @@ const getTargetElementOrPDFHandle = <T extends HTMLElement>(
   if (typeof targetRefOrGetter === "function") {
     return targetRefOrGetter();
   }
-  const element = targetRefOrGetter?.current;
-  return element;
+  return targetRefOrGetter?.current;
 };
 
 /**
- * React hook for generating PDF documents from HTML elements.
+ * Build a jsPDF document from a DOM element using the configured engine.
  *
- * @param usePDFoptions - Configuration options for PDF generation (optional)
- * @returns An object containing:
- *   - targetRef: React ref to attach to the element you want to convert
- *   - toPDF: Function to trigger PDF generation, returns a Promise<jsPDF>
+ * Internal; the public surface is `create`, `save`, `open`, `print`,
+ * `generatePDF`, and the `usePDF` hook.
+ */
+async function buildDocument<T extends HTMLElement>(
+  targetRefOrGetter: TargetElementFinder<T>,
+  rawOptions?: Options
+): Promise<Document | null> {
+  const targetOrHandle = getTargetElementOrPDFHandle(targetRefOrGetter);
+  if (!targetOrHandle) {
+    console.error("Unable to get the target element.");
+    return null;
+  }
+  if ("getPdf" in targetOrHandle || "getDocument" in targetOrHandle) {
+    const handle = targetOrHandle as PDFHandle;
+    const pdf = handle.getPdf?.() ?? handle.getDocument?.()?.getInstance();
+    if (pdf) return new Document(pdf, rawOptions?.filename);
+    return null;
+  }
+
+  const options = resolveOptions(rawOptions);
+  const doc = new jsPDF({
+    format: options.page.format,
+    orientation: options.page.orientation,
+    unit: "mm",
+    ...options.overrides.pdf,
+  });
+
+  const targets: TargetElement[] = [{ element: targetOrHandle }];
+
+  // Reserve space for header/footer so body renderers know where to stop.
+  const headerReservedMM = options.header
+    ? Number(options.header.margin ?? 0) + 30
+    : 0;
+  const footerReservedMM = options.footer
+    ? Number(options.footer.margin ?? 0) + 20
+    : 0;
+
+  if (options.engine === "html") {
+    await renderHtmlBody(
+      doc,
+      targets,
+      options,
+      headerReservedMM,
+      footerReservedMM
+    );
+  } else {
+    await renderCanvasBody(doc, targets, options);
+  }
+
+  if (options.header || options.footer) {
+    const numberOfPages = doc.getNumberOfPages();
+    const header = await renderFragmentsPerPage(options.header, numberOfPages);
+    const footer = await renderFragmentsPerPage(options.footer, numberOfPages);
+    try {
+      await stampHeaderFooter(doc, {
+        headerElements: header.elements,
+        footerElements: footer.elements,
+        options,
+      });
+    } finally {
+      header.cleanup();
+      footer.cleanup();
+    }
+  }
+
+  return new Document(doc, options.filename);
+}
+
+/**
+ * React hook for generating PDF documents from HTML elements.
  *
  * @example
  * ```tsx
@@ -42,66 +120,29 @@ const getTargetElementOrPDFHandle = <T extends HTMLElement>(
 export const usePDF = (usePDFoptions?: Options): UsePDFResult => {
   const targetRef = useRef(null);
   const toPDF = useCallback(
-    (toPDFoptions?: Options): Promise<InstanceType<typeof jsPDF>> => {
-      return generatePDF(targetRef, usePDFoptions ?? toPDFoptions);
-    },
+    (toPDFoptions?: Options): Promise<InstanceType<typeof jsPDF>> =>
+      generatePDF(targetRef, usePDFoptions ?? toPDFoptions),
     [targetRef, usePDFoptions]
   );
   return { targetRef, toPDF };
 };
 
 /**
- * Creates a PDF document from an HTML element without triggering any action (save/open/print).
- * Returns the Document instance for further manipulation.
- *
- * @param targetRefOrGetter - React ref, getter function, or PDFHandle to get the target element.
- *   Examples: `containerRef`, `() => document.getElementById('myElement')`
- * @param options - Configuration options for PDF generation (optional)
- * @returns Promise resolving to the Document instance, or null if element not found
- * @throws Error if PDF generation fails
- *
- * @example
- * ```tsx
- * const doc = await create(containerRef, { filename: 'report.pdf' });
- * // Use doc.save(), doc.open(), or doc.print() manually
- * ```
+ * Build a PDF without saving, opening, or printing it. Returns the
+ * `Document` facade so callers can trigger actions themselves.
  */
 export const create = async <T extends HTMLElement>(
   targetRefOrGetter: TargetElementFinder<T>,
   options?: Options
-): Promise<InstanceType<typeof Document> | null> => {
+): Promise<Document | null> => {
   try {
-    const targetElementOrPDFHandle =
-      getTargetElementOrPDFHandle(targetRefOrGetter);
-    if (!targetElementOrPDFHandle) {
-      console.error("Unable to get the target element.");
-      return null;
-    }
-    if ("getDocument" in targetElementOrPDFHandle) {
-      return targetElementOrPDFHandle.getDocument();
-    }
-    const converter = new DocumentConverter(options);
-    return await converter.createDocument(targetElementOrPDFHandle);
+    return await buildDocument(targetRefOrGetter, options);
   } catch (error) {
     console.error("Failed to create PDF document:", error);
     throw error;
   }
 };
 
-/**
- * Creates a PDF document from an HTML element and opens it in a new browser tab.
- *
- * @param targetRefOrGetter - React ref, getter function, or PDFHandle to get the target element.
- *   Examples: `containerRef`, `() => document.getElementById('myElement')`
- * @param options - Configuration options for PDF generation (optional)
- * @returns Promise that resolves when the PDF is opened
- * @throws Error if PDF generation or opening fails
- *
- * @example
- * ```tsx
- * await open(containerRef, { page: { orientation: 'landscape' } });
- * ```
- */
 export const open = async <T extends HTMLElement>(
   targetRefOrGetter: TargetElementFinder<T>,
   options?: Options
@@ -115,21 +156,6 @@ export const open = async <T extends HTMLElement>(
   }
 };
 
-/**
- * Creates a PDF document from an HTML element and downloads it to a file.
- *
- * @param targetRefOrGetter - React ref, getter function, or PDFHandle to get the target element.
- *   Examples: `containerRef`, `() => document.getElementById('myElement')`
- * @param options - Configuration options for PDF generation (optional).
- *   Use `filename` option to specify the download filename.
- * @returns Promise that resolves when the file has been saved
- * @throws Error if PDF generation or saving fails
- *
- * @example
- * ```tsx
- * await save(containerRef, { filename: 'invoice.pdf' });
- * ```
- */
 export const save = async <T extends HTMLElement>(
   targetRefOrGetter: TargetElementFinder<T>,
   options?: Options
@@ -143,20 +169,6 @@ export const save = async <T extends HTMLElement>(
   }
 };
 
-/**
- * Creates a PDF document from an HTML element and triggers the browser print dialog.
- *
- * @param targetRefOrGetter - React ref, getter function, or PDFHandle to get the target element.
- *   Examples: `containerRef`, `() => document.getElementById('myElement')`
- * @param options - Configuration options for PDF generation (optional)
- * @returns Promise that resolves when the print dialog is triggered
- * @throws Error if PDF generation fails
- *
- * @example
- * ```tsx
- * await print(containerRef, { page: { format: 'a4' } });
- * ```
- */
 export const print = async <T extends HTMLElement>(
   targetRefOrGetter: TargetElementFinder<T>,
   options?: Options
@@ -176,18 +188,19 @@ const generatePDF = async <T extends HTMLElement>(
 ): Promise<InstanceType<typeof jsPDF>> => {
   try {
     const document = await create(targetRefOrGetter, options);
+    if (!document) {
+      throw new Error("Failed to create PDF document.");
+    }
     switch (options?.method) {
       case "build":
         return document.getInstance();
-      case "open": {
+      case "open":
         document.open();
         return document.getInstance();
-      }
       case "save":
-      default: {
+      default:
         await document.save();
         return document.getInstance();
-      }
     }
   } catch (error) {
     console.error("Failed to generate PDF:", error);
@@ -196,3 +209,7 @@ const generatePDF = async <T extends HTMLElement>(
 };
 
 export default generatePDF;
+
+// Re-export internal building blocks that advanced consumers used.
+export { renderCanvasBody, getMargins };
+export { renderHtmlBody };

@@ -3,277 +3,173 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 
-// Mock DocumentConverter before importing the module under test
-const mockCreateDocument = vi.fn();
-
-vi.mock("../services/documentConverter", () => ({
-  DocumentConverter: vi.fn().mockImplementation(() => ({
-    createDocument: mockCreateDocument,
-  })),
-  parseOptions: vi.fn(),
+// Stub the body renderers so the tests don't try to run html2canvas /
+// jsPDF.html() inside jsdom. Each stub records whether it was invoked.
+const mocks = vi.hoisted(() => ({
+  renderCanvasBody: vi.fn(async () => undefined),
+  renderHtmlBody: vi.fn(async () => undefined),
+  stampHeaderFooter: vi.fn(async () => undefined),
 }));
 
-import { usePDF, create, open, save, print } from "../index";
+vi.mock("../body/canvas", () => ({
+  renderCanvasBody: mocks.renderCanvasBody,
+  getMargins: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+  getPageMaxWidth: () => 210,
+  getPageMaxHeight: () => 297,
+}));
+
+vi.mock("../body/html", () => ({
+  renderHtmlBody: mocks.renderHtmlBody,
+}));
+
+vi.mock("../overlay/headerFooter", () => ({
+  stampHeaderFooter: mocks.stampHeaderFooter,
+}));
+
+const renderCanvasBodyMock = mocks.renderCanvasBody;
+const renderHtmlBodyMock = mocks.renderHtmlBody;
+const stampHeaderFooterMock = mocks.stampHeaderFooter;
+
+// jsPDF constructor is real; the stubbed renderers never touch it beyond the
+// constructor + addPage, which jsdom tolerates. `open()` needs window.open.
+const openSpy = vi.fn();
+Object.defineProperty(window, "open", { value: openSpy, writable: true });
+// autoPrint / output("dataurlnewwindow") would also hit window; stub a jsPDF
+// save/print where needed.
+
+import { usePDF, create, open, save, print, resolveOptions } from "../index";
 import generatePDF from "../index";
+import { Document } from "../document";
 
-// Helper to build a mock Document returned by DocumentConverter.createDocument
-const createMockDocument = () => ({
-  save: vi.fn().mockResolvedValue(undefined),
-  open: vi.fn(),
-  print: vi.fn(),
-  getInstance: vi.fn().mockReturnValue({ fake: "jsPDF" }),
-});
+const element = () => document.createElement("div");
 
-describe("getTargetElementOrPDFHandle (tested via create)", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+describe("resolveOptions", () => {
+  test("returns defaults when nothing is passed", () => {
+    const out = resolveOptions();
+    expect(out.engine).toBe("canvas");
+    expect(out.method).toBe("save");
+    expect(out.canvas.resolution).toBeGreaterThan(0);
+    expect(out.header).toBeNull();
+    expect(out.footer).toBeNull();
   });
 
-  test("returns null and logs error when ref.current is null", async () => {
+  test("forwards legacy resolution to canvas.resolution", () => {
+    const warnSpy = vi
+      .spyOn(console, "warn")
+      .mockImplementation(() => undefined);
+    const out = resolveOptions({ resolution: 5 });
+    expect(out.canvas.resolution).toBe(5);
+    warnSpy.mockRestore();
+  });
+
+  test("normalises a header render fn into a FooterHeaderProps shape", () => {
+    const Render = () => null as any;
+    const out = resolveOptions({ header: Render });
+    expect(out.header?.render).toBe(Render);
+    expect(out.header?.align).toBe("center");
+  });
+
+  test("engine: html picks html config", () => {
+    const out = resolveOptions({
+      engine: "html",
+      html: { autoPaging: "slice" },
+    });
+    expect(out.engine).toBe("html");
+    expect(out.html.autoPaging).toBe("slice");
+  });
+});
+
+describe("create / save / open / print / generatePDF", () => {
+  beforeEach(() => {
+    renderCanvasBodyMock.mockClear();
+    renderHtmlBodyMock.mockClear();
+    stampHeaderFooterMock.mockClear();
+    openSpy.mockClear();
+  });
+
+  test("create returns null and logs when target is missing", async () => {
     const errorSpy = vi
       .spyOn(console, "error")
       .mockImplementation(() => undefined);
-    const ref = { current: null };
-    const result = await create(ref as any);
+    const result = await create({ current: null } as any);
     expect(result).toBeNull();
     expect(errorSpy).toHaveBeenCalledWith("Unable to get the target element.");
     errorSpy.mockRestore();
   });
 
-  test("returns null and logs error when ref is undefined", async () => {
-    const errorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-    const ref = { current: undefined };
-    const result = await create(ref as any);
-    expect(result).toBeNull();
-    errorSpy.mockRestore();
+  test("create uses the canvas engine by default", async () => {
+    const el = element();
+    const doc = await create(() => el);
+    expect(doc).toBeInstanceOf(Document);
+    expect(renderCanvasBodyMock).toHaveBeenCalledTimes(1);
+    expect(renderHtmlBodyMock).not.toHaveBeenCalled();
   });
 
-  test("returns null and logs error when getter returns null", async () => {
-    const errorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-    const getter = () => null;
-    const result = await create(getter);
-    expect(result).toBeNull();
-    expect(errorSpy).toHaveBeenCalledWith("Unable to get the target element.");
-    errorSpy.mockRestore();
+  test("create routes to the html engine when engine: html", async () => {
+    const el = element();
+    const doc = await create(() => el, { engine: "html" });
+    expect(doc).toBeInstanceOf(Document);
+    expect(renderHtmlBodyMock).toHaveBeenCalledTimes(1);
+    expect(renderCanvasBodyMock).not.toHaveBeenCalled();
   });
 
-  test("resolves element from getter function", async () => {
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-    const getter = () => element;
-    const result = await create(getter);
-    expect(result).toBe(mockDoc);
-    expect(mockCreateDocument).toHaveBeenCalledWith(element);
-  });
-
-  test("resolves element from ref object", async () => {
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-    const ref = { current: element };
-    const result = await create(ref as any);
-    expect(result).toBe(mockDoc);
-    expect(mockCreateDocument).toHaveBeenCalledWith(element);
-  });
-});
-
-describe("create", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  test("uses PDFHandle.getDocument when element has getDocument", async () => {
-    const mockDoc = createMockDocument();
-    const pdfHandle = {
-      getDocument: vi.fn().mockReturnValue(mockDoc),
+  test("reuses an existing PDFHandle via getDocument", async () => {
+    const inner = { output: () => "bloburl", getNumberOfPages: () => 1 } as any;
+    const handle = {
+      getDocument: () => new Document(inner, "existing.pdf"),
+      getPdf: () => inner,
       update: vi.fn(),
       save: vi.fn(),
       open: vi.fn(),
       print: vi.fn(),
     };
-    const ref = { current: pdfHandle };
-    const result = await create(ref as any);
-    expect(pdfHandle.getDocument).toHaveBeenCalled();
-    expect(result).toBe(mockDoc);
-    expect(mockCreateDocument).not.toHaveBeenCalled();
+    const result = await create({ current: handle } as any);
+    expect(result?.getInstance()).toBe(inner);
+    expect(renderCanvasBodyMock).not.toHaveBeenCalled();
   });
 
-  test("passes options to DocumentConverter", async () => {
-    const { DocumentConverter } = await import("../services/documentConverter");
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-    const options = { filename: "test.pdf" };
-    await create(() => element, options);
-    expect(DocumentConverter).toHaveBeenCalledWith(options);
+  test("open triggers window.open with bloburl", async () => {
+    const el = element();
+    await open(() => el);
+    expect(openSpy).toHaveBeenCalled();
   });
 
-  test("propagates errors from createDocument", async () => {
+  test("save returns undefined when create fails", async () => {
     const errorSpy = vi
       .spyOn(console, "error")
       .mockImplementation(() => undefined);
-    const error = new Error("conversion failed");
-    mockCreateDocument.mockRejectedValue(error);
-    const element = document.createElement("div");
-    await expect(create(() => element)).rejects.toThrow("conversion failed");
-    expect(errorSpy).toHaveBeenCalledWith(
-      "Failed to create PDF document:",
-      error
-    );
-    errorSpy.mockRestore();
-  });
-});
-
-describe("open", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  test("creates document and calls open on it", async () => {
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-    await open(() => element);
-    expect(mockDoc.open).toHaveBeenCalled();
-  });
-
-  test("does not throw when element is null", async () => {
-    const errorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-    await open(() => null);
-    // create returns null, document?.open() is safe
+    const res = await save(() => null as any);
+    expect(res).toBeUndefined();
     errorSpy.mockRestore();
   });
 
-  test("propagates errors from create", async () => {
-    const errorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-    mockCreateDocument.mockRejectedValue(new Error("open error"));
-    const element = document.createElement("div");
-    await expect(open(() => element)).rejects.toThrow("open error");
-    errorSpy.mockRestore();
-  });
-});
-
-describe("save", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+  test("print triggers autoPrint without throwing", async () => {
+    const el = element();
+    await expect(print(() => el)).resolves.not.toThrow();
   });
 
-  test("creates document and calls save on it", async () => {
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-    await save(() => element);
-    expect(mockDoc.save).toHaveBeenCalled();
+  test("generatePDF defaults to save and returns a jsPDF instance", async () => {
+    const el = element();
+    const instance = await generatePDF(() => el);
+    expect(instance).toBeDefined();
+    expect(typeof (instance as any).save).toBe("function");
   });
 
-  test("does not throw when element is null", async () => {
-    const errorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-    await save(() => null);
-    errorSpy.mockRestore();
+  test("generatePDF with method: build skips save/open", async () => {
+    const el = element();
+    const instance = await generatePDF(() => el, { method: "build" });
+    expect(instance).toBeDefined();
   });
 
-  test("propagates errors from create", async () => {
-    const errorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-    mockCreateDocument.mockRejectedValue(new Error("save error"));
-    const element = document.createElement("div");
-    await expect(save(() => element)).rejects.toThrow("save error");
-    errorSpy.mockRestore();
-  });
-});
-
-describe("print", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  test("creates document and calls print on it", async () => {
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-    await print(() => element);
-    expect(mockDoc.print).toHaveBeenCalled();
-  });
-
-  test("does not throw when element is null", async () => {
-    const errorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-    await print(() => null);
-    errorSpy.mockRestore();
-  });
-});
-
-describe("generatePDF (default export)", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  test("defaults to save method and returns jsPDF instance", async () => {
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-    const result = await generatePDF(() => element);
-    expect(mockDoc.save).toHaveBeenCalled();
-    expect(mockDoc.getInstance).toHaveBeenCalled();
-    expect(result).toEqual({ fake: "jsPDF" });
-  });
-
-  test("save method calls save and returns instance", async () => {
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-    const result = await generatePDF(() => element, { method: "save" });
-    expect(mockDoc.save).toHaveBeenCalled();
-    expect(result).toEqual({ fake: "jsPDF" });
-  });
-
-  test("open method calls open and returns instance", async () => {
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-    const result = await generatePDF(() => element, { method: "open" });
-    expect(mockDoc.open).toHaveBeenCalled();
-    expect(mockDoc.save).not.toHaveBeenCalled();
-    expect(result).toEqual({ fake: "jsPDF" });
-  });
-
-  test("build method returns instance without save or open", async () => {
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-    const result = await generatePDF(() => element, { method: "build" });
-    expect(mockDoc.save).not.toHaveBeenCalled();
-    expect(mockDoc.open).not.toHaveBeenCalled();
-    expect(result).toEqual({ fake: "jsPDF" });
-  });
-
-  test("propagates errors", async () => {
-    const errorSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-    mockCreateDocument.mockRejectedValue(new Error("generate error"));
-    const element = document.createElement("div");
-    await expect(generatePDF(() => element)).rejects.toThrow("generate error");
-    errorSpy.mockRestore();
+  test("generatePDF with method: open calls window.open", async () => {
+    const el = element();
+    await generatePDF(() => el, { method: "open" });
+    expect(openSpy).toHaveBeenCalled();
   });
 });
 
 describe("usePDF", () => {
   let container: HTMLDivElement;
-  // Stores the latest hook result so tests can inspect it
   let hookResult: ReturnType<typeof usePDF>;
 
   function HookConsumer({
@@ -286,7 +182,7 @@ describe("usePDF", () => {
   }
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    renderCanvasBodyMock.mockClear();
     container = document.createElement("div");
     document.body.appendChild(container);
   });
@@ -296,99 +192,44 @@ describe("usePDF", () => {
     container.remove();
   });
 
-  test("returns targetRef and toPDF function", () => {
+  test("returns a targetRef and a toPDF function", () => {
     act(() => {
       ReactDOM.render(React.createElement(HookConsumer), container);
     });
     expect(hookResult).toHaveProperty("targetRef");
-    expect(hookResult).toHaveProperty("toPDF");
     expect(typeof hookResult.toPDF).toBe("function");
     expect(hookResult.targetRef.current).toBeNull();
   });
 
-  test("returns stable references across re-renders", () => {
+  test("toPDF invokes the canvas body renderer when a ref target is set", async () => {
     act(() => {
       ReactDOM.render(
         React.createElement(HookConsumer, {
-          options: { filename: "test.pdf" },
+          options: { filename: "hook.pdf" },
         }),
         container
       );
     });
-    const first = { ...hookResult };
-    act(() => {
-      ReactDOM.render(
-        React.createElement(HookConsumer, {
-          options: { filename: "test.pdf" },
-        }),
-        container
-      );
-    });
-    expect(hookResult.targetRef).toBe(first.targetRef);
-  });
-
-  test("toPDF calls generatePDF with targetRef and hook options", async () => {
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-
-    act(() => {
-      ReactDOM.render(
-        React.createElement(HookConsumer, {
-          options: { filename: "hook-options.pdf" },
-        }),
-        container
-      );
-    });
-    hookResult.targetRef.current = element;
-
+    hookResult.targetRef.current = element();
     await act(async () => {
       await hookResult.toPDF();
     });
-    expect(mockCreateDocument).toHaveBeenCalledWith(element);
+    expect(renderCanvasBodyMock).toHaveBeenCalled();
   });
 
-  test("hook options take precedence over toPDF options", async () => {
-    const { DocumentConverter } = await import("../services/documentConverter");
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-
+  test("toPDF switches to the html engine when options request it", async () => {
     act(() => {
       ReactDOM.render(
         React.createElement(HookConsumer, {
-          options: { filename: "hook-level.pdf" },
+          options: { engine: "html" },
         }),
         container
       );
     });
-    hookResult.targetRef.current = element;
-
+    hookResult.targetRef.current = element();
     await act(async () => {
-      await hookResult.toPDF({ filename: "call-level.pdf" });
+      await hookResult.toPDF();
     });
-    // usePDFoptions ?? toPDFoptions means hook options win when defined
-    expect(DocumentConverter).toHaveBeenCalledWith(
-      expect.objectContaining({ filename: "hook-level.pdf" })
-    );
-  });
-
-  test("toPDF options are used when hook options are undefined", async () => {
-    const { DocumentConverter } = await import("../services/documentConverter");
-    const mockDoc = createMockDocument();
-    mockCreateDocument.mockResolvedValue(mockDoc);
-    const element = document.createElement("div");
-
-    act(() => {
-      ReactDOM.render(React.createElement(HookConsumer), container);
-    });
-    hookResult.targetRef.current = element;
-
-    await act(async () => {
-      await hookResult.toPDF({ filename: "fallback.pdf" });
-    });
-    expect(DocumentConverter).toHaveBeenCalledWith(
-      expect.objectContaining({ filename: "fallback.pdf" })
-    );
+    expect(renderHtmlBodyMock).toHaveBeenCalled();
   });
 });

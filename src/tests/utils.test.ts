@@ -1,10 +1,9 @@
 import { describe, test, expect } from "vitest";
 import * as utils from "../utils";
-import { Image } from "../models/image";
 
 describe("utils", () => {
   describe("cropY", () => {
-    test("should work", () => {
+    test("crops the source canvas to the requested height", () => {
       const canvas = document.createElement("canvas");
       canvas.setAttribute("width", String(400));
       canvas.setAttribute("height", String(1000));
@@ -12,7 +11,7 @@ describe("utils", () => {
         width: 400,
         height: 700,
         offsetY: 500,
-        canvas: canvas,
+        canvas,
       });
       expect({
         width: croppedCanvas.width,
@@ -25,7 +24,7 @@ describe("utils", () => {
   });
 
   describe("calculateHeightOffset", () => {
-    test("return the height when is less than the max height", () => {
+    test("returns the height when it fits under the max", () => {
       expect(
         utils.calculateHeightOffset({
           maxHeight: 1000,
@@ -34,7 +33,7 @@ describe("utils", () => {
         })
       ).toBe(999);
     });
-    test("return the offset height when is less than the max height", () => {
+    test("returns the remainder when offset pushes height past the limit", () => {
       expect(
         utils.calculateHeightOffset({
           maxHeight: 1000,
@@ -43,7 +42,7 @@ describe("utils", () => {
         })
       ).toBe(900);
     });
-    test("return the max height when is higher than the offset height", () => {
+    test("returns the max height when it still overflows", () => {
       expect(
         utils.calculateHeightOffset({
           maxHeight: 1000,
@@ -55,31 +54,30 @@ describe("utils", () => {
   });
 
   describe("calculateFitRatio", () => {
-    test("return the correct ratio when the size is greater than the max size", () => {
+    test("returns shrink ratio when size exceeds max", () => {
       expect(utils.calculateFitRatio({ maxSize: 5, size: 10 })).toBe(0.5);
     });
-    test("return 1 when the size is less or equal than the max size", () => {
+    test("returns 1 when size is under the max", () => {
       expect(utils.calculateFitRatio({ maxSize: 10, size: 10 })).toBe(1);
       expect(utils.calculateFitRatio({ maxSize: 10, size: 9.99 })).toBe(1);
     });
   });
 
   describe("calculateFillRatio", () => {
-    test("return the correct ratio when the size is lower than the target size", () => {
+    test("scales up to fill target", () => {
       expect(utils.calculateFillRatio({ targetSize: 20, size: 10 })).toBe(2);
     });
-    test("return the correct ratio when the size is higher or equal than the target size ", () => {
+    test("scales down to fill target", () => {
       expect(utils.calculateFillRatio({ targetSize: 10, size: 20 })).toBe(0.5);
     });
   });
 
-  describe("getImageDimensionsMM", () => {
-    test("return the correct dimensions for a image in MM", () => {
+  describe("canvasDimensionsMM", () => {
+    test("converts a scaled canvas to mm", () => {
       const canvas = document.createElement("canvas");
       canvas.setAttribute("width", String(200));
       canvas.setAttribute("height", String(400));
-      const image = new Image(canvas, 3);
-      expect(utils.getImageDimensionsMM(image)).toEqual({
+      expect(utils.canvasDimensionsMM(canvas, 3)).toEqual({
         height: 35.27777777773221,
         width: 17.638888888866106,
       });
@@ -87,13 +85,13 @@ describe("utils", () => {
   });
 
   describe("mmToPX", () => {
-    test("should convert correctly", () => {
+    test("converts mm to px", () => {
       expect(utils.mmToPX(200)).toBe(755.905511812);
     });
   });
 
   describe("pxToMM", () => {
-    test("should convert correctly", () => {
+    test("converts px to mm", () => {
       expect(utils.pxToMM(755.905511812)).toBe(200);
     });
   });

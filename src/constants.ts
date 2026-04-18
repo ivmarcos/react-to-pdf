@@ -1,7 +1,7 @@
 import {
   AlignmentOption,
   DashCaseToUpperSnakeCase,
-  DocumentConverterOptions,
+  ResolvedOptions,
   SizeOption,
 } from "./types";
 
@@ -40,28 +40,45 @@ export const Size: Record<DashCaseToUpperSnakeCase<SizeOption>, SizeOption> = {
   SHRINK_TO_FIT: "shrink-to-fit",
 };
 
-export const DEFAULT_OPTIONS: Readonly<DocumentConverterOptions> = {
-  resolution: Resolution.MEDIUM,
+/**
+ * Fully-resolved default options. Functions inside the library receive this
+ * shape after `resolveOptions` normalises user input.
+ */
+export const DEFAULT_OPTIONS: Readonly<ResolvedOptions> = {
+  filename: undefined,
+  method: "save",
+  engine: "canvas",
   page: {
     margin: Margin.NONE,
     format: "A4",
     orientation: "portrait",
   },
+  header: null,
+  footer: null,
   canvas: {
+    resolution: Resolution.MEDIUM,
+    quality: 0.9,
     mimeType: "image/jpeg",
-    qualityRatio: 0.9,
-    useCORS: true,
-    logging: false,
+    align: Alignment.TOP_LEFT,
+    size: Size.ORIGINAL,
+    hooks: {},
+    overrides: {
+      useCORS: true,
+      logging: false,
+    },
   },
-  overrides: {},
-  align: Alignment.TOP_LEFT,
-  size: Size.ORIGINAL,
-  header: {
-    margin: 7,
-    align: "center",
+  html: {
+    autoPaging: "text",
+    fragmentScale: 2,
+    overrides: {},
   },
-  footer: {
-    margin: 7,
-    align: "center",
+  overrides: {
+    pdf: {},
   },
+};
+
+/** Default header/footer values when consumers provide only a render function. */
+export const DEFAULT_HEADER_FOOTER = {
+  margin: 7,
+  align: "center" as const,
 };
