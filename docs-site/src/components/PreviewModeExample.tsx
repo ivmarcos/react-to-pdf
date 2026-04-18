@@ -113,24 +113,47 @@ function Demo({ PDF, Margin }: { PDF: any; Margin: any }) {
             Preview-mode demo
           </h1>
           <p style={{ marginTop: 10, color: "#475569", lineHeight: 1.6 }}>
-            Flip the tabs above to compare the two ways <code>&lt;PDF&gt;</code>
+            Flip the tabs above to compare the two ways <InlineCode>&lt;PDF&gt;</InlineCode>
             {" "}can show its content while the file is being built.
           </p>
           <ul style={{ color: "#475569", lineHeight: 1.8 }}>
             <li>
-              <code>preview="embed"</code> — the actual generated PDF is
-              displayed via <code>&lt;embed&gt;</code>. It re-embeds on every
-              build, so users can scroll pages, zoom, and print from here.
+              <InlineCode>preview="embed"</InlineCode> — the actual generated
+              PDF is displayed via <InlineCode>&lt;embed&gt;</InlineCode>. It
+              re-embeds on every build, so users can scroll pages, zoom, and
+              print from here.
             </li>
             <li>
-              <code>preview="children"</code> — the React children render
-              normally on the page. Good when you want the user to see the
-              content before they download.
+              <InlineCode>preview="children"</InlineCode> — the React children
+              render normally on the page. Good when you want the user to see
+              the content before they download.
             </li>
           </ul>
         </div>
       </PDF>
     </div>
+  );
+}
+
+function InlineCode({ children }: { children: React.ReactNode }) {
+  // Explicit inline styles so the code looks the same whether the children
+  // render inline (inside the docs' .prose wrapper) or offscreen via the
+  // <PDF> portal (which is outside .prose, so the typography plugin's dark
+  // code background would otherwise leak through).
+  return (
+    <code
+      style={{
+        background: "#f1f5f9",
+        color: "#0f172a",
+        padding: "2px 6px",
+        borderRadius: 4,
+        fontFamily:
+          "Fira Code, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+        fontSize: "0.9em",
+      }}
+    >
+      {children}
+    </code>
   );
 }
 
