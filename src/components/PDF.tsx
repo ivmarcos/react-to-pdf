@@ -26,6 +26,7 @@ import { renderHtmlBody } from "../body/html";
 import { stampHeaderFooter } from "../overlay/headerFooter";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
+import { Body } from "./Body";
 import { OFFSCREEN_POSITION } from "../constants";
 
 const previewStyle: CSSProperties = {
@@ -237,7 +238,10 @@ export const PDF = forwardRef<PDFHandle, PDFProps>(
 
     const targetChildren = useMemo(() => {
       return React.Children.map(children, (child, index) => {
-        if (React.isValidElement(child)) {
+        // Only inject the registration props when the child is a <Body>.
+        // Plain JSX (e.g. <article>) would otherwise receive unknown DOM
+        // attributes and log React warnings.
+        if (React.isValidElement(child) && child.type === Body) {
           return React.cloneElement(child as React.ReactElement<BodyProps>, {
             registerTarget,
             targetIndex: index,
