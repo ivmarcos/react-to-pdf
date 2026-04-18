@@ -28,6 +28,8 @@ export const navigation = {
         { title: "Certificates", href: "/docs/examples/certificate" },
         { title: "Event Tickets", href: "/docs/examples/ticket" },
         { title: "Reports with Tables", href: "/docs/examples/report" },
+        { title: "Resume / CV", href: "/docs/examples/resume" },
+        { title: "Form to PDF", href: "/docs/examples/form" },
         {
           title: "Standalone Functions",
           href: "/docs/examples/standalone-functions",

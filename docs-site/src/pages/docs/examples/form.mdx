@@ -1,0 +1,90 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: "Form to PDF - React to PDF"
+description: "Capture form submissions as searchable PDF receipts using the html engine."
+---
+
+import FormExample from "@components/FormExample";
+
+# Form to PDF
+
+A common request: the user fills out a support form, and you want to hand
+them a printable PDF receipt that mirrors what they submitted. Rendering
+with the html engine means the receipt is a vector PDF — the
+field values are searchable, copy-pasteable, and ATS / indexer friendly.
+
+## Live demo
+
+Edit any field, then hit **Download Submission PDF**. The embedded preview
+regenerates so you can inspect the output before saving.
+
+<FormExample client:load />
+
+## How it's built
+
+```tsx
+import { useRef, useState } from "react";
+import { PDF, Margin, PDFHandle } from "react-to-pdf";
+
+function SupportForm() {
+  const [state, setState] = useState({
+    fullName: "",
+    email: "",
+    requestType: "Bug report",
+    summary: "",
+  });
+  const pdfRef = useRef<PDFHandle>(null);
+
+  return (
+    <>
+      <form>
+        <input
+          value={state.fullName}
+          onChange={(e) => setState({ ...state, fullName: e.target.value })}
+        />
+        {/* ...the rest of the fields... */}
+      </form>
+
+      <button onClick={() => pdfRef.current?.save("submission.pdf")}>
+        Download submission PDF
+      </button>
+
+      <PDF
+        ref={pdfRef}
+        engine="html"
+        preview="embed"
+        page={{ format: "a4", margin: Margin.MEDIUM }}
+        html={{ autoPaging: "text" }}
+      >
+        <article>
+          <h1>Support request</h1>
+          <p><strong>Full name:</strong> {state.fullName}</p>
+          <p><strong>Email:</strong> {state.email}</p>
+          <p><strong>Request type:</strong> {state.requestType}</p>
+          <p><strong>Summary:</strong> {state.summary}</p>
+        </article>
+      </PDF>
+    </>
+  );
+}
+```
+
+## Tips
+
+- Keep the receipt layout simple — big headings, comfortable spacing,
+  plain text. The html engine renders standard typography very well, but
+  complex CSS (transforms, gradient backgrounds, shadows) falls back to
+  raster.
+- If you need the official `preview="embed"` iframe to appear only
+  *after* the user submits the form, conditionally render the
+  `<PDF>` component. Its first build starts as soon as it mounts, so you
+  can save the file straight from the imperative ref.
+- Because the output is vectorised, the file size stays tiny even as
+  fields grow. Typical submissions come in under 100 KB.
+
+## See also
+
+- [Rendering Engines](/react-to-pdf/docs/advanced/engines) — canvas vs html
+  trade-offs.
+- [Components API](/react-to-pdf/docs/api/components) — the full `<PDF>`
+  reference, including preview modes.

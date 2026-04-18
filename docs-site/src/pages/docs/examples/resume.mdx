@@ -1,0 +1,83 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: "Resume / CV Example - React to PDF"
+description: "Render a searchable, ATS-friendly resume PDF using the html engine."
+---
+
+import ResumeExample from "@components/ResumeExample";
+
+# Resume / CV
+
+A resume is one of the documents where a vector, selectable PDF matters most:
+recruiters skim by copy-pasting keywords, and applicant-tracking systems
+(ATS) parse the text layer. Rendering with the html engine produces real PDF
+text operators instead of a flattened screenshot, so the output is both
+smaller and machine-readable.
+
+## Live demo
+
+<ResumeExample client:load />
+
+## How it's built
+
+```tsx
+import { useRef } from "react";
+import { PDF, Margin, PDFHandle } from "react-to-pdf";
+
+function Resume() {
+  const pdfRef = useRef<PDFHandle>(null);
+
+  return (
+    <>
+      <button onClick={() => pdfRef.current?.save("resume.pdf")}>
+        Download resume
+      </button>
+
+      <PDF
+        ref={pdfRef}
+        engine="html"
+        preview="embed"
+        page={{ format: "a4", margin: Margin.MEDIUM }}
+        html={{ autoPaging: "text" }}
+      >
+        <article>
+          <header>
+            <h1>Jane Doe</h1>
+            <p>Senior Frontend Engineer · jane@example.com</p>
+          </header>
+
+          <section>
+            <h2>Summary</h2>
+            <p>Eight years building design-system-driven React...</p>
+          </section>
+
+          {/* Experience, Education, Skills... */}
+        </article>
+      </PDF>
+    </>
+  );
+}
+```
+
+## Why the html engine
+
+- **Selectable text.** Recruiters can highlight and copy skills or bullets
+  straight out of the PDF without re-typing.
+- **ATS friendly.** The text layer is indexable by Greenhouse, Lever,
+  Workday, and similar trackers.
+- **Smaller files.** Vector text compresses far better than a rasterised
+  screenshot. Typical resumes end up under 200 KB.
+- **Accessible.** Screen readers can narrate the content.
+
+> If you want a highly typographic layout with a custom webfont, be aware
+> that the html engine only supports the built-in PDF fonts (Helvetica,
+> Times, Courier) unless you register a custom font via
+> `doc.addFileToVFS` / `doc.addFont`. Stick to the canvas engine if font
+> fidelity matters more than searchability.
+
+## See also
+
+- [Rendering Engines](/react-to-pdf/docs/advanced/engines) — the full
+  feature matrix for canvas vs html.
+- [Custom Fonts](/react-to-pdf/docs/advanced/custom-fonts) — registering
+  additional typefaces.
