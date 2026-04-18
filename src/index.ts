@@ -7,6 +7,7 @@ import { renderHtmlBody } from "./body/html";
 import { stampHeaderFooter } from "./overlay/headerFooter";
 import { renderFragmentsPerPage } from "./overlay/renderFragments";
 import { resolveOptions } from "./options";
+import { MM_TO_PX } from "./constants";
 import {
   Options,
   PDFHandle,
@@ -64,30 +65,33 @@ async function buildDocument<T extends HTMLElement>(
 
   const targets: TargetElement[] = [{ element: targetOrHandle }];
 
-  // Reserve space for header/footer so body renderers know where to stop.
-  const headerReservedMM = options.header
-    ? Number(options.header.margin ?? 0) + 30
-    : 0;
-  const footerReservedMM = options.footer
-    ? Number(options.footer.margin ?? 0) + 20
-    : 0;
-
   if (options.engine === "html") {
-    await renderHtmlBody(
-      doc,
-      targets,
-      options,
-      headerReservedMM,
-      footerReservedMM
-    );
+    // Both engines now use `page.margin` as-is; neither reserves extra space
+    // for header/footer. Users who need a larger band for ornate headers
+    // should bump `page.margin.top` / `page.margin.bottom` accordingly.
+    await renderHtmlBody(doc, targets, options, 0, 0);
   } else {
     await renderCanvasBody(doc, targets, options);
   }
 
   if (options.header || options.footer) {
     const numberOfPages = doc.getNumberOfPages();
-    const header = await renderFragmentsPerPage(options.header, numberOfPages);
-    const footer = await renderFragmentsPerPage(options.footer, numberOfPages);
+    const margins = getMargins(options);
+    const pageWidthMM = doc.internal.pageSize.getWidth();
+    const contentWidthPx = Math.max(
+      200,
+      Math.round((pageWidthMM - margins.left - margins.right) * MM_TO_PX)
+    );
+    const header = await renderFragmentsPerPage(
+      options.header,
+      numberOfPages,
+      contentWidthPx
+    );
+    const footer = await renderFragmentsPerPage(
+      options.footer,
+      numberOfPages,
+      contentWidthPx
+    );
     try {
       await stampHeaderFooter(doc, {
         headerElements: header.elements,

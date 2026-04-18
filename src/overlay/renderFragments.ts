@@ -8,10 +8,13 @@ import type { FooterHeaderProps, FooterHeaderRenderProps } from "../types";
  * elements plus a cleanup function. Header/footer receive
  * `{ page, pages }` on each render.
  *
+ * `targetWidthPx`, when provided, sets the host's CSS width so the fragment
+ * lays out at the exact pixel width it will occupy on the PDF page. This
+ * makes flex layouts (e.g. `justify-content: space-between`) span the full
+ * printable width instead of collapsing to the fragment's natural width.
+ *
  * Uses `ReactDOM.render` / `unmountComponentAtNode`, which work on all
- * supported React versions (16.8+). On React 18 this logs a deprecation
- * warning; a future major release will switch to `createRoot` via an
- * opt-in helper to keep the peer-dep surface on `react-dom` only.
+ * supported React versions (16.8+).
  *
  * The hook path (`usePDF` / `generatePDF`) uses this; the `<PDF>` component
  * renders header/footer as real React children and passes their refs
@@ -19,7 +22,8 @@ import type { FooterHeaderProps, FooterHeaderRenderProps } from "../types";
  */
 export async function renderFragmentsPerPage(
   config: FooterHeaderProps | null,
-  numberOfPages: number
+  numberOfPages: number,
+  targetWidthPx?: number
 ): Promise<{ elements: (HTMLElement | null)[]; cleanup: () => void }> {
   if (!config || numberOfPages === 0) {
     return { elements: [], cleanup: () => undefined };
@@ -33,6 +37,9 @@ export async function renderFragmentsPerPage(
     host.style.left = "-10000px";
     host.style.top = "-10000px";
     host.style.pointerEvents = "none";
+    if (targetWidthPx && targetWidthPx > 0) {
+      host.style.width = `${targetWidthPx}px`;
+    }
     document.body.appendChild(host);
     const props: FooterHeaderRenderProps = { page: i, pages: numberOfPages };
     // eslint-disable-next-line react/no-deprecated

@@ -1,12 +1,17 @@
 import html2canvas from "html2canvas";
 import type jsPDF from "jspdf";
+import { getMargins } from "../body/canvas";
 import type { FooterHeaderProps, ResolvedOptions } from "../types";
-import * as utils from "../utils";
 
 /**
  * Stamp header and/or footer images onto every page of the document.
  * Engine-agnostic: works for the canvas body renderer and the html body
  * renderer alike, as long as the body reserved enough top/bottom margin.
+ *
+ * Headers/footers are drawn spanning the full printable width of the page
+ * (page width minus left/right margins). The fragment's own layout (flex,
+ * grid, absolute positioning) is responsible for arranging its contents
+ * within that band.
  */
 export async function stampHeaderFooter(
   doc: InstanceType<typeof jsPDF>,
@@ -24,7 +29,8 @@ export async function stampHeaderFooter(
 
   const pageWidthMM = doc.internal.pageSize.getWidth();
   const pageHeightMM = doc.internal.pageSize.getHeight();
-  const pageMaxWidthPX = utils.mmToPX(pageWidthMM);
+  const margins = getMargins(options);
+  const contentWidthMM = pageWidthMM - margins.left - margins.right;
   const scale = options.engine === "html" ? options.html.fragmentScale : 2;
 
   const rasterise = async (
@@ -35,6 +41,7 @@ export async function stampHeaderFooter(
       scale,
       useCORS: true,
       logging: false,
+      backgroundColor: null,
     });
   };
 
@@ -53,10 +60,9 @@ export async function stampHeaderFooter(
         canvas: headerCanvas,
         placement: "header",
         config: options.header,
-        pageWidthMM,
+        contentWidthMM,
+        leftMM: margins.left,
         pageHeightMM,
-        pageMaxWidthPX,
-        scale,
       });
     }
 
@@ -67,10 +73,9 @@ export async function stampHeaderFooter(
         canvas: footerCanvas,
         placement: "footer",
         config: options.footer,
-        pageWidthMM,
+        contentWidthMM,
+        leftMM: margins.left,
         pageHeightMM,
-        pageMaxWidthPX,
-        scale,
       });
     }
   }
@@ -81,37 +86,29 @@ async function addFragment({
   canvas,
   placement,
   config,
-  pageWidthMM,
+  contentWidthMM,
+  leftMM,
   pageHeightMM,
-  pageMaxWidthPX,
-  scale,
 }: {
   doc: InstanceType<typeof jsPDF>;
   canvas: HTMLCanvasElement;
   placement: "header" | "footer";
   config: FooterHeaderProps;
-  pageWidthMM: number;
+  contentWidthMM: number;
+  leftMM: number;
   pageHeightMM: number;
-  pageMaxWidthPX: number;
-  scale: number;
 }): Promise<void> {
-  const widthMM = utils.pxToMM(canvas.width / scale);
-  const heightMM = utils.pxToMM(canvas.height / scale);
-  const margin = Number(config.margin ?? 0);
+  // Draw the fragment at the full printable width, preserving its aspect
+  // ratio to compute the height it occupies on the page.
+  const widthMM = contentWidthMM;
+  const heightMM = (canvas.height / canvas.width) * widthMM;
+  const marginEdgeMM = Number(config.margin ?? 0);
 
-  let x: number;
-  switch (config.align) {
-    case "left":
-      x = 0;
-      break;
-    case "right":
-      x = pageWidthMM - widthMM;
-      break;
-    default:
-      x = pageWidthMM / 2 - widthMM / 2;
-  }
-
-  const y = placement === "header" ? margin : pageHeightMM - margin - heightMM;
+  const x = leftMM;
+  const y =
+    placement === "header"
+      ? marginEdgeMM
+      : pageHeightMM - marginEdgeMM - heightMM;
 
   const imageData = canvas.toDataURL("image/png");
   doc.addImage({
@@ -121,5 +118,4 @@ async function addFragment({
     x,
     y,
   });
-  void pageMaxWidthPX; // reserved for future width-clipping use
 }
