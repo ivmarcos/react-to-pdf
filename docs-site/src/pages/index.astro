@@ -2,7 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Button from '@components/Button.astro';
 import Card from '@components/Card.astro';
-import LivePlayground from '@components/LivePlayground';
+import QuickStartDemo from '@components/QuickStartDemo';
 
 const features = [
   {
@@ -99,7 +99,7 @@ const features = [
     </div>
   </section>
 
-  <!-- Quick Start Live Editor -->
+  <!-- Quick Start -->
   <section class="py-20 bg-white dark:bg-gray-950 border-y border-gray-200 dark:border-gray-800">
     <div class="container mx-auto px-4">
       <div class="max-w-6xl mx-auto">
@@ -108,15 +108,15 @@ const features = [
             Quick Start
           </h2>
           <p class="text-lg text-gray-600 dark:text-gray-300">
-            Edit the code, then click <span class="font-semibold">Download PDF</span> to try it live
+            Edit the code. The preview updates live, and Download PDF is one click away.
           </p>
         </div>
 
-        <LivePlayground client:load compact heightPx={420} showSelector={false} />
+        <QuickStartDemo client:load />
 
         <div class="mt-8 text-center">
           <a href="/react-to-pdf/playground" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium mr-6">
-            Full playground →
+            Full playground (with Monaco) →
           </a>
           <a href="/react-to-pdf/docs/quick-start" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
             Read the guide →

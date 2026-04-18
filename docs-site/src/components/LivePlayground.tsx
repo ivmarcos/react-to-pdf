@@ -6,12 +6,29 @@ import * as React from "react";
 const examples = {
   basic: {
     title: "Basic Example",
-    code: `import { usePDF } from 'react-to-pdf';
+    code: `import { useState } from 'react';
+import { usePDF } from 'react-to-pdf';
 
 function MyDocument() {
+  const [busy, setBusy] = useState(false);
+
   const { targetRef, toPDF } = usePDF({
-    filename: 'hello.pdf'
+    filename: 'hello.pdf',
+    resolution: 1, // fast demo; bump to 3+ for print quality
+    canvas: {
+      foreignObjectRendering: true,
+      useCORS: true
+    }
   });
+
+  const handleDownload = async () => {
+    setBusy(true);
+    try {
+      await toPDF();
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const buttonStyle = {
     background: 'linear-gradient(135deg,#0ea5e9,#d946ef)',
@@ -21,14 +38,16 @@ function MyDocument() {
     borderRadius: 8,
     fontWeight: 600,
     fontSize: 14,
-    cursor: 'pointer',
-    boxShadow: '0 4px 10px rgba(14,165,233,0.25)'
+    cursor: busy ? 'wait' : 'pointer',
+    opacity: busy ? 0.75 : 1,
+    boxShadow: '0 4px 10px rgba(14,165,233,0.25)',
+    transition: 'opacity 0.15s'
   };
 
   return (
     <div style={{ display: 'grid', gap: 16 }}>
-      <button style={buttonStyle} onClick={() => toPDF()}>
-        ⬇ Download PDF
+      <button style={buttonStyle} onClick={handleDownload} disabled={busy}>
+        {busy ? 'Generating…' : '⬇ Download PDF'}
       </button>
 
       <div
@@ -60,7 +79,8 @@ function MyDocument() {
 
 function StyledDocument() {
   const { targetRef, toPDF } = usePDF({
-    filename: 'styled-document.pdf'
+    filename: 'styled-document.pdf',
+    resolution: 2
   });
 
   const buttonStyle = {
@@ -109,7 +129,8 @@ function StyledDocument() {
 
 function TableDocument() {
   const { targetRef, toPDF } = usePDF({
-    filename: 'table-document.pdf'
+    filename: 'table-document.pdf',
+    resolution: 2
   });
 
   const data = [
