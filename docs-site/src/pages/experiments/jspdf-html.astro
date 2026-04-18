@@ -1,0 +1,78 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import JsPdfHtmlExperiment from '@components/JsPdfHtmlExperiment';
+
+const snippetBody = 'doc.html(bodyEl, { autoPaging: "text" })';
+const snippetHeader = 'header({ page, totalPages })';
+const snippetPaging = 'autoPaging: "text"';
+const snippetFixed = 'position: fixed';
+---
+
+<BaseLayout
+  title="Experiment: jsPDF.html() method, React to PDF"
+  description="Proof of concept using jsPDF's doc.html() method for body auto-pagination, with React component header and footer overlays."
+>
+  <div class="container mx-auto px-4 py-12 max-w-5xl">
+    <div class="mb-10">
+      <p class="text-xs uppercase tracking-wider font-semibold text-accent-600 dark:text-accent-400 mb-2">
+        Experiment
+      </p>
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-50 mb-4">
+        jsPDF <code class="text-2xl md:text-3xl bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">doc.html()</code> approach
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-300">
+        Evaluating whether jsPDF's built-in <code>doc.html()</code> can replace the current
+        html2canvas-only pipeline for the body, while keeping React-component-driven
+        headers and footers.
+      </p>
+    </div>
+
+    <div class="rounded-lg border border-emerald-300 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-950/40 p-5 mb-10 text-sm text-emerald-900 dark:text-emerald-200">
+      <strong>Landed on the branch.</strong> The library now accepts
+      <code>{'usePDF({ engine: "html" })'}</code>. This page keeps the inline
+      proof-of-concept for illustration. When the next version ships, the
+      example below will switch to the unified API.
+    </div>
+
+    <JsPdfHtmlExperiment client:load />
+
+    <section class="mt-14 space-y-4 text-gray-700 dark:text-gray-300">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-50 mt-10">What's different</h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>
+          <strong>Body</strong> is rendered via <code>{snippetBody}</code>.
+          jsPDF handles pagination internally, so the library no longer has to splice
+          canvases manually.
+        </li>
+        <li>
+          <strong>Headers and footers</strong> are still React components
+          (<code>{snippetHeader}</code> / <code>footer(...)</code>), rendered
+          into an offscreen root, rasterised via html2canvas once per page, and drawn with
+          <code>doc.addImage()</code> at the reserved top/bottom margins.
+        </li>
+        <li>
+          <strong>Vectorised text</strong>: with <code>{snippetPaging}</code>, the body
+          text becomes selectable and searchable in the PDF, a notable quality upgrade over
+          a pure image pipeline.
+        </li>
+      </ul>
+
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-50 mt-10">Trade-offs</h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>
+          <code>doc.html()</code> still depends on html2canvas internally, so raw speed is
+          similar; the win is API simplicity and selectable text.
+        </li>
+        <li>
+          Complex CSS (shadows, transforms, web fonts, <code>{snippetFixed}</code>) renders
+          inconsistently. Users would need to keep printable content simple, a documented
+          caveat.
+        </li>
+        <li>
+          Header/footer still rasterise, so they remain non-selectable. This is the trade-off
+          for keeping the React-component API.
+        </li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
