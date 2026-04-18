@@ -33,8 +33,10 @@ export async function renderHtmlBody(
   await new Promise<void>((resolve, reject) => {
     try {
       doc.html(body, {
-        x: margin.left,
-        y: margin.top + reservedTopMM,
+        // Note: deliberately no `x`/`y` here. jsPDF's `html()` applies
+        // `margin[3]` as the left offset and `margin[0]` as the top offset
+        // for pagination; passing `x`/`y` on top of that doubles the
+        // left/top indent on the first page.
         width: contentWidthMM,
         windowWidth: body.scrollWidth || 800,
         margin: [
