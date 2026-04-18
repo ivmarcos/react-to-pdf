@@ -21,3 +21,5 @@ docs-site/node_modules/
 docs-site/src/env.d.ts
 test-tarball/
 *.tgz
+CLAUDE.local.md
+.claude/
