@@ -319,8 +319,8 @@ export default function LivePlayground({
                     backgroundColor: selected
                       ? "#0ea5e9"
                       : isDark
-                        ? "#1e293b"
-                        : "#ffffff",
+                      ? "#1e293b"
+                      : "#ffffff",
                     color: selected ? "white" : labelColor,
                     border: selected
                       ? "2px solid #0ea5e9"

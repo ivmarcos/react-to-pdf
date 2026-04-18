@@ -304,9 +304,7 @@ function CompiledPreview({
   }, [code, usePDF, onError]);
 
   if (compiling && !Component) {
-    return (
-      <div style={{ fontSize: 13, color: "#94a3b8" }}>Compiling…</div>
-    );
+    return <div style={{ fontSize: 13, color: "#94a3b8" }}>Compiling…</div>;
   }
 
   if (!Component) return null;
