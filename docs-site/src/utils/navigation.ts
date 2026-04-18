@@ -41,6 +41,7 @@ export const navigation = {
     {
       title: "Advanced",
       links: [
+        { title: "Rendering Engines", href: "/docs/advanced/engines" },
         { title: "Custom Fonts", href: "/docs/advanced/custom-fonts" },
         { title: "Styling", href: "/docs/advanced/styling" },
         { title: "Performance", href: "/docs/advanced/performance" },

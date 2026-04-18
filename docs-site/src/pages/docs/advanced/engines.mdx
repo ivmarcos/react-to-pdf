@@ -1,0 +1,151 @@
+---
+layout: "@layouts/DocsLayout.astro"
+title: "Rendering Engines - React to PDF"
+description: "Choose between the canvas engine (raster) and the html engine (vectorised, selectable text). Trade-offs, examples, and a live side-by-side comparison."
+---
+
+import EngineComparisonExample from "@components/EngineComparisonExample";
+
+# Rendering Engines
+
+React to PDF ships two rendering engines. You pick one with the `engine`
+option; everything else about the API is the same.
+
+```tsx
+const { targetRef, toPDF } = usePDF({ engine: "canvas" }); // default
+const { targetRef, toPDF } = usePDF({ engine: "html" });   // vectorised text
+```
+
+## At a glance
+
+| | `engine: "canvas"` (default) | `engine: "html"` |
+| --- | --- | --- |
+| Body is… | a rasterised screenshot via html2canvas | jsPDF-native text (when `autoPaging: "text"`) |
+| Selectable text | ❌ body is an image | ✅ `Ctrl+F`, copy, screen readers |
+| Searchable | ❌ | ✅ |
+| File size | larger (image data) | smaller (vector glyphs) |
+| CSS fidelity | high (whatever the browser paints) | limited subset (no transforms, webfonts need registering) |
+| Pagination | library slices the captured canvas | jsPDF paginates internally |
+| Header / footer | React → html2canvas → stamp | same path |
+
+## Try it
+
+The demo below renders the same multi-page document through either engine so
+you can download both PDFs and open them side-by-side. Try selecting text or
+hitting `Ctrl+F` in a PDF viewer.
+
+<EngineComparisonExample client:load />
+
+## When to pick which
+
+**Pick `canvas` when**
+
+- Your document has webfonts, gradients, shadows, or transforms that must
+  reproduce exactly.
+- You're rendering things that are visually complex, like certificates
+  with decorative borders, posters, receipts with ornamented headers.
+- You don't need the user to be able to select or search the output.
+
+**Pick `html` when**
+
+- You need the PDF to be searchable or copy-pastable, like reports,
+  contracts, invoices that get indexed, or long-form articles.
+- The content is mostly text with light styling.
+- File size matters (vector text is much smaller than a rasterised image).
+- You care about accessibility. Screen readers can consume the vectorised
+  text layer.
+
+## Full example: multi-page report with headers and footers
+
+```tsx
+import { usePDF } from 'react-to-pdf';
+
+function Report({ data }) {
+  const { targetRef, toPDF } = usePDF({
+    filename: 'quarterly-report.pdf',
+    engine: 'html',
+    page: { margin: 12, format: 'a4' },
+    html: { autoPaging: 'text' },
+    header: ({ page, pages }) => (
+      <header style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <span>Quarterly Report 2026</span>
+        <span>Page {page} / {pages}</span>
+      </header>
+    ),
+    footer: ({ page, pages }) => (
+      <footer style={{ textAlign: 'center', color: '#64748b' }}>
+        Confidential · {page} of {pages}
+      </footer>
+    ),
+  });
+
+  return (
+    <>
+      <button onClick={() => toPDF()}>Download report</button>
+      <article ref={targetRef}>
+        <h1>Executive summary</h1>
+        <p>Revenue this quarter was...</p>
+        {/* ... many sections of real content ... */}
+      </article>
+    </>
+  );
+}
+```
+
+The header/footer render functions receive `{ page, pages }` on every page
+so you can show "Page 3 of 12" dynamically. They work the same way on both
+engines, since they're always rasterised via html2canvas so any React component
+is supported, even on the html engine.
+
+## Engine-specific options
+
+### `canvas: { ... }`
+
+Only consulted when `engine === "canvas"`.
+
+| Option | Default | Notes |
+| --- | --- | --- |
+| `resolution` | `3` | Higher = sharper text but bigger file. Use `Resolution.HIGH` for print. |
+| `quality` | `0.9` | JPEG quality, 0..1. |
+| `mimeType` | `"image/jpeg"` | `"image/png"` if you need transparency. |
+| `align` | `"top-left"` | `"center-x"`, `"center-y"`, `"center-xy"`. |
+| `size` | `"original"` | `"fill-page"`, `"shrink-to-fit"`. |
+| `hooks.beforeAddPage` / `afterAddPage` | (none) | Receive `{ doc, page, canvas }`. Mutate the canvas to add watermarks, etc. |
+| `overrides` | (none) | Raw html2canvas options for edge cases. |
+
+### `html: { ... }`
+
+Only consulted when `engine === "html"`.
+
+| Option | Default | Notes |
+| --- | --- | --- |
+| `autoPaging` | `"text"` | `"text"` for vectorised body; `"slice"` for raster pagination; `false` to disable. |
+| `fragmentScale` | `2` | html2canvas scale for the header/footer rasterisation. |
+| `overrides` | (none) | Raw pass-through to jsPDF's `html()` call (minus the keys the library manages). |
+
+## Caveats for the html engine
+
+1. **Fonts.** jsPDF only ships Helvetica, Courier, and Times. Custom webfonts
+   in body text will render with a fallback. Register fonts explicitly via
+   `doc.addFileToVFS` + `doc.addFont`, or stay on the canvas engine.
+2. **Single body.** `engine: "html"` supports one `<Body>` / `targetRef`. Wrap
+   multiple sections in a container, or switch to the canvas engine which
+   supports multiple targets.
+3. **CSS subset.** Transforms, shadows, and some positioning tricks won't
+   translate. Keep vector-bound content to standard typography and simple
+   backgrounds.
+
+## Legacy options
+
+If you were using the older top-level `resolution`, `align`, `size`, or
+`hooks.beforeAddCanvasToPage` keys, they still work. They're forwarded into
+`canvas.*` with a one-time console warning. The recommended migration:
+
+| Old | New |
+| --- | --- |
+| `options.resolution` | `options.canvas.resolution` |
+| `options.align` / `options.size` | `options.canvas.align` / `options.canvas.size` |
+| `options.canvas.qualityRatio` | `options.canvas.quality` |
+| `options.canvas.useCORS` / `logging` | `options.canvas.overrides.useCORS` / `.logging` |
+| `options.hooks.beforeAddCanvasToPage` | `options.canvas.hooks.beforeAddPage` |
+| `PDFHandle.getDocument()` | `PDFHandle.getPdf()` (returns the raw jsPDF) |
