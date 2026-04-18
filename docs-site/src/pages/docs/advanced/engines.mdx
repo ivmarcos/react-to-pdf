@@ -109,7 +109,7 @@ Only consulted when `engine === "canvas"`.
 | `quality` | `0.9` | JPEG quality, 0..1. |
 | `mimeType` | `"image/jpeg"` | `"image/png"` if you need transparency. |
 | `align` | `"top-left"` | `"center-x"`, `"center-y"`, `"center-xy"`. |
-| `size` | `"original"` | `"fill-page"`, `"shrink-to-fit"`. |
+| `size` | `"shrink-to-fit"` | Shrinks the capture when it's wider than the page. Other values: `"original"` (keep natural size, may clip), `"fill-page"` (always scale to the page width). |
 | `hooks.beforeAddPage` / `afterAddPage` | (none) | Receive `{ doc, page, canvas }`. Mutate the canvas to add watermarks, etc. |
 | `overrides` | (none) | Raw html2canvas options for edge cases. |
 

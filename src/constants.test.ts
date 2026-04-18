@@ -75,7 +75,7 @@ describe("Constants", () => {
       expect(DEFAULT_OPTIONS.canvas.quality).toBe(0.9);
       expect(DEFAULT_OPTIONS.canvas.mimeType).toBe("image/jpeg");
       expect(DEFAULT_OPTIONS.canvas.align).toBe(Alignment.TOP_LEFT);
-      expect(DEFAULT_OPTIONS.canvas.size).toBe(Size.ORIGINAL);
+      expect(DEFAULT_OPTIONS.canvas.size).toBe(Size.SHRINK_TO_FIT);
       expect(DEFAULT_OPTIONS.canvas.overrides.useCORS).toBe(true);
       expect(DEFAULT_OPTIONS.canvas.overrides.logging).toBe(false);
     });

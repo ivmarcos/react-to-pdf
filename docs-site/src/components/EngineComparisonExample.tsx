@@ -111,7 +111,7 @@ function buildOptions(engine: Engine): Options {
         </span>
       </div>
     ),
-    canvas: { resolution: 2, size: "shrink-to-fit" },
+    canvas: { resolution: 2 },
     html: { autoPaging: "text" },
   };
 }

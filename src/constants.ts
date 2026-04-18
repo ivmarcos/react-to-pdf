@@ -60,7 +60,10 @@ export const DEFAULT_OPTIONS: Readonly<ResolvedOptions> = {
     quality: 0.9,
     mimeType: "image/jpeg",
     align: Alignment.TOP_LEFT,
-    size: Size.ORIGINAL,
+    // Default to shrink-to-fit so an element wider than the page's content
+    // area is scaled down instead of clipped on the right. Users who want
+    // the old behaviour can still pass `size: Size.ORIGINAL` explicitly.
+    size: Size.SHRINK_TO_FIT,
     hooks: {},
     overrides: {
       useCORS: true,
