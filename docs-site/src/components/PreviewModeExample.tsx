@@ -129,9 +129,66 @@ function Demo({ PDF, Margin }: { PDF: any; Margin: any }) {
               the content before they download.
             </li>
           </ul>
+
+          <p style={{ marginTop: 18, color: "#475569" }}>
+            The usage below renders identically whether you're looking at it
+            on the page or inside the embedded PDF:
+          </p>
+          <HighlightedSnippet />
         </div>
       </PDF>
     </div>
+  );
+}
+
+/**
+ * Hand-tokenised snippet so the code reads the same whether it's rendered
+ * on the page or captured into the PDF via html2canvas. Inline styles
+ * only, to avoid depending on the docs' prose / Shiki output (which lives
+ * outside the offscreen portal the PDF captures from).
+ */
+function HighlightedSnippet() {
+  const KW = "#d946ef"; // keywords
+  const STR = "#16a34a"; // strings
+  const COM = "#94a3b8"; // comments
+  const TYP = "#f59e0b"; // jsx tag names
+
+  const span = (color: string, children: React.ReactNode) => (
+    <span style={{ color }}>{children}</span>
+  );
+
+  return (
+    <pre
+      style={{
+        marginTop: 6,
+        background: "#0b1220",
+        color: "#e2e8f0",
+        padding: "14px 16px",
+        borderRadius: 8,
+        fontFamily:
+          "Fira Code, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+        fontSize: 12,
+        lineHeight: 1.55,
+        overflow: "hidden",
+        whiteSpace: "pre",
+      }}
+    >
+      {span(KW, "import")} {"{"} useRef {"}"} {span(KW, "from")} {span(STR, '"react"')};{"\n"}
+      {span(KW, "import")} {"{"} PDF, Margin, PDFHandle {"}"} {span(KW, "from")} {span(STR, '"react-to-pdf"')};{"\n"}
+      {"\n"}
+      {span(KW, "function")} {span(TYP, "PreviewDemo")}() {"{"}{"\n"}
+      {"  "}{span(KW, "const")} pdfRef = useRef{"<"}PDFHandle{">"}({span(KW, "null")});{"\n"}
+      {"  "}{span(KW, "return")} ({"\n"}
+      {"    "}{span(TYP, "<PDF")}{"\n"}
+      {"      "}ref={"{"}pdfRef{"}"}{"\n"}
+      {"      "}preview={span(STR, '"embed"')}  {span(COM, '// live inline preview')}{"\n"}
+      {"      "}page={"{"}{"{"} format: {span(STR, '"a4"')}, margin: Margin.MEDIUM {"}"}{"}"}{"\n"}
+      {"    "}{span(TYP, ">")}{"\n"}
+      {"      "}{span(TYP, "<article>")}Hello PDF!{span(TYP, "</article>")}{"\n"}
+      {"    "}{span(TYP, "</PDF>")}{"\n"}
+      {"  "});{"\n"}
+      {"}"}
+    </pre>
   );
 }
 

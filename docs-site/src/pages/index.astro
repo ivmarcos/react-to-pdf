@@ -3,6 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Button from '@components/Button.astro';
 import Card from '@components/Card.astro';
 import QuickStartDemo from '@components/QuickStartDemo';
+import HtmlEnginePreviewExample from '@components/HtmlEnginePreviewExample';
 
 const features = [
   {
@@ -120,6 +121,35 @@ const features = [
           </a>
           <a href="/react-to-pdf/docs/quick-start" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
             Read the guide →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- New: vectorised PDFs + inline preview -->
+  <section class="py-20 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-950 dark:to-gray-900 border-b border-gray-200 dark:border-gray-800">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider text-white" style="background: linear-gradient(135deg,#0ea5e9,#d946ef);">
+            New in 4.0
+          </span>
+          <h2 class="mt-4 text-3xl font-bold text-gray-900 dark:text-gray-50">
+            Vector, searchable PDFs — with a live preview on the page
+          </h2>
+          <p class="mt-3 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Opt in to the html engine and you get real, selectable PDF text.
+            Pair it with <code class="font-mono text-sm">preview="embed"</code> and the generated file is rendered
+            inline while the user decides whether to download.
+          </p>
+        </div>
+
+        <HtmlEnginePreviewExample client:load />
+
+        <div class="mt-8 text-center">
+          <a href="/react-to-pdf/docs/advanced/engines" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
+            Read about rendering engines →
           </a>
         </div>
       </div>
