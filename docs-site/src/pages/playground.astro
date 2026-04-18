@@ -56,9 +56,17 @@ import LivePlayground from '@components/LivePlayground';
     margin-bottom: 10px;
   }
 
+  :global(html.dark) .playground-header h1 {
+    color: #f1f5f9;
+  }
+
   .playground-header p {
     color: #64748b;
     font-size: 18px;
+  }
+
+  :global(html.dark) .playground-header p {
+    color: #94a3b8;
   }
 
   .info-section {
@@ -70,6 +78,11 @@ import LivePlayground from '@components/LivePlayground';
     border: 1px solid #e2e8f0;
   }
 
+  :global(html.dark) .info-section {
+    background: #0f172a;
+    border-color: #1f2937;
+  }
+
   .info-section h2 {
     font-size: 24px;
     color: #0f172a;
@@ -77,11 +90,19 @@ import LivePlayground from '@components/LivePlayground';
     margin-bottom: 20px;
   }
 
+  :global(html.dark) .info-section h2 {
+    color: #f1f5f9;
+  }
+
   .info-section ol {
     padding-left: 25px;
     line-height: 1.8;
     color: #475569;
     margin-bottom: 30px;
+  }
+
+  :global(html.dark) .info-section ol {
+    color: #cbd5e1;
   }
 
   .info-section li {
@@ -95,6 +116,11 @@ import LivePlayground from '@components/LivePlayground';
     font-size: 14px;
     color: #0ea5e9;
     font-family: Monaco, Menlo, monospace;
+  }
+
+  :global(html.dark) .info-section code {
+    background: #1f2937;
+    color: #38bdf8;
   }
 
   .links {
@@ -122,10 +148,20 @@ import LivePlayground from '@components/LivePlayground';
     transition: all 0.2s;
   }
 
+  :global(html.dark) .link-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
   .link-card:hover {
     background: #e0f2fe;
     border-color: #0ea5e9;
     transform: translateY(-2px);
+  }
+
+  :global(html.dark) .link-card:hover {
+    background: #0c4a6e;
+    border-color: #0ea5e9;
   }
 
   .link-card strong {
@@ -133,8 +169,16 @@ import LivePlayground from '@components/LivePlayground';
     font-size: 16px;
   }
 
+  :global(html.dark) .link-card strong {
+    color: #f1f5f9;
+  }
+
   .link-card span {
     color: #64748b;
     font-size: 14px;
+  }
+
+  :global(html.dark) .link-card span {
+    color: #94a3b8;
   }
 </style>

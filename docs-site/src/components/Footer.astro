@@ -1,26 +1,18 @@
 ---
 import { navigation } from '@utils/navigation';
+import Logo from '@components/Logo.astro';
 ---
 
-<footer class="bg-gray-50 border-t border-gray-200">
+<footer class="bg-gray-50 border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
   <div class="container mx-auto px-4 py-12">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <!-- Brand -->
       <div class="md:col-span-2">
-        <a href="/react-to-pdf/" class="flex items-center gap-2 font-semibold text-gray-900 mb-4">
-          <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="url(#gradient)" />
-            <path d="M8 10h16v2H8zM8 15h16v2H8zM8 20h10v2H8z" fill="white" />
-            <defs>
-              <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
-                <stop offset="0%" stop-color="rgb(14, 165, 233)" />
-                <stop offset="100%" stop-color="rgb(217, 70, 239)" />
-              </linearGradient>
-            </defs>
-          </svg>
+        <a href="/react-to-pdf/" class="flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-100 mb-4">
+          <Logo />
           <span class="text-lg">React to PDF</span>
         </a>
-        <p class="text-sm text-gray-600 max-w-md">
+        <p class="text-sm text-gray-600 dark:text-gray-400 max-w-md">
           Simple, powerful library to generate PDF documents from React components.
           TypeScript ready, multi-page support, fully customizable.
         </p>
@@ -29,7 +21,7 @@ import { navigation } from '@utils/navigation';
             href="https://github.com/ivmarcos/react-to-pdf"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-gray-500 hover:text-gray-700 transition-colors"
+            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
             aria-label="GitHub"
           >
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -40,7 +32,7 @@ import { navigation } from '@utils/navigation';
             href="https://www.npmjs.com/package/react-to-pdf"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-gray-500 hover:text-gray-700 transition-colors"
+            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
             aria-label="npm"
           >
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -53,13 +45,13 @@ import { navigation } from '@utils/navigation';
       <!-- Footer Links -->
       {navigation.footer.map((section) => (
         <div>
-          <h3 class="font-semibold text-gray-900 mb-3">{section.title}</h3>
+          <h3 class="font-semibold text-gray-900 dark:text-gray-100 mb-3">{section.title}</h3>
           <ul class="space-y-2">
             {section.links.map((link) => (
               <li>
                 <a
                   href={link.href.startsWith('http') ? link.href : `/react-to-pdf${link.href}`}
-                  class="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                  class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
                   target={link.href.startsWith('http') ? '_blank' : undefined}
                   rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                 >
@@ -73,12 +65,12 @@ import { navigation } from '@utils/navigation';
     </div>
 
     <!-- Bottom Bar -->
-    <div class="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-      <p class="text-sm text-gray-600">
+    <div class="border-t border-gray-200 dark:border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-sm text-gray-600 dark:text-gray-400">
         © {new Date().getFullYear()} React to PDF. Released under the MIT License.
       </p>
-      <p class="text-sm text-gray-600">
-        Built with <a href="https://astro.build" class="text-primary-600 hover:text-primary-700" target="_blank" rel="noopener noreferrer">Astro</a>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Built with <a href="https://astro.build" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" target="_blank" rel="noopener noreferrer">Astro</a>
       </p>
     </div>
   </div>

@@ -2,7 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Button from '@components/Button.astro';
 import Card from '@components/Card.astro';
-import CodeBlock from '@components/CodeBlock.astro';
+import LivePlayground from '@components/LivePlayground';
 
 const features = [
   {
@@ -36,27 +36,6 @@ const features = [
     icon: '🚀',
   },
 ];
-
-const quickStartCode = `import { usePDF } from 'react-to-pdf';
-
-function MyDocument() {
-  const { targetRef, toPDF } = usePDF({
-    filename: 'document.pdf'
-  });
-
-  return (
-    <div>
-      <button onClick={() => toPDF()}>
-        Download PDF
-      </button>
-
-      <div ref={targetRef}>
-        <h1>Hello PDF!</h1>
-        <p>This content will be converted to PDF.</p>
-      </div>
-    </div>
-  );
-}`;
 ---
 
 <BaseLayout
@@ -64,10 +43,10 @@ function MyDocument() {
   description="Simple, powerful library to generate PDF documents from React components. TypeScript ready, multi-page support, fully customizable."
 >
   <!-- Hero Section -->
-  <section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-accent-50 py-20 md:py-32">
+  <section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-accent-50 dark:from-primary-950/30 dark:via-gray-950 dark:to-accent-950/30 py-20 md:py-32">
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto text-center">
-        <div class="inline-flex items-center gap-2 bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+        <div class="inline-flex items-center gap-2 bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
           <span class="relative flex h-2 w-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
@@ -75,14 +54,14 @@ function MyDocument() {
           Version 3.2.2 is now available
         </div>
 
-        <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+        <h1 class="text-5xl md:text-6xl font-bold text-gray-900 dark:text-gray-50 mb-6">
           Generate PDFs from<br />
           <span class="bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
             React Components
           </span>
         </h1>
 
-        <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+        <p class="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto">
           Simple, powerful library to create PDF documents from your React components.
           TypeScript ready, multi-page support, fully customizable.
         </p>
@@ -96,7 +75,7 @@ function MyDocument() {
           </Button>
         </div>
 
-        <div class="mt-12 flex flex-wrap justify-center gap-8 text-sm text-gray-600">
+        <div class="mt-12 flex flex-wrap justify-center gap-8 text-sm text-gray-600 dark:text-gray-400">
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
@@ -120,24 +99,27 @@ function MyDocument() {
     </div>
   </section>
 
-  <!-- Quick Start Code -->
-  <section class="py-20 bg-gray-50">
+  <!-- Quick Start Live Editor -->
+  <section class="py-20 bg-gray-50 dark:bg-gray-900">
     <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto">
+      <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-4">
             Quick Start
           </h2>
-          <p class="text-lg text-gray-600">
-            Get started in seconds with our simple API
+          <p class="text-lg text-gray-600 dark:text-gray-300">
+            Edit the code, then click <span class="font-semibold">Download PDF</span> to try it live
           </p>
         </div>
 
-        <CodeBlock code={quickStartCode} language="tsx" />
+        <LivePlayground client:load compact heightPx={420} showSelector={false} />
 
         <div class="mt-8 text-center">
-          <a href="/react-to-pdf/docs/quick-start" class="text-primary-600 hover:text-primary-700 font-medium">
-            View full quick start guide →
+          <a href="/react-to-pdf/playground" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium mr-6">
+            Full playground →
+          </a>
+          <a href="/react-to-pdf/docs/quick-start" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
+            Read the guide →
           </a>
         </div>
       </div>
@@ -148,10 +130,10 @@ function MyDocument() {
   <section class="py-20">
     <div class="container mx-auto px-4">
       <div class="text-center mb-16">
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-4">
           Everything you need
         </h2>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
           Built with developer experience in mind. Powerful features that just work.
         </p>
       </div>
@@ -160,10 +142,10 @@ function MyDocument() {
         {features.map((feature) => (
           <Card>
             <div class="text-4xl mb-4">{feature.icon}</div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
               {feature.title}
             </h3>
-            <p class="text-gray-600">
+            <p class="text-gray-600 dark:text-gray-300">
               {feature.description}
             </p>
           </Card>
@@ -173,41 +155,41 @@ function MyDocument() {
   </section>
 
   <!-- Use Cases -->
-  <section class="py-20 bg-gradient-to-br from-gray-50 to-primary-50">
+  <section class="py-20 bg-gradient-to-br from-gray-50 to-primary-50 dark:from-gray-900 dark:to-primary-950/40">
     <div class="container mx-auto px-4">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-16">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-4">
             Perfect for any use case
           </h2>
-          <p class="text-lg text-gray-600">
+          <p class="text-lg text-gray-600 dark:text-gray-300">
             From invoices to reports, certificates to tickets
           </p>
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
-          <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-            <h3 class="font-semibold text-lg mb-2">📄 Invoices & Receipts</h3>
-            <p class="text-gray-600 text-sm mb-3">Generate professional invoices with your branding</p>
-            <a href="/react-to-pdf/docs/examples/invoice" class="text-primary-600 text-sm font-medium">View example →</a>
+          <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="font-semibold text-lg mb-2 text-gray-900 dark:text-gray-100">📄 Invoices & Receipts</h3>
+            <p class="text-gray-600 dark:text-gray-300 text-sm mb-3">Generate professional invoices with your branding</p>
+            <a href="/react-to-pdf/docs/examples/invoice" class="text-primary-600 dark:text-primary-400 text-sm font-medium">View example →</a>
           </div>
 
-          <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-            <h3 class="font-semibold text-lg mb-2">🎓 Certificates</h3>
-            <p class="text-gray-600 text-sm mb-3">Create beautiful certificates for courses and events</p>
-            <a href="/react-to-pdf/docs/examples/certificate" class="text-primary-600 text-sm font-medium">View example →</a>
+          <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="font-semibold text-lg mb-2 text-gray-900 dark:text-gray-100">🎓 Certificates</h3>
+            <p class="text-gray-600 dark:text-gray-300 text-sm mb-3">Create beautiful certificates for courses and events</p>
+            <a href="/react-to-pdf/docs/examples/certificate" class="text-primary-600 dark:text-primary-400 text-sm font-medium">View example →</a>
           </div>
 
-          <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-            <h3 class="font-semibold text-lg mb-2">🎫 Event Tickets</h3>
-            <p class="text-gray-600 text-sm mb-3">Design custom tickets with QR codes and barcodes</p>
-            <a href="/react-to-pdf/docs/examples/ticket" class="text-primary-600 text-sm font-medium">View example →</a>
+          <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="font-semibold text-lg mb-2 text-gray-900 dark:text-gray-100">🎫 Event Tickets</h3>
+            <p class="text-gray-600 dark:text-gray-300 text-sm mb-3">Design custom tickets with QR codes and barcodes</p>
+            <a href="/react-to-pdf/docs/examples/ticket" class="text-primary-600 dark:text-primary-400 text-sm font-medium">View example →</a>
           </div>
 
-          <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-            <h3 class="font-semibold text-lg mb-2">📊 Reports & Analytics</h3>
-            <p class="text-gray-600 text-sm mb-3">Export data tables and charts to PDF format</p>
-            <a href="/react-to-pdf/docs/examples/report" class="text-primary-600 text-sm font-medium">View example →</a>
+          <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="font-semibold text-lg mb-2 text-gray-900 dark:text-gray-100">📊 Reports & Analytics</h3>
+            <p class="text-gray-600 dark:text-gray-300 text-sm mb-3">Export data tables and charts to PDF format</p>
+            <a href="/react-to-pdf/docs/examples/report" class="text-primary-600 dark:text-primary-400 text-sm font-medium">View example →</a>
           </div>
         </div>
       </div>

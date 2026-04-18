@@ -9,18 +9,20 @@
   }
 
   * {
-    @apply border-gray-200;
+    @apply border-gray-200 dark:border-gray-800;
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100;
     font-feature-settings: "rlig" 1, "calt" 1;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    body {
-      @apply bg-gray-950 text-gray-100;
-    }
   }
 }
 
@@ -34,6 +36,6 @@
   }
 
   .btn-secondary {
-    @apply btn border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 px-6 py-3;
+    @apply btn border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:hover:bg-gray-800 px-6 py-3;
   }
 }

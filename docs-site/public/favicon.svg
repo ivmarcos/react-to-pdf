@@ -1,10 +1,19 @@
 <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="6" fill="url(#gradient)"/>
-  <path d="M8 10h16v2H8zM8 15h16v2H8zM8 20h10v2H8z" fill="white"/>
   <defs>
-    <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
-      <stop offset="0%" stop-color="rgb(14, 165, 233)"/>
-      <stop offset="100%" stop-color="rgb(217, 70, 239)"/>
+    <linearGradient id="rtpBg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#d946ef"/>
+    </linearGradient>
+    <linearGradient id="rtpInk" x1="10" y1="15" x2="22" y2="23" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#c026d3"/>
     </linearGradient>
   </defs>
+  <rect width="32" height="32" rx="7" fill="url(#rtpBg)"/>
+  <ellipse cx="16" cy="16" rx="13" ry="4.5" stroke="white" stroke-opacity="0.38" stroke-width="0.9" transform="rotate(-35 16 16)" fill="none"/>
+  <ellipse cx="16" cy="16" rx="13" ry="4.5" stroke="white" stroke-opacity="0.22" stroke-width="0.9" transform="rotate(35 16 16)" fill="none"/>
+  <path d="M 7.5 8.5 L 19 8.5 L 23.5 13 L 23.5 25 L 7.5 25 Z" fill="white"/>
+  <path d="M 19 8.5 L 19 13 L 23.5 13 Z" fill="#f3e8ff"/>
+  <path d="M 19 8.5 L 19 13 L 23.5 13" stroke="#d8b4fe" stroke-width="0.5" fill="none" stroke-linejoin="round"/>
+  <text x="15.5" y="21" text-anchor="middle" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="6" font-weight="800" fill="url(#rtpInk)" letter-spacing="-0.2">PDF</text>
 </svg>

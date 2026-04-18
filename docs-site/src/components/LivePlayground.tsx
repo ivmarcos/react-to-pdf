@@ -108,7 +108,43 @@ function TableDocument() {
   },
 };
 
-export default function LivePlayground() {
+interface LivePlaygroundProps {
+  compact?: boolean;
+  heightPx?: number;
+  showSelector?: boolean;
+}
+
+function useIsDark() {
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof document === "undefined") return false;
+    return document.documentElement.classList.contains("dark");
+  });
+
+  useEffect(() => {
+    const read = () =>
+      setIsDark(document.documentElement.classList.contains("dark"));
+    read();
+    const handler = () => read();
+    window.addEventListener("themechange", handler);
+    const observer = new MutationObserver(read);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => {
+      window.removeEventListener("themechange", handler);
+      observer.disconnect();
+    };
+  }, []);
+
+  return isDark;
+}
+
+export default function LivePlayground({
+  compact = false,
+  heightPx = 600,
+  showSelector = true,
+}: LivePlaygroundProps) {
   const [mounted, setMounted] = useState(false);
   const [usePDF, setUsePDF] = useState<any>(null);
   const [selectedExample, setSelectedExample] = useState<
@@ -116,9 +152,9 @@ export default function LivePlayground() {
   >("basic");
   const [code, setCode] = useState(examples.basic.code);
   const [error, setError] = useState<string | null>(null);
+  const isDark = useIsDark();
 
   useEffect(() => {
-    // Only import and initialize on client side
     import("react-to-pdf")
       .then((module) => {
         const pkg = module as any;
@@ -128,6 +164,8 @@ export default function LivePlayground() {
       })
       .catch((error) => {
         console.error("[LivePlayground] Failed to load react-to-pdf:", error);
+        setError("Failed to load react-to-pdf. Check the console for details.");
+        setMounted(true);
       });
   }, []);
 
@@ -137,7 +175,15 @@ export default function LivePlayground() {
     setError(null);
   };
 
-  if (!mounted || !usePDF) {
+  const editorHeight = `${heightPx}px`;
+  const previewBg = isDark ? "#0f172a" : "#f8fafc";
+  const previewBorder = isDark ? "#1f2937" : "#e2e8f0";
+  const previewText = isDark ? "#e2e8f0" : "#0f172a";
+  const labelColor = isDark ? "#f1f5f9" : "#0f172a";
+  const hintColor = isDark ? "#94a3b8" : "#64748b";
+  const editorBorder = isDark ? "#334155" : "#cbd5e1";
+
+  if (!mounted) {
     return (
       <div
         style={{
@@ -145,96 +191,122 @@ export default function LivePlayground() {
           margin: "0 auto",
           padding: "60px 20px",
           textAlign: "center",
-          color: "#64748b",
+          color: hintColor,
           fontSize: "16px",
         }}
       >
-        Loading playground...
+        Loading playground…
+      </div>
+    );
+  }
+
+  if (!usePDF) {
+    return (
+      <div
+        style={{
+          maxWidth: "900px",
+          margin: "0 auto",
+          padding: "30px",
+          border: "1px solid #fecaca",
+          background: "#fef2f2",
+          color: "#991b1b",
+          borderRadius: "8px",
+        }}
+      >
+        <strong>Playground unavailable.</strong>{" "}
+        {error ?? "react-to-pdf failed to load."}
       </div>
     );
   }
 
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
-      {/* Example Selector */}
-      <div
-        style={{
-          marginBottom: "30px",
-          display: "flex",
-          gap: "10px",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
-        {(Object.keys(examples) as Array<keyof typeof examples>).map((key) => (
-          <button
-            key={key}
-            onClick={() => handleExampleChange(key)}
-            style={{
-              padding: "12px 24px",
-              backgroundColor: selectedExample === key ? "#0ea5e9" : "#ffffff",
-              color: selectedExample === key ? "white" : "#0f172a",
-              border:
-                selectedExample === key
-                  ? "2px solid #0ea5e9"
-                  : "2px solid #e2e8f0",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "15px",
-              fontWeight: "600",
-              transition: "all 0.2s",
-              boxShadow:
-                selectedExample === key
-                  ? "0 4px 6px rgba(14, 165, 233, 0.2)"
-                  : "none",
-            }}
-          >
-            {examples[key].title}
-          </button>
-        ))}
-      </div>
+      {showSelector && (
+        <div
+          style={{
+            marginBottom: "30px",
+            display: "flex",
+            gap: "10px",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
+          {(Object.keys(examples) as Array<keyof typeof examples>).map(
+            (key) => {
+              const selected = selectedExample === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => handleExampleChange(key)}
+                  style={{
+                    padding: "12px 24px",
+                    backgroundColor: selected
+                      ? "#0ea5e9"
+                      : isDark
+                        ? "#1e293b"
+                        : "#ffffff",
+                    color: selected ? "white" : labelColor,
+                    border: selected
+                      ? "2px solid #0ea5e9"
+                      : `2px solid ${editorBorder}`,
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    fontSize: "15px",
+                    fontWeight: 600,
+                    transition: "all 0.2s",
+                    boxShadow: selected
+                      ? "0 4px 6px rgba(14, 165, 233, 0.2)"
+                      : "none",
+                  }}
+                >
+                  {examples[key].title}
+                </button>
+              );
+            }
+          )}
+        </div>
+      )}
 
-      {/* Code Editor and Preview Grid */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "30px",
-          padding: "0 20px",
+          gridTemplateColumns: compact ? "1fr 1fr" : "1fr 1fr",
+          gap: "24px",
+          padding: compact ? "0" : "0 20px",
         }}
       >
-        {/* Code Editor Section */}
         <div>
-          <h3
-            style={{
-              marginTop: 0,
-              marginBottom: "15px",
-              color: "#0f172a",
-              fontSize: "18px",
-              fontWeight: "600",
-            }}
-          >
-            ✏️ Live Editor
-          </h3>
+          {!compact && (
+            <h3
+              style={{
+                marginTop: 0,
+                marginBottom: "15px",
+                color: labelColor,
+                fontSize: "18px",
+                fontWeight: 600,
+              }}
+            >
+              ✏️ Live Editor
+            </h3>
+          )}
           <div
             style={{
-              border: "1px solid #334155",
+              border: `1px solid ${editorBorder}`,
               borderRadius: "8px",
               overflow: "hidden",
-              height: "600px",
+              height: editorHeight,
             }}
           >
             <Editor
-              height="600px"
+              height={editorHeight}
               defaultLanguage="typescript"
               value={code}
               onChange={(value) => {
                 setCode(value || "");
                 setError(null);
               }}
-              theme="vs-dark"
+              theme={isDark ? "vs-dark" : "light"}
               beforeMount={(monaco) => {
-                // Disable TypeScript validation to remove error squiggles
                 monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
                   {
                     noSemanticValidation: true,
@@ -261,27 +333,28 @@ export default function LivePlayground() {
           </div>
         </div>
 
-        {/* Live Preview Section */}
         <div>
-          <h3
-            style={{
-              marginTop: 0,
-              marginBottom: "15px",
-              color: "#0f172a",
-              fontSize: "18px",
-              fontWeight: "600",
-            }}
-          >
-            🎯 Live Preview
-          </h3>
+          {!compact && (
+            <h3
+              style={{
+                marginTop: 0,
+                marginBottom: "15px",
+                color: labelColor,
+                fontSize: "18px",
+                fontWeight: 600,
+              }}
+            >
+              🎯 Live Preview
+            </h3>
+          )}
           <div
             style={{
               padding: "20px",
-              backgroundColor: "#f8fafc",
+              backgroundColor: previewBg,
+              color: previewText,
               borderRadius: "8px",
-              border: "1px solid #e2e8f0",
-              minHeight: "600px",
-              maxHeight: "600px",
+              border: `1px solid ${previewBorder}`,
+              height: editorHeight,
               overflow: "auto",
             }}
           >
@@ -301,83 +374,95 @@ export default function LivePlayground() {
                 </pre>
               </div>
             ) : (
-              <LivePreview code={code} usePDF={usePDF} onError={setError} />
+              <LivePreview
+                code={code}
+                usePDF={usePDF}
+                onError={setError}
+                isDark={isDark}
+              />
             )}
           </div>
-          <p
-            style={{
-              marginTop: "15px",
-              fontSize: "14px",
-              color: "#64748b",
-              fontStyle: "italic",
-              textAlign: "center",
-            }}
-          >
-            👆 Edit the code and see the preview update in real-time!
-          </p>
+          {!compact && (
+            <p
+              style={{
+                marginTop: "15px",
+                fontSize: "14px",
+                color: hintColor,
+                fontStyle: "italic",
+                textAlign: "center",
+              }}
+            >
+              👆 Edit the code and see the preview update in real-time!
+            </p>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-// Component that evaluates and renders the user's code
 function LivePreview({
   code,
   usePDF,
   onError,
+  isDark,
 }: {
   code: string;
   usePDF: any;
   onError: (error: string | null) => void;
+  isDark: boolean;
 }) {
   const [Component, setComponent] = useState<any>(null);
+  const [compiling, setCompiling] = useState(true);
 
   useEffect(() => {
     async function compileAndRender() {
+      setCompiling(true);
       try {
-        // Dynamically import Babel
         const Babel = await import("@babel/standalone");
-
-        // Extract the component code (remove import statement)
         const componentCode = code.replace(/import.*from.*['"];?\s*/g, "");
-
-        // Transform JSX to JavaScript using Babel
         const transformedCode = Babel.transform(componentCode, {
           presets: ["react"],
           filename: "playground.tsx",
         }).code;
 
-        // Create a function that returns the component
+        const functionNames = extractFunctionNames(code);
+        if (functionNames.length === 0) {
+          throw new Error("No component function found in code");
+        }
+
         const createComponent = new Function(
           "React",
           "usePDF",
           `
           const { useState, useEffect, useRef, useCallback, createElement } = React;
           ${transformedCode}
-
-          // Return the first function found (the component)
-          const functionNames = ${JSON.stringify(extractFunctionNames(code))};
-          if (functionNames.length > 0) {
-            return eval(functionNames[0]);
-          }
-          throw new Error('No component function found in code');
+          return ${functionNames[0]};
           `
         );
 
         const ComponentFunc = createComponent(React, usePDF);
-
         setComponent(() => ComponentFunc);
         onError(null);
       } catch (err: any) {
-        console.error("Error evaluating code:", err);
+        console.error("[LivePlayground] compile error:", err);
         onError(err.message || "Failed to compile or evaluate code");
         setComponent(null);
+      } finally {
+        setCompiling(false);
       }
     }
 
     compileAndRender();
   }, [code, usePDF, onError]);
+
+  if (compiling && !Component) {
+    return (
+      <div style={{ color: isDark ? "#94a3b8" : "#64748b", fontSize: 14 }}>
+        Compiling…
+      </div>
+    );
+  }
 
   if (!Component) {
     return null;
@@ -391,15 +476,12 @@ function LivePreview({
   }
 }
 
-// Helper function to extract function names from code
 function extractFunctionNames(code: string): string[] {
   const functionRegex = /function\s+(\w+)/g;
   const names: string[] = [];
   let match;
-
   while ((match = functionRegex.exec(code)) !== null) {
     names.push(match[1]);
   }
-
   return names;
 }

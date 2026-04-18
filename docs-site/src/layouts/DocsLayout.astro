@@ -25,7 +25,7 @@ const { title, description, headings = [] } = Astro.props;
         </div>
 
         <!-- Pagination -->
-        <div class="mt-16 pt-8 border-t border-gray-200">
+        <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
           <div class="flex justify-between items-center">
             <slot name="prev-link" />
             <slot name="next-link" />
@@ -41,23 +41,23 @@ const { title, description, headings = [] } = Astro.props;
 
 <style is:global>
   .prose {
-    @apply text-gray-700;
+    @apply text-gray-700 dark:text-gray-300;
   }
 
   .prose h1 {
-    @apply text-4xl font-bold text-gray-900 mb-4;
+    @apply text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4;
   }
 
   .prose h2 {
-    @apply text-3xl font-bold text-gray-900 mt-12 mb-4 pb-2 border-b border-gray-200;
+    @apply text-3xl font-bold text-gray-900 dark:text-gray-100 mt-12 mb-4 pb-2 border-b border-gray-200 dark:border-gray-800;
   }
 
   .prose h3 {
-    @apply text-2xl font-semibold text-gray-900 mt-8 mb-3;
+    @apply text-2xl font-semibold text-gray-900 dark:text-gray-100 mt-8 mb-3;
   }
 
   .prose h4 {
-    @apply text-xl font-semibold text-gray-900 mt-6 mb-2;
+    @apply text-xl font-semibold text-gray-900 dark:text-gray-100 mt-6 mb-2;
   }
 
   .prose p {
@@ -65,7 +65,7 @@ const { title, description, headings = [] } = Astro.props;
   }
 
   .prose a {
-    @apply text-primary-600 hover:text-primary-700 font-medium no-underline;
+    @apply text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium no-underline;
   }
 
   .prose ul, .prose ol {
@@ -77,11 +77,11 @@ const { title, description, headings = [] } = Astro.props;
   }
 
   .prose code {
-    @apply bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-sm font-mono;
+    @apply bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100 px-1.5 py-0.5 rounded text-sm font-mono;
   }
 
   .prose pre {
-    @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-6;
+    @apply bg-gray-900 text-gray-100 dark:bg-gray-950 dark:border dark:border-gray-800 p-4 rounded-lg overflow-x-auto my-6;
   }
 
   .prose pre code {
@@ -89,7 +89,7 @@ const { title, description, headings = [] } = Astro.props;
   }
 
   .prose blockquote {
-    @apply border-l-4 border-primary-500 pl-4 italic my-6 text-gray-600;
+    @apply border-l-4 border-primary-500 pl-4 italic my-6 text-gray-600 dark:text-gray-400;
   }
 
   .prose table {
@@ -97,11 +97,11 @@ const { title, description, headings = [] } = Astro.props;
   }
 
   .prose th {
-    @apply bg-gray-50 border border-gray-300 px-4 py-2 text-left font-semibold;
+    @apply bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 px-4 py-2 text-left font-semibold;
   }
 
   .prose td {
-    @apply border border-gray-300 px-4 py-2;
+    @apply border border-gray-300 dark:border-gray-700 px-4 py-2;
   }
 
   .prose img {
@@ -109,6 +109,10 @@ const { title, description, headings = [] } = Astro.props;
   }
 
   .prose strong {
-    @apply font-semibold text-gray-900;
+    @apply font-semibold text-gray-900 dark:text-gray-100;
+  }
+
+  .prose hr {
+    @apply border-gray-200 dark:border-gray-800 my-8;
   }
 </style>
