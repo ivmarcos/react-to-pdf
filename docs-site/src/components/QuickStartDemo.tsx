@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import * as React from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import { oneDark } from "@codemirror/theme-one-dark";
 
 const DEFAULT_CODE = `import { usePDF } from 'react-to-pdf';
 
@@ -151,44 +154,44 @@ function CodeEditor({
   onChange: (v: string) => void;
   isDark: boolean;
 }) {
-  const lines = value.split("\n").length;
-  const rows = Math.max(16, Math.min(lines + 1, 26));
+  const extensions = useMemo(
+    () => [javascript({ jsx: true, typescript: true })],
+    []
+  );
 
   return (
     <div
       className="rounded-lg overflow-hidden border"
       style={{
-        background: isDark ? "#0f172a" : "#0b1220",
+        background: "#282c34",
         borderColor: isDark ? "#1f2937" : "#0b1220",
       }}
     >
       <div
         className="flex items-center justify-between px-4 h-9 text-xs font-medium"
         style={{
-          background: isDark ? "#1e293b" : "#111827",
+          background: "#21252b",
           color: "#94a3b8",
         }}
       >
         <span>example.tsx</span>
         <span className="opacity-70">editable</span>
       </div>
-      <textarea
+      <CodeMirror
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        spellCheck={false}
-        rows={rows}
-        className="w-full block outline-none resize-none"
+        onChange={(v) => onChange(v)}
+        theme={oneDark}
+        extensions={extensions}
+        basicSetup={{
+          lineNumbers: true,
+          foldGutter: false,
+          highlightActiveLine: false,
+          highlightActiveLineGutter: false,
+        }}
         style={{
-          background: isDark ? "#0f172a" : "#0b1220",
-          color: "#e2e8f0",
-          caretColor: "#0ea5e9",
+          fontSize: 13,
           fontFamily:
             "Fira Code, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
-          fontSize: 13,
-          lineHeight: "1.55",
-          padding: "14px 16px",
-          tabSize: 2,
-          border: "none",
         }}
         aria-label="Editable code sample"
       />
