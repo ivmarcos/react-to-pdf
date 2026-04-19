@@ -77,18 +77,18 @@ function AnnualReport() {
 
 # Components API
 
-The `<PDF>` component is a declarative alternative to the `usePDF` hook. You
-wrap the content you want captured, attach a `ref`, and trigger generation
+The <span class="text-primary-600 dark:text-primary-400 font-bold">PDF</span>
+component is a declarative alternative to the `usePDF` hook. You wrap the
+content you want captured, attach a `ref`, and trigger generation
 imperatively via the handle.
 
-## `<PDF>` component
+## The <span class="text-primary-600 dark:text-primary-400 font-extrabold tracking-tight">PDF</span> component
 
-### Basic usage: code and live preview side by side
+### Basic usage
 
-<div class="grid md:grid-cols-2 gap-4 items-start">
-  <CodeBlock code={basicPdfCode} language="tsx" />
-  <PDFComponentExample client:load />
-</div>
+<PDFComponentExample client:load />
+
+<CodeBlock code={basicPdfCode} language="tsx" />
 
 ### Props
 
@@ -135,10 +135,9 @@ The `header` and `footer` props accept a render function that receives
 `{ page, pages }` on every page, so you can show dynamic page numbers. They
 work identically on both engines.
 
-<div class="grid md:grid-cols-2 gap-4 items-start">
-  <CodeBlock code={multiPageCode} language="tsx" />
-  <MultiPageExample client:load />
-</div>
+<MultiPageExample client:load />
+
+<CodeBlock code={multiPageCode} language="tsx" />
 
 The header/footer render function is mounted into an offscreen React root,
 rasterised via html2canvas once per page, and stamped at the reserved top

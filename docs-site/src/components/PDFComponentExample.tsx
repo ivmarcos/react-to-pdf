@@ -69,22 +69,54 @@ function Demo({ PDF, Margin }: { PDF: any; Margin: any }) {
               fontSize: 14,
             }}
           >
-            This block is rendered by <code>&lt;PDF&gt;</code> with{" "}
-            <code>preview="children"</code>, so you see the same content that
-            gets captured into the file. Click <strong>Download PDF</strong>{" "}
-            to trigger <code>pdfRef.current.save()</code>.
+            This block is rendered by <Accent>&lt;PDF&gt;</Accent> with{" "}
+            <Accent>preview="children"</Accent>, so you see the same content
+            that gets captured into the file. Click{" "}
+            <strong>Download PDF</strong> to trigger{" "}
+            <Accent>pdfRef.current.save()</Accent>.
           </p>
           <ul style={{ color: "#475569", lineHeight: 1.8, fontSize: 14 }}>
-            <li>Imperative <code>save / open / print / update / getPdf</code> via ref.</li>
             <li>
-              <code>preview="children"</code> renders inline,{" "}
-              <code>preview="embed"</code> shows an embedded PDF preview.
+              Imperative <Accent>save / open / print / update / getPdf</Accent> via ref.
             </li>
-            <li>Works with the canvas engine (default) or <code>engine: "html"</code>.</li>
+            <li>
+              <Accent>preview="children"</Accent> renders inline,{" "}
+              <Accent>preview="embed"</Accent> shows an embedded PDF preview.
+            </li>
+            <li>
+              Works with the canvas engine (default) or{" "}
+              <Accent>engine: "html"</Accent>.
+            </li>
           </ul>
         </div>
       </PDF>
     </div>
+  );
+}
+
+/**
+ * Inline emphasis that reads as "code-ish" without actually using a
+ * monospace font. The canvas engine rasterises whatever the browser
+ * paints, and switching font-family mid-line produces different glyph
+ * metrics / baseline per family — in html2canvas that shows up as the
+ * last line of the code bit getting cropped. Keeping the same sans
+ * family and just tweaking colour/background avoids that.
+ */
+function Accent({ children }: { children: React.ReactNode }) {
+  return (
+    <span
+      style={{
+        background: "#f1f5f9",
+        color: "#0f172a",
+        padding: "1px 6px",
+        borderRadius: 4,
+        fontFamily: "inherit",
+        fontWeight: 600,
+        fontSize: "0.95em",
+      }}
+    >
+      {children}
+    </span>
   );
 }
 
